@@ -12,7 +12,7 @@
     <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5 lg:px-8">
         <x-site.logo />
 
-        <nav class="hidden items-center gap-8 md:flex" aria-label="Main">
+        <nav class="hidden items-center gap-6 lg:flex" aria-label="Main">
             @foreach ($links as $link)
                 <a href="{{ route($link['route']) }}"
                    class="text-sm {{ $link['active'] ? 'text-ink-900' : 'text-ink-600 hover:text-ink-900' }}"
@@ -20,7 +20,7 @@
             @endforeach
         </nav>
 
-        <div class="hidden items-center gap-3 md:flex">
+        <div class="hidden items-center gap-3 lg:flex">
             @auth
                 <x-ui.button :href="auth()->user()->isAdmin() ? route('admin.dashboard') : route('dashboard')"
                              variant="outline" size="sm">
@@ -32,13 +32,13 @@
             @endauth
         </div>
 
-        <button type="button" @click="open = true" class="p-1.5 text-ink-700 md:hidden" aria-label="Open menu">
+        <button type="button" @click="open = true" class="p-1.5 text-ink-700 lg:hidden" aria-label="Open menu">
             <x-ui.icon name="menu" class="size-6" />
         </button>
     </div>
 
     {{-- Mobile drawer --}}
-    <div x-show="open" x-cloak class="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true">
+    <div x-show="open" x-cloak class="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
         <div class="absolute inset-0 bg-ink-950/40" @click="open = false"></div>
         <div class="absolute inset-y-0 right-0 flex w-[min(20rem,85vw)] flex-col bg-sand-50"
              x-transition:enter="transition duration-200 ease-out"
@@ -54,7 +54,9 @@
 
             <nav class="flex flex-col divide-y divide-ink-200 border-b border-ink-200" aria-label="Mobile">
                 @foreach ($links as $link)
-                    <a href="{{ route($link['route']) }}" class="px-5 py-3.5 text-[0.95rem] text-ink-800">{{ $link['label'] }}</a>
+                    <a href="{{ route($link['route']) }}"
+                       class="px-5 py-3.5 text-[0.95rem] {{ $link['active'] ? 'bg-sand-100 font-medium text-ink-900' : 'text-ink-800' }}"
+                       @if($link['active']) aria-current="page" @endif>{{ $link['label'] }}</a>
                 @endforeach
             </nav>
 
