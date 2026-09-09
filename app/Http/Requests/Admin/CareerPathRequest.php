@@ -19,6 +19,7 @@ class CareerPathRequest extends FormRequest
             'slug' => str($this->input('slug') ?: $this->input('title'))->slug()->value(),
             'is_published' => $this->boolean('is_published'),
             'is_featured' => $this->boolean('is_featured'),
+            'bundle_course_id' => $this->input('bundle_course_id') ?: null,
             'courses' => array_values($this->input('courses', [])),
         ]);
     }
@@ -38,6 +39,7 @@ class CareerPathRequest extends FormRequest
             'description' => ['required', 'string', 'max:2000'],
             'capstone_title' => ['nullable', 'string', 'max:150'],
             'capstone_description' => ['nullable', 'string', 'max:1000'],
+            'bundle_course_id' => ['nullable', Rule::exists('courses', 'id')->withoutTrashed()],
             'is_published' => ['boolean'],
             'is_featured' => ['boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],

@@ -1,6 +1,6 @@
 <x-layouts.public title="Courses" description="The full Edunova catalogue: expert-led programmes with live classes and certification.">
     <section class="border-b border-ink-200">
-        <div class="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-20">
+        <div class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8 lg:py-20">
             <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">The catalogue</p>
             <h1 class="mt-4 max-w-3xl text-[2rem] leading-tight sm:text-[2.5rem]">
                 Every programme the academy runs
@@ -21,8 +21,8 @@
     </section>
 
     @if ($categories->isNotEmpty())
-        <div class="border-b border-ink-200 bg-white">
-            <div class="mx-auto max-w-6xl px-5 lg:px-8">
+        <div class="border-b border-ink-200 bg-texture-dots">
+            <div class="mx-auto max-w-[1600px] px-6 lg:px-12">
                 <nav class="-mb-px flex flex-wrap gap-x-7 gap-y-1 overflow-x-auto" aria-label="Filter by subject">
                     <a href="{{ route('courses.index') }}"
                        class="border-b-2 py-4 text-sm whitespace-nowrap {{ $activeCategory === null ? 'border-ink-900 text-ink-900' : 'border-transparent text-ink-500 hover:text-ink-900' }}">
@@ -41,7 +41,7 @@
         </div>
     @endif
 
-    <section class="mx-auto max-w-6xl px-5 py-12 lg:px-8 lg:py-16">
+    <section class="mx-auto max-w-[1600px] px-5 py-12 lg:px-8 lg:py-16">
         @if ($activeCategory?->description)
             <p class="mb-8 max-w-2xl text-[0.9375rem] text-ink-600">{{ $activeCategory->description }}</p>
         @endif
@@ -64,8 +64,8 @@
         @endif
     </section>
 
-    <section class="border-t border-ink-200 bg-white">
-        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 px-5 py-12 lg:px-8">
+    <section class="border-t border-ink-200 bg-texture-dots">
+        <div class="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-6 px-5 py-12 lg:px-8">
             <div class="max-w-xl">
                 <h2 class="text-xl">Not sure which one fits?</h2>
                 <p class="mt-2 text-sm/6 text-ink-600">

@@ -1,7 +1,7 @@
 <x-layouts.public :title="$course->title" :description="$course->short_description">
     {{-- Course hero --}}
     <section class="border-b border-ink-200 bg-white">
-        <div class="mx-auto max-w-6xl px-5 pt-8 lg:px-8">
+        <div class="mx-auto max-w-[1600px] px-5 pt-8 lg:px-8">
             <x-ui.breadcrumbs :items="[
                 ['label' => 'Courses', 'url' => route('courses.index')],
                 ['label' => $course->title],
@@ -9,13 +9,13 @@
         </div>
 
         @if ($course->banner_url || $course->thumbnail_url)
-            <div class="mx-auto mt-6 max-w-6xl px-5 lg:px-8">
+            <div class="mx-auto mt-6 max-w-[1600px] px-6 lg:px-12">
                 <img src="{{ $course->banner_url ?? $course->thumbnail_url }}" alt=""
                      class="aspect-[3/1] w-full border border-ink-200 object-cover">
             </div>
         @endif
 
-        <div class="mx-auto grid max-w-6xl gap-10 px-5 py-10 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-14">
+        <div class="mx-auto grid max-w-[1600px] gap-10 px-5 py-10 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-14">
             <div class="lg:col-span-7">
                 @if ($course->category)
                     <p class="text-[0.6875rem] font-medium tracking-[0.14em] text-pine-700 uppercase">{{ $course->category->name }}</p>
@@ -148,7 +148,7 @@
 
     {{-- What you will learn --}}
     @if (! empty($course->outcomes))
-        <section class="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-16">
+        <section class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8 lg:py-16">
             <h2 class="text-[1.5rem] leading-tight">What you will be able to do</h2>
             <ul class="mt-8 grid gap-x-10 gap-y-4 sm:grid-cols-2">
                 @foreach ($course->outcomes as $outcome)
@@ -163,7 +163,7 @@
 
     {{-- Overview, audience and requirements --}}
     <section class="border-t border-ink-200 bg-white">
-        <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-16">
+        <div class="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-16">
             <div class="lg:col-span-7">
                 <h2 class="text-[1.5rem] leading-tight">About this course</h2>
                 <div class="prose-academy mt-6">
@@ -202,7 +202,7 @@
     </section>
 
     {{-- Curriculum --}}
-    <section class="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-16">
+    <section class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8 lg:py-16">
         <div class="flex flex-wrap items-end justify-between gap-4">
             <div>
                 <h2 class="text-[1.5rem] leading-tight">Curriculum</h2>
@@ -230,7 +230,7 @@
     {{-- Instructor --}}
     @if ($course->instructor)
         <section class="border-y border-ink-200 bg-white">
-            <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-16">
+            <div class="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-16">
                 <div class="lg:col-span-4">
                     @if ($course->instructor->avatar_url)
                         <img src="{{ $course->instructor->avatar_url }}" alt="{{ $course->instructor->name }}"
@@ -276,7 +276,7 @@
 
     {{-- Testimonials --}}
     @if ($course->testimonials->isNotEmpty())
-        <section class="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-16">
+        <section class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8 lg:py-16">
             <h2 class="text-[1.5rem] leading-tight">From students on this course</h2>
             <div class="mt-10 grid gap-10 lg:grid-cols-3">
                 @foreach ($course->testimonials as $testimonial)
@@ -288,7 +288,7 @@
 
     {{-- Student reviews --}}
     <section class="border-t border-ink-200 bg-white">
-        <div class="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-16">
+        <div class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8 lg:py-16">
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <h2 class="text-[1.5rem] leading-tight">Student reviews</h2>
                 @if ($averageRating)
@@ -343,7 +343,7 @@
     {{-- FAQ --}}
     @if ($faqs->isNotEmpty())
         <section class="border-t border-ink-200 bg-white">
-            <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-16">
+            <div class="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-16">
                 <div class="lg:col-span-4">
                     <h2 class="text-[1.5rem] leading-tight">Common questions</h2>
                     <p class="mt-4 text-sm/6 text-ink-600">
@@ -360,7 +360,7 @@
 
     {{-- Closing enrolment prompt --}}
     <section class="bg-ink-950">
-        <div class="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-8 px-5 py-14 lg:px-8 lg:py-16">
+        <div class="mx-auto flex max-w-[1600px] flex-wrap items-end justify-between gap-8 px-5 py-14 lg:px-8 lg:py-16">
             <div class="max-w-xl">
                 <h2 class="text-[1.75rem] leading-tight text-white">{{ $course->title }}</h2>
                 <p class="mt-3 text-[0.975rem]/7 text-white/60">

@@ -12,7 +12,7 @@
 @endphp
 
 <footer class="border-t border-ink-200 bg-white">
-    <div class="mx-auto max-w-6xl px-5 py-14 lg:px-8">
+    <div class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8">
         <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
             <div class="lg:col-span-4">
                 <x-site.logo />

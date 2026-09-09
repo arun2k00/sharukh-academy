@@ -1,7 +1,7 @@
 <x-layouts.public :description="$settings['site_tagline'] ?? null">
     {{-- Hero --}}
     <section class="border-b border-ink-200">
-        <div class="mx-auto grid max-w-6xl gap-12 px-5 py-16 lg:grid-cols-12 lg:gap-16 lg:px-8 lg:py-24">
+        <div class="mx-auto grid max-w-[1600px] gap-12 px-5 py-16 lg:grid-cols-12 lg:gap-16 lg:px-8 lg:py-24">
             <div class="lg:col-span-7">
                 <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">
                     A focused data engineering academy
@@ -47,8 +47,8 @@
     </section>
 
     {{-- Measured facts, presented as a rule-divided strip rather than stat cards --}}
-    <section class="border-b border-ink-200 bg-white">
-        <dl class="mx-auto grid max-w-6xl divide-y divide-ink-200 px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:px-8">
+    <section class="border-b border-ink-200 bg-texture-dots">
+        <dl class="mx-auto grid max-w-[1600px] divide-y divide-ink-200 px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:px-8">
             <div class="py-8 sm:pr-8">
                 <dt class="text-[0.8125rem] text-ink-500">Programmes offered</dt>
                 <dd class="mt-2 font-serif text-3xl text-ink-900 tabular-nums">{{ $stats['courses'] }}</dd>
@@ -64,8 +64,12 @@
         </dl>
     </section>
 
+    <section class="border-b border-ink-200 bg-white py-10">
+        <x-site.placement-scroller class="mx-auto max-w-[1600px] px-5 lg:px-12" />
+    </section>
+
     {{-- Featured courses --}}
-    <section class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+    <section class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
         <div class="flex flex-wrap items-end justify-between gap-6">
             <x-ui.section-heading
                 eyebrow="The catalogue"
@@ -94,13 +98,13 @@
 
     {{-- Upcoming live classes --}}
     @if ($upcomingClasses->isNotEmpty())
-        <section class="border-b border-ink-200 bg-white">
-            <div class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+        <section class="border-b border-ink-200 bg-texture-dots">
+            <div class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
                 <x-ui.section-heading eyebrow="Live sessions" title="Upcoming live classes" />
 
                 <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($upcomingClasses as $liveClass)
-                        <a href="{{ route('live-classes.show', $liveClass) }}" class="group block border border-ink-200 bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-pine-300 hover:shadow-lg">
+                        <a href="{{ route('live-classes.show', $liveClass) }}" class="card-interactive group block border border-ink-100 bg-white p-5">
                             <p class="text-[0.6875rem] font-medium tracking-[0.12em] text-pine-700 uppercase">{{ $liveClass->course->title }}</p>
                             <h3 class="mt-2 text-[1.0625rem] leading-snug group-hover:underline group-hover:underline-offset-4">
                                 {{ $liveClass->title }}
@@ -117,8 +121,8 @@
     @endif
 
     {{-- How it works --}}
-    <section class="border-y border-ink-200 bg-white">
-        <div class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+    <section class="border-y border-ink-200 bg-texture-dots">
+        <div class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
             <x-ui.section-heading eyebrow="How the academy works" title="Structured to fit around real work" />
 
             <div class="mt-12 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
@@ -140,8 +144,8 @@
 
     {{-- Testimonials --}}
     @if ($testimonials->isNotEmpty())
-        <section class="border-y border-ink-200 bg-white">
-            <div class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+        <section class="border-y border-ink-200 bg-texture-dots">
+            <div class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
                 <x-ui.section-heading eyebrow="From our students" title="What people say after finishing" />
 
                 <div class="mt-12 grid gap-10 lg:grid-cols-3">
@@ -155,7 +159,7 @@
 
     {{-- FAQ --}}
     @if ($faqs->isNotEmpty())
-        <section class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+        <section class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
             <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
                 <div class="lg:col-span-4">
                     <x-ui.section-heading eyebrow="Questions" title="Before you enrol" />
@@ -175,7 +179,7 @@
 
     {{-- Closing call to action --}}
     <section class="bg-ink-950">
-        <div class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+        <div class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
             <div class="grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-16">
                 <div class="lg:col-span-8">
                     <h2 class="text-[1.875rem] leading-tight text-white sm:text-[2.25rem]">

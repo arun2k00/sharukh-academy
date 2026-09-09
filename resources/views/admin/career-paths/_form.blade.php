@@ -44,6 +44,18 @@
                        :invalid="$errors->has('capstone_description')">{{ old('capstone_description', $careerPath->capstone_description) }}</x-ui.textarea>
     </x-ui.field>
 
+    <x-ui.field label="All-in-one bundle course" for="bundle_course_id" :error="$errors->first('bundle_course_id')"
+                hint="Optional. A single course that covers this whole path — highlighted at the top of the roadmap page as the one-enrolment alternative.">
+        <x-ui.select id="bundle_course_id" name="bundle_course_id" :invalid="$errors->has('bundle_course_id')">
+            <option value="">None</option>
+            @foreach ($courses as $course)
+                <option value="{{ $course->id }}" @selected((int) old('bundle_course_id', $careerPath->bundle_course_id) === $course->id)>
+                    {{ $course->title }}
+                </option>
+            @endforeach
+        </x-ui.select>
+    </x-ui.field>
+
     <div class="flex flex-wrap gap-6">
         <x-ui.checkbox name="is_published" value="1" label="Published"
                        hint="Visible on the public roadmap page." :checked="(bool) old('is_published', $careerPath->is_published ?? true)" />

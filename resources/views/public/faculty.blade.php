@@ -5,7 +5,7 @@
 
 <x-layouts.public title="Our Faculty" description="The instructors who write, teach and answer questions on every Edunova programme.">
     <section class="border-b border-ink-200">
-        <div class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+        <div class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
             <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">Our faculty</p>
             <h1 class="mt-5 max-w-3xl text-[2rem] leading-[1.15] sm:text-[2.75rem]">
                 Taught by people who build this for a living.
@@ -18,7 +18,7 @@
     </section>
 
     @if ($lead)
-        <section class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+        <section class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
             <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
                 <div class="lg:col-span-4">
                     @if ($lead->avatar_url)
@@ -71,8 +71,8 @@
     @endif
 
     @if ($rest->isNotEmpty())
-        <section class="border-t border-ink-200 bg-white">
-            <div class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+        <section class="border-t border-ink-200 bg-texture-dots">
+            <div class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
                 <x-ui.section-heading eyebrow="Also teaching here" title="The rest of the team" />
 
                 <div class="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
@@ -108,7 +108,7 @@
     @endif
 
     <section class="bg-ink-950">
-        <div class="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-8 px-5 py-16 lg:px-8">
+        <div class="mx-auto flex max-w-[1600px] flex-wrap items-end justify-between gap-8 px-5 py-16 lg:px-8">
             <h2 class="max-w-xl text-[1.75rem] leading-tight text-white">
                 See what they teach.
             </h2>

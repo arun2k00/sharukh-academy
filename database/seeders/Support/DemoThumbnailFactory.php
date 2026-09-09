@@ -15,6 +15,25 @@ use Illuminate\Support\Str;
 final class DemoThumbnailFactory
 {
     /**
+     * A shared stock photo used as a temporary thumbnail and banner for every
+     * course until real per-course photography exists — see public/bannerheader.jpg.
+     */
+    public static function stockPhotoPath(): ?string
+    {
+        $source = public_path('bannerheader.jpg');
+
+        if (! is_file($source)) {
+            return null;
+        }
+
+        $path = 'courses/stock-photo.jpg';
+
+        Storage::disk('public')->put($path, file_get_contents($source));
+
+        return $path;
+    }
+
+    /**
      * Background and accent per category slug.
      *
      * @var array<string, array{0: string, 1: string}>

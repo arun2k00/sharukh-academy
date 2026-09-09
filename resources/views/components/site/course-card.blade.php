@@ -1,10 +1,11 @@
 @props(['course'])
 
-<article {{ $attributes->merge(['class' => 'group flex flex-col border border-ink-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-pine-300 hover:shadow-lg']) }}>
-    <a href="{{ route('courses.show', $course) }}" class="block aspect-[16/9] overflow-hidden bg-ink-100">
+<article {{ $attributes->merge(['class' => 'card-interactive group flex flex-col overflow-hidden border border-ink-100 bg-white']) }}>
+    <a href="{{ route('courses.show', $course) }}" class="relative block aspect-[16/9] overflow-hidden bg-ink-100">
         @if ($course->thumbnail_url)
             <img src="{{ $course->thumbnail_url }}" alt=""
-                 class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" loading="lazy">
+                 class="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-110" loading="lazy">
+            <div class="absolute inset-0 bg-linear-to-t from-ink-950/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
         @else
             <span class="flex size-full items-center justify-center bg-ink-900 px-6 text-center font-serif text-lg text-sand-200">
                 {{ $course->title }}
@@ -18,7 +19,8 @@
         @endif
 
         <h3 class="mt-2 text-lg leading-snug">
-            <a href="{{ route('courses.show', $course) }}" class="hover:underline hover:underline-offset-4">{{ $course->title }}</a>
+            <a href="{{ route('courses.show', $course) }}"
+               class="transition-colors duration-200 group-hover:text-pine-700">{{ $course->title }}</a>
         </h3>
 
         <p class="mt-2 line-clamp-2 text-sm/6 text-ink-600">{{ $course->short_description }}</p>
@@ -45,7 +47,7 @@
             </div>
             <span class="flex shrink-0 items-center gap-1.5 text-[0.8125rem] font-medium text-pine-700">
                 View course
-                <x-ui.icon name="arrow-right" class="size-4 transition-transform group-hover:translate-x-0.5" />
+                <x-ui.icon name="arrow-right" class="size-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
             </span>
         </div>
     </div>

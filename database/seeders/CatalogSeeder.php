@@ -169,13 +169,13 @@ class CatalogSeeder extends Seeder
                 'audience' => $definition['audience'],
                 'certificate_enabled' => true,
                 'completion_threshold' => 100,
-                'thumbnail_path' => DemoThumbnailFactory::make(
+                'thumbnail_path' => DemoThumbnailFactory::stockPhotoPath() ?? DemoThumbnailFactory::make(
                     $definition['slug'],
                     $definition['title'],
                     $definition['category'],
                     $definition['level']->value,
                 ),
-                'banner_path' => DemoThumbnailFactory::makeBanner(
+                'banner_path' => DemoThumbnailFactory::stockPhotoPath() ?? DemoThumbnailFactory::makeBanner(
                     $definition['slug'],
                     $definition['title'],
                     $definition['category'],

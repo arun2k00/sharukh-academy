@@ -1,12 +1,12 @@
-<x-layouts.admin title="Career paths" heading="Career paths">
+<x-layouts.admin title="Career Plus" heading="Career Plus">
     <x-slot:actions>
-        <x-ui.button :href="route('admin.career-paths.create')" size="sm" icon="plus">New career path</x-ui.button>
+        <x-ui.button :href="route('admin.career-paths.create')" size="sm" icon="plus">New Career Plus path</x-ui.button>
     </x-slot:actions>
 
     @if ($careerPaths->isEmpty())
-        <x-ui.empty-state icon="graduation-cap" title="No career paths yet"
+        <x-ui.empty-state icon="graduation-cap" title="No Career Plus paths yet"
                           description="Group existing courses into a staged roadmap, e.g. a job-ready programme that sequences several skill courses.">
-            <x-ui.button :href="route('admin.career-paths.create')">New career path</x-ui.button>
+            <x-ui.button :href="route('admin.career-paths.create')">New Career Plus path</x-ui.button>
         </x-ui.empty-state>
     @else
         <x-admin.table :headings="['Title', 'Courses', 'Status', ['label' => '', 'class' => 'text-right']]">
@@ -35,7 +35,7 @@
                             <a href="{{ route('admin.career-paths.edit', $careerPath) }}"
                                class="text-[0.8125rem] text-ink-600 hover:text-ink-900">Edit</a>
                             <x-admin.delete-form :action="route('admin.career-paths.destroy', $careerPath)"
-                                                 confirm="Delete this career path? The courses in it are not affected." />
+                                                 confirm="Delete this Career Plus path? The courses in it are not affected." />
                         </div>
                     </td>
                 </tr>

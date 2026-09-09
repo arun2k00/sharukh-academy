@@ -11,7 +11,7 @@
 </head>
 <body class="flex min-h-full flex-col">
     <header class="border-b border-ink-200">
-        <div class="mx-auto flex h-16 max-w-6xl items-center px-5 lg:px-8">
+        <div class="mx-auto flex h-16 max-w-[1600px] items-center px-6 lg:px-12">
             <x-site.logo />
         </div>
     </header>
@@ -32,7 +32,7 @@
     </main>
 
     <footer class="border-t border-ink-200 py-6">
-        <p class="mx-auto max-w-6xl px-5 text-[0.8125rem] text-ink-500 lg:px-8">
+        <p class="mx-auto max-w-[1600px] px-5 text-[0.8125rem] text-ink-500 lg:px-8">
             Need help? Write to
             <a href="mailto:{{ config('academy.support_email') }}" class="text-pine-700 hover:underline">{{ config('academy.support_email') }}</a>
         </p>

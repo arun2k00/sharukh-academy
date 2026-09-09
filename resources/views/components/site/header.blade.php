@@ -1,7 +1,7 @@
 @php
     $links = [
         ['label' => 'Courses', 'route' => 'courses.index', 'active' => request()->routeIs('courses.*')],
-        ['label' => 'Career paths', 'route' => 'career-paths.index', 'active' => request()->routeIs('career-paths.*')],
+        ['label' => 'Career Plus', 'route' => 'career-paths.index', 'active' => request()->routeIs('career-paths.*')],
         ['label' => 'Our Faculty', 'route' => 'faculty', 'active' => request()->routeIs('faculty')],
         ['label' => 'About', 'route' => 'about', 'active' => request()->routeIs('about')],
         ['label' => 'Contact', 'route' => 'contact', 'active' => request()->routeIs('contact')],
@@ -9,7 +9,7 @@
 @endphp
 
 <header x-data="{ open: false }" class="sticky top-0 z-40 border-b border-ink-200 bg-sand-50/95 backdrop-blur-sm">
-    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5 lg:px-8">
+    <div class="mx-auto flex h-16 max-w-[1600px] items-center justify-between gap-6 px-6 lg:px-12">
         <x-site.logo />
 
         <nav class="hidden items-center gap-6 lg:flex" aria-label="Main">
@@ -32,7 +32,9 @@
             @endauth
         </div>
 
-        <button type="button" @click="open = true" class="p-1.5 text-ink-700 lg:hidden" aria-label="Open menu">
+        <button type="button" @click="open = true"
+                class="-mr-2.5 flex size-11 items-center justify-center text-ink-700 lg:hidden"
+                aria-label="Open menu">
             <x-ui.icon name="menu" class="size-6" />
         </button>
     </div>
@@ -47,7 +49,9 @@
              x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
             <div class="flex h-16 items-center justify-between border-b border-ink-200 px-5">
                 <x-site.logo />
-                <button type="button" @click="open = false" class="p-1.5 text-ink-700" aria-label="Close menu">
+                <button type="button" @click="open = false"
+                        class="-mr-2.5 flex size-11 items-center justify-center text-ink-700"
+                        aria-label="Close menu">
                     <x-ui.icon name="close" class="size-5" />
                 </button>
             </div>

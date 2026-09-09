@@ -12,7 +12,7 @@
                 </p>
             @endunless
 
-            <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">Career path</p>
+            <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">Career Plus</p>
             <h1 class="mt-4 text-[2rem] leading-tight sm:text-[2.5rem]">{{ $careerPath->title }}</h1>
             @if ($careerPath->subtitle)
                 <p class="mt-4 max-w-2xl text-[1.0625rem]/8 text-ink-600">{{ $careerPath->subtitle }}</p>
@@ -25,7 +25,43 @@
         </div>
     </section>
 
+    @if ($careerPath->bundleCourse)
+        @php $bundle = $careerPath->bundleCourse; @endphp
+        <section class="border-b border-ink-200 bg-texture-dark">
+            <div class="mx-auto max-w-4xl px-5 py-12 lg:px-8">
+                <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+                    <div>
+                        <p class="inline-flex items-center gap-1.5 bg-pine-500/15 px-2.5 py-1 text-[0.6875rem] font-medium tracking-wide text-pine-300 uppercase">
+                            <x-ui.icon name="star" class="size-3.5" />
+                            The all-in-one option
+                        </p>
+                        <h2 class="mt-4 max-w-lg text-xl leading-snug text-white sm:text-2xl">
+                            Prefer one enrolment instead of six? <span class="text-pine-300">{{ $bundle->title }}</span>
+                            covers this entire path.
+                        </h2>
+                        <p class="mt-3 max-w-lg text-sm/6 text-white/60">{{ $bundle->short_description }}</p>
+                    </div>
+
+                    <div class="shrink-0 border border-white/10 bg-white/5 p-6 text-center lg:w-64">
+                        @if ($bundle->compare_at_price && $bundle->compare_at_price > $bundle->price)
+                            <p class="text-sm text-white/40 line-through">
+                                {{ config('academy.currency_symbol') }}{{ number_format((float) $bundle->compare_at_price, 0) }}
+                            </p>
+                        @endif
+                        <p class="font-serif text-3xl text-white">{{ $bundle->price_label }}</p>
+                        <p class="mt-1 text-[0.75rem] text-white/50">all-inclusive</p>
+                        <x-ui.button :href="route('courses.show', $bundle)" class="mt-4 w-full">View the course</x-ui.button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
+
     <section class="mx-auto max-w-3xl px-5 py-14 lg:px-8">
+        <p class="mb-8 text-sm/6 text-ink-600">
+            Or take the same path one course at a time — every step below is a complete, independently
+            enrollable programme on its own.
+        </p>
         <ol class="space-y-0">
             @foreach ($stages as $stageLabel => $coursesInStage)
                 <li>
@@ -110,7 +146,7 @@
                     through the rest of the path.
                 </p>
             </div>
-            <x-ui.button :href="route('career-paths.index')" variant="outline">See other paths</x-ui.button>
+            <x-ui.button :href="route('career-paths.index')" variant="outline">See other Career Plus paths</x-ui.button>
         </div>
     </section>
 </x-layouts.public>

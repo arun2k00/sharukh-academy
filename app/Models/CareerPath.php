@@ -8,18 +8,22 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 
 /**
- * A curated, ordered sequence of existing courses (§ career paths) — a
- * roadmap page, not a purchasable bundle. Each attached course stays a
- * normal, independently enrollable Course; the path only groups and orders
- * them into stages for the journey diagram.
+ * A curated, ordered sequence of existing courses ("Career Plus") — a
+ * roadmap page, not itself a purchasable bundle. Each attached course stays
+ * a normal, independently enrollable Course; the path only groups and orders
+ * them into stages for the journey diagram. It may optionally point at one
+ * real, purchasable Course that covers the same ground in a single
+ * enrolment (bundle_course_id) — a highlighted "all-in-one" alternative to
+ * taking every step separately.
  */
 #[Fillable([
     'slug', 'title', 'subtitle', 'description', 'capstone_title',
-    'capstone_description', 'is_published', 'is_featured', 'sort_order',
+    'capstone_description', 'bundle_course_id', 'is_published', 'is_featured', 'sort_order',
 ])]
 class CareerPath extends Model
 {
@@ -67,6 +71,14 @@ class CareerPath extends Model
     public function hasCapstone(): bool
     {
         return filled($this->capstone_title) || filled($this->capstone_description);
+    }
+
+    /**
+     * @return BelongsTo<Course, $this>
+     */
+    public function bundleCourse(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
     }
 
     /**

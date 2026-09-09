@@ -60,7 +60,7 @@
     }
 
     body {
-        @apply bg-sand-50 text-ink-800 antialiased;
+        @apply bg-white text-ink-800 antialiased;
         font-feature-settings: 'kern', 'liga';
     }
 
@@ -121,6 +121,76 @@
 
     .prose-academy strong {
         @apply font-semibold text-ink-900;
+    }
+
+    /*
+    | The page background is pure white throughout, so alternating sections
+    | get a texture instead of a flat off-white block to stay differentiated.
+    | Both are intentionally faint — felt more than seen.
+    */
+    .bg-texture-dots {
+        background-color: #ffffff;
+        background-image: radial-gradient(circle, rgba(3, 117, 62, 0.12) 1px, transparent 1px);
+        background-size: 22px 22px;
+    }
+
+    .bg-texture-grid {
+        background-color: #ffffff;
+        background-image:
+            linear-gradient(to right, rgba(26, 26, 24, 0.045) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(26, 26, 24, 0.045) 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+
+    .bg-texture-dark {
+        background-color: #102015;
+        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+        background-size: 22px 22px;
+    }
+
+    /*
+    | Shared hover language for clickable cards (course cards, career-path
+    | cards, live-class cards) — a soft brand-tinted lift rather than a flat
+    | border-colour swap, defined once so every card stays consistent.
+    */
+    .card-interactive {
+        @apply transition-all duration-300 ease-out;
+        box-shadow: 0 1px 2px rgba(16, 32, 21, 0.04);
+    }
+
+    .card-interactive:hover {
+        transform: translateY(-4px) scale(1.008);
+        box-shadow:
+            0 20px 40px -16px rgba(3, 117, 62, 0.22),
+            0 8px 16px -8px rgba(16, 32, 21, 0.12);
+    }
+
+    /*
+    | Continuous horizontal marquee for the placement-partners strip. The
+    | track is rendered twice back to back in the markup; animating exactly
+    | -50% loops it seamlessly regardless of how many logos it holds.
+    */
+    .marquee-track {
+        animation: marquee-scroll 32s linear infinite;
+    }
+
+    .marquee-track:hover {
+        animation-play-state: paused;
+    }
+
+    @keyframes marquee-scroll {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .marquee-track {
+            animation: none;
+        }
     }
 }
 
