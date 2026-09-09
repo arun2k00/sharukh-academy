@@ -4,7 +4,7 @@
         <div class="mx-auto grid max-w-6xl gap-12 px-5 py-16 lg:grid-cols-12 lg:gap-16 lg:px-8 lg:py-24">
             <div class="lg:col-span-7">
                 <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">
-                    A focused online academy
+                    A focused data engineering academy
                 </p>
 
                 <h1 class="mt-5 text-[2.25rem] leading-[1.1] sm:text-[3rem] lg:text-[3.25rem]">
@@ -21,54 +21,27 @@
                 </div>
 
                 <p class="mt-8 text-[0.8125rem] text-ink-500">
-                    Live classes included · Downloadable resources · Certificate on completion
+                    Live classes included · Production-grade projects · Certificate on completion
                 </p>
             </div>
 
-            <div class="lg:col-span-5">
-                @if ($featuredCourses->isNotEmpty())
-                    @php $spotlight = $featuredCourses->first(); @endphp
-                    {{-- A composed information panel rather than a decorative image. --}}
-                    <a href="{{ route('courses.show', $spotlight) }}" class="group block bg-ink-950">
-                        @if ($spotlight->thumbnail_url)
-                            <img src="{{ $spotlight->thumbnail_url }}" alt="" class="aspect-[16/9] w-full object-cover">
-                        @endif
+            <div class="relative lg:col-span-5">
+                {{-- Soft brand-coloured field behind the artwork, rather than a hard image edge. --}}
+                <div class="absolute inset-0 -z-10 scale-90 rounded-full bg-linear-to-br from-pine-200 via-pine-100 to-sand-100 blur-2xl"
+                     aria-hidden="true"></div>
 
-                        <div class="p-6">
-                            <p class="text-[0.6875rem] font-medium tracking-[0.14em] text-white/50 uppercase">Now enrolling</p>
-                            <p class="mt-3 font-serif text-[1.375rem]/tight text-white group-hover:underline group-hover:underline-offset-4">
-                                {{ $spotlight->title }}
-                            </p>
+                <img src="{{ asset('banner.png') }}" alt=""
+                     class="mx-auto w-full max-w-md object-contain drop-shadow-xl transition-transform duration-500 hover:-translate-y-1 lg:max-w-none">
 
-                            <dl class="mt-5 grid grid-cols-3 gap-4 border-t border-white/15 pt-5 text-white/70">
-                                <div>
-                                    <dt class="text-[0.6875rem] tracking-wide uppercase">Lessons</dt>
-                                    <dd class="mt-1 font-serif text-lg text-white tabular-nums">{{ $spotlight->lessons_count }}</dd>
-                                </div>
-                                <div>
-                                    <dt class="text-[0.6875rem] tracking-wide uppercase">Length</dt>
-                                    <dd class="mt-1 font-serif text-lg text-white">{{ $spotlight->duration_label }}</dd>
-                                </div>
-                                <div>
-                                    <dt class="text-[0.6875rem] tracking-wide uppercase">Level</dt>
-                                    <dd class="mt-1 font-serif text-lg text-white">{{ $spotlight->level->label() }}</dd>
-                                </div>
-                            </dl>
-
-                            <p class="mt-5 flex items-center gap-2 text-sm font-medium text-white">
-                                See the full curriculum
-                                <x-ui.icon name="arrow-right" class="size-4 transition-transform group-hover:translate-x-1" />
-                            </p>
-                        </div>
-                    </a>
-                @else
-                    <div class="flex aspect-[4/5] flex-col justify-end bg-ink-950 p-8">
-                        <p class="font-serif text-[1.5rem]/tight text-white">
-                            Small cohorts. Real practitioners. Work you can show.
-                        </p>
-                        <p class="mt-4 text-sm/6 text-white/50">{{ config('academy.name') }}</p>
+                <div class="absolute -bottom-4 left-1/2 flex w-[calc(100%-2.5rem)] max-w-xs -translate-x-1/2 items-center gap-3 border border-ink-200 bg-white/95 px-5 py-4 shadow-lg backdrop-blur-sm sm:left-4 sm:w-auto sm:translate-x-0">
+                    <span class="flex size-10 shrink-0 items-center justify-center bg-pine-50 text-pine-700">
+                        <x-ui.icon name="award" class="size-5" />
+                    </span>
+                    <div>
+                        <p class="font-serif text-lg leading-none text-ink-900">3000+</p>
+                        <p class="mt-1 text-[0.75rem] text-ink-500">students trained</p>
                     </div>
-                @endif
+                </div>
             </div>
         </div>
     </section>
@@ -127,7 +100,7 @@
 
                 <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($upcomingClasses as $liveClass)
-                        <a href="{{ route('live-classes.show', $liveClass) }}" class="group block border border-ink-200 p-5 hover:border-ink-400">
+                        <a href="{{ route('live-classes.show', $liveClass) }}" class="group block border border-ink-200 bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-pine-300 hover:shadow-lg">
                             <p class="text-[0.6875rem] font-medium tracking-[0.12em] text-pine-700 uppercase">{{ $liveClass->course->title }}</p>
                             <h3 class="mt-2 text-[1.0625rem] leading-snug group-hover:underline group-hover:underline-offset-4">
                                 {{ $liveClass->title }}
@@ -155,8 +128,8 @@
                     ['Material you can actually use', 'Templates, worksheets and reference files attached to the lessons that need them.'],
                     ['Finish with proof', 'Complete the curriculum and your certificate is issued automatically, with a public verification link.'],
                 ] as $index => $item)
-                    <div class="border-t border-ink-900 pt-5">
-                        <p class="font-mono text-[0.8125rem] text-ink-400 tabular-nums">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</p>
+                    <div class="group border-t-2 border-ink-900 pt-5 transition-colors duration-200 hover:border-pine-600">
+                        <p class="font-mono text-[0.8125rem] text-ink-400 tabular-nums transition-colors group-hover:text-pine-600">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</p>
                         <h3 class="mt-3 font-sans text-[0.975rem] font-semibold text-ink-900">{{ $item[0] }}</h3>
                         <p class="mt-2 text-sm/6 text-ink-600">{{ $item[1] }}</p>
                     </div>

@@ -81,8 +81,8 @@ class EngagementSeeder extends Seeder
         if ($courses->has(0)) {
             CourseAnnouncement::create([
                 'course_id' => $courses[0]->id,
-                'title' => 'Bonus swipe-file added to Module 2',
-                'body' => 'A downloadable swipe file with real campaign briefs has been added to the second module. Find it under the resources on the relevant lesson.',
+                'title' => 'Bonus practice dataset added to Module 2',
+                'body' => 'A downloadable practice dataset with real messy records has been added to the second module. Find it under the resources on the relevant lesson.',
                 'created_by' => $admin->id,
             ]);
         }
@@ -113,14 +113,14 @@ class EngagementSeeder extends Seeder
         if ($courses->has(0)) {
             CourseReview::create([
                 'course_id' => $courses[0]->id, 'user_id' => $meera->id,
-                'rating' => 5, 'review' => 'Practical from the first lesson. I used the targeting framework on a live campaign in week two and the drop in cost-per-lead was immediate.',
+                'rating' => 5, 'review' => 'Practical from the first lesson. I used the window-function techniques on a real report at work in week two and cut something that used to take an hour down to five minutes.',
                 'is_approved' => true,
             ]);
 
             if ($kwame !== null) {
                 CourseReview::create([
                     'course_id' => $courses[0]->id, 'user_id' => $kwame->id,
-                    'rating' => 4, 'review' => "Good pace and the live sessions are worth attending. Wish there was more on attribution but that's a small gap.",
+                    'rating' => 4, 'review' => "Good pace, and the live query-optimisation clinic alone was worth it. Wish there was a bit more on indexing internals but that's a small gap.",
                     'is_approved' => true,
                 ]);
             }
@@ -129,7 +129,7 @@ class EngagementSeeder extends Seeder
         if ($courses->has(1) && $jude !== null) {
             CourseReview::create([
                 'course_id' => $courses[1]->id, 'user_id' => $jude->id,
-                'rating' => 5, 'review' => 'Exactly what I needed to take a brand identity project from brief to delivery with confidence.',
+                'rating' => 5, 'review' => 'Exactly what I needed to go from writing one-off scripts to a proper, idempotent ETL job I would actually trust in production.',
                 'is_approved' => true,
             ]);
         }
@@ -137,7 +137,7 @@ class EngagementSeeder extends Seeder
         if ($courses->has(3) && $fiona !== null) {
             CourseReview::create([
                 'course_id' => $courses[3]->id, 'user_id' => $fiona->id,
-                'rating' => 4, 'review' => 'Clear structure and the templates saved me hours. Some sections assume tools I had to look up separately.',
+                'rating' => 4, 'review' => 'Clear structure and the warehouse project saved me hours of trial and error. A couple of sections assume you already have a trial account set up, which took me a bit to sort separately.',
                 'is_approved' => true,
             ]);
         }
@@ -146,7 +146,7 @@ class EngagementSeeder extends Seeder
         if ($courses->has(2) && $rohit !== null) {
             CourseReview::create([
                 'course_id' => $courses[2]->id, 'user_id' => $rohit->id,
-                'rating' => 3, 'review' => "Solid content but I'm only halfway through — marking as in progress for now.",
+                'rating' => 3, 'review' => "Solid content and the pipeline examples are genuinely useful — I'm only halfway through, so marking this as in progress for now.",
                 'is_approved' => false,
             ]);
         }
@@ -171,12 +171,12 @@ class EngagementSeeder extends Seeder
                 'course_id' => $courses[0]->id,
                 'lesson_id' => $lesson?->id,
                 'user_id' => $meera->id,
-                'question' => 'For the targeting exercise, should the lookalike audience be built from purchasers or from everyone who added to cart?',
+                'question' => 'For the deduplication exercise, should I match records on email alone or email plus phone number when the same customer sometimes has a typo in one field?',
             ]);
 
             $question->replies()->create([
                 'user_id' => $admin->id,
-                'reply' => 'Start from purchasers if you have at least a few hundred — it converts better even though the audience is smaller. Fall back to add-to-cart only if purchaser volume is too low to build a reliable lookalike.',
+                'reply' => 'Match on whichever field is more consistently populated in your dataset — usually email. If both fields have a meaningful typo rate, a two-pass match (exact match first, then a fuzzy match on whatever is left) beats trying to write one perfect rule up front.',
                 'is_pinned' => true,
             ]);
         }
@@ -186,7 +186,7 @@ class EngagementSeeder extends Seeder
                 'course_id' => $courses[1]->id,
                 'lesson_id' => null,
                 'user_id' => $jude->id,
-                'question' => 'Is there a recommended file structure for handing off the final identity system to a client?',
+                'question' => 'Is there a recommended project structure for a script that will eventually be handed off to another engineer to maintain?',
             ]);
         }
 
@@ -195,12 +195,12 @@ class EngagementSeeder extends Seeder
                 'course_id' => $courses[3]->id,
                 'lesson_id' => $this->firstLesson($courses[3])?->id,
                 'user_id' => $fiona->id,
-                'question' => 'Which template should I start from if the project is a rebrand rather than a brand-new identity?',
+                'question' => 'Which warehouse size should I use for the exercises if I only have the free trial credits to work with?',
             ]);
 
             $question->replies()->create([
                 'user_id' => $admin->id,
-                'reply' => "Start from the same template — the rebrand-specific guidance is in the lesson notes further into the module, it just isn't a separate template.",
+                'reply' => 'Stay on X-Small for every exercise in this course — the datasets are intentionally small enough that a bigger warehouse only costs you more credits without being any faster.',
                 'is_pinned' => false,
             ]);
         }
@@ -220,7 +220,7 @@ class EngagementSeeder extends Seeder
             if ($lessons->isNotEmpty()) {
                 LessonNote::create([
                     'user_id' => $meera->id, 'lesson_id' => $lessons->first()->id, 'course_id' => $courses[0]->id,
-                    'content' => 'Re-watch this before the live session — the audience-overlap point at the start is easy to miss.',
+                    'content' => 'Re-watch this before the live session — the NULL-handling point at the start is easy to miss.',
                     'video_timestamp_seconds' => 145,
                 ]);
 
@@ -232,7 +232,7 @@ class EngagementSeeder extends Seeder
             if ($lessons->count() > 1) {
                 LessonNote::create([
                     'user_id' => $meera->id, 'lesson_id' => $lessons[1]->id, 'course_id' => $courses[0]->id,
-                    'content' => 'Budget split example: 70/30 was for a launch campaign, not evergreen. Check before copying the ratio.',
+                    'content' => 'Window frame example: this running-total query assumes the rows are already sorted — check the ORDER BY before copying this pattern elsewhere.',
                     'video_timestamp_seconds' => 512,
                 ]);
             }
@@ -244,7 +244,7 @@ class EngagementSeeder extends Seeder
             if ($lessons->isNotEmpty()) {
                 LessonNote::create([
                     'user_id' => $jude->id, 'lesson_id' => $lessons->first()->id, 'course_id' => $courses[1]->id,
-                    'content' => 'Good reference for the client presentation deck structure.',
+                    'content' => 'Good reference for structuring the ETL script into functions that are actually testable on their own.',
                     'video_timestamp_seconds' => null,
                 ]);
             }
@@ -280,7 +280,7 @@ class EngagementSeeder extends Seeder
                 'user_id' => $rohit->id,
                 'subject' => 'Video keeps buffering on lesson 3',
                 'category' => 'technical',
-                'message' => 'The video on lesson three of the negotiation course keeps buffering every few seconds even though everything else on my connection is fine.',
+                'message' => 'The video on lesson three of the Snowflake course keeps buffering every few seconds even though everything else on my connection is fine.',
                 'status' => 'in_progress',
             ]);
 

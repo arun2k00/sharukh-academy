@@ -1,4 +1,4 @@
-<x-layouts.public title="Courses" description="The full Oacer Academy catalogue: expert-led programmes with live classes and certification.">
+<x-layouts.public title="Courses" description="The full Edunova catalogue: expert-led programmes with live classes and certification.">
     <section class="border-b border-ink-200">
         <div class="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-20">
             <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">The catalogue</p>

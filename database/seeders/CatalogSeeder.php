@@ -54,10 +54,6 @@ class CatalogSeeder extends Seeder
     private function seedCategories(): array
     {
         $rows = [
-            ['name' => 'Marketing', 'slug' => 'marketing', 'description' => 'Demand generation, paid media and lifecycle work.'],
-            ['name' => 'Design', 'slug' => 'design', 'description' => 'Identity, systems and the craft of visual decisions.'],
-            ['name' => 'Business', 'slug' => 'business', 'description' => 'Running the commercial side of a practice.'],
-            ['name' => 'Analytics', 'slug' => 'analytics', 'description' => 'Turning numbers into decisions people act on.'],
             ['name' => 'Data Engineering', 'slug' => 'data-engineering', 'description' => 'Building the pipelines and warehouses everything else runs on.'],
         ];
 
@@ -80,48 +76,37 @@ class CatalogSeeder extends Seeder
     {
         $rows = [
             [
-                'slug' => 'priya-raman',
-                'name' => 'Priya Raman',
-                'headline' => 'Performance marketing lead, ex-agency, 14 years in paid media',
+                'slug' => 'sharuk-shaik',
+                'name' => 'Sharuk Shaik',
+                'headline' => 'Enterprise data engineering trainer — 10+ years, 3000+ students trained',
                 'is_featured' => true,
-                'experience_years' => 14,
-                'bio' => "I have spent fourteen years buying media for businesses that could not afford to waste it — first at a Bangalore agency running accounts for regional retail, then in-house at two consumer subscription companies.\n\nMost marketing teaching is written by people who have not had to defend a spend figure in a board meeting. This one is not. Everything here is the process I actually use: how to size a market honestly, how to build a testing plan that survives a bad quarter, and how to say no to a channel that will not work.",
+                'experience_years' => 10,
+                'bio' => "Sharukh Sir is a seasoned data engineering professional with over a decade of experience building and managing enterprise data platforms across multiple industries including banking, insurance, retail, and healthcare.\n\nHaving worked with organizations ranging from fast-growing startups to Fortune 500 companies, he brings a unique perspective that blends deep technical knowledge with practical business understanding.\n\nHis teaching philosophy is simple: theory without practice is incomplete. Every concept is taught with real-world context, every module ends with hands-on exercises, and every student graduates with production-grade project experience.\n\nHis mission is to make every student industry-ready from day one — not just in tools and technology, but in mindset, problem-solving, and professional communication.",
                 'credentials' => [
-                    'Led paid acquisition for two subscription businesses through Series B',
-                    'Managed cumulative ad spend above ₹40 crore',
-                    'Guest lecturer, IIM Bangalore digital marketing elective',
-                    'Google Ads and Meta Blueprint certified',
+                    '10+ Years Industry Experience',
+                    '3000+ Students Trained',
+                    'Enterprise-Grade Expertise',
+                    'Active Mentorship Community',
+                    'Hands-on expertise across Snowflake, dbt, Azure Data Factory, Power BI, SQL Server, Python, Azure DevOps and Git',
                 ],
             ],
             [
-                'slug' => 'daniel-okoro',
-                'name' => 'Daniel Okoro',
-                'headline' => 'Independent brand designer and design-systems consultant',
-                'experience_years' => 11,
-                'bio' => "I run a two-person studio. We do identity work for companies between their first and their fiftieth employee — the stage where a brand has to stop being a logo and start being a system other people can use without asking you.\n\nI teach the way I work: fewer, better decisions, documented well enough that a developer or a junior designer can carry them forward.",
+                'slug' => 'arun-singh',
+                'name' => 'Arun Singh',
+                'headline' => 'Full-stack engineer & cloud architect — 10+ years, 1000+ students trained',
+                'experience_years' => 10,
+                'bio' => "I have spent over a decade building software end to end — from the backend and the database schema underneath it, through the frontend a user actually touches, to the server it all runs on in production.\n\nMy background spans building products from scratch for early-stage startups and hardening infrastructure for larger, more established teams — writing the code, deploying it correctly on both Linux and Windows servers, and designing the cloud architecture that keeps it running once real users show up.\n\nI teach the way I build: nothing is finished until it is deployed, monitored, and left in a state another engineer can maintain without having to call you at 11pm.",
                 'credentials' => [
-                    'Identity work for 60+ companies across Africa and Europe',
-                    'Design systems consultant to three publicly listed firms',
-                    'Type & Lettering award, D&AD New Blood',
-                ],
-            ],
-            [
-                'slug' => 'anita-fernandes',
-                'name' => 'Anita Fernandes',
-                'headline' => 'Fractional CFO for founder-led companies',
-                'experience_years' => 18,
-                'bio' => "I build the financial model before the company needs it, and then I make the founder able to run it without me.\n\nEighteen years of audit, corporate finance and eventually fractional CFO work has convinced me that most founders do not need more finance theory. They need one model they trust, and the confidence to change an assumption in front of an investor.",
-                'credentials' => [
-                    'Chartered Accountant, 18 years in practice',
-                    'Fractional CFO to 20+ founder-led companies',
-                    'Advised on raises totalling ₹300 crore',
+                    '10+ Years Industry Experience',
+                    '1000+ Students Trained',
+                    'Enterprise-Grade Expertise',
+                    'Full-stack development across frontend, backend and databases, with complete deployment skills on Linux and Windows servers, and cloud architecture experience',
                 ],
             ],
             [
                 'slug' => 'vikram-nair',
                 'name' => 'Vikram Nair',
                 'headline' => 'Senior data engineer, ex-Flipkart, 12 years building pipelines',
-                'is_featured' => true,
                 'experience_years' => 12,
                 'bio' => "I have spent twelve years moving data from wherever it is produced to wherever someone needs to trust it — first at two e-commerce companies during their highest-growth years, then as a consultant to teams rebuilding pipelines that had outgrown their original design.\n\nMost data engineering teaching starts with syntax. I start with the failure modes: what happens when the source schema changes without warning, when a job runs twice, when yesterday's numbers do not match today's backfill. Everything here is written to survive contact with a real production system, not just a tutorial dataset.",
                 'credentials' => [
@@ -330,10 +315,10 @@ class CatalogSeeder extends Seeder
     private function seedTestimonials(): void
     {
         $rows = [
-            ['Meera Sundaram', 'Growth lead, D2C skincare', 5, true, 'I had been running ads for two years without a real testing framework. The third module alone changed how we plan a quarter — we cut two channels and put the money where it was already working.'],
-            ['Jude Mensah', 'Founder, independent studio', 5, true, 'The identity module gave me language for decisions I was making on instinct. My client presentations got noticeably shorter and my revisions dropped.'],
-            ['Rohit Bansal', 'Co-founder, logistics SaaS', 5, true, 'I built our first investor model during the course and used it in a raise six weeks later. Anita answered a question of mine in a live class that saved me a very embarrassing mistake.'],
-            ['Fiona Clarke', 'Freelance copywriter', 4, false, 'Practical and unglamorous in the best way. No growth-hacking nonsense, just the actual sequence of work.'],
+            ['Meera Sundaram', 'Data Analyst, D2C retail', 5, true, 'The SQL course alone was worth it — window functions and query optimisation are things my last job never actually taught me. I went into my next interview and answered the SQL round without hesitating once.'],
+            ['Jude Mensah', 'BI Developer, fintech startup', 5, true, 'Sharuk breaks down Snowflake in a way that finally made warehouse architecture click. The real-world project at the end is genuinely production-grade, not a toy exercise.'],
+            ['Rohit Bansal', 'Data Engineer, logistics SaaS', 5, true, 'I built our first Azure Data Factory pipeline during the course and had it running in production three weeks later. The monitoring and error-handling module alone saved us from a bad incident.'],
+            ['Fiona Clarke', 'Analytics Engineer, healthcare tech', 4, false, 'Practical and unglamorous in the best way — no theory for its own sake. The dbt course is exactly the workflow our team uses now, tests and all.'],
         ];
 
         Testimonial::query()->delete();

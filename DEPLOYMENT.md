@@ -76,7 +76,7 @@ CREATE DATABASE oacer_academy CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 Copy `.env.example` to `.env` and fill it in:
 
 ```dotenv
-APP_NAME="Oacer Academy"
+APP_NAME="Edunova"
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://your-domain.com

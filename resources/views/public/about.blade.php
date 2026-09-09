@@ -1,4 +1,4 @@
-<x-layouts.public title="About" description="How Oacer Academy teaches, and who teaches here.">
+<x-layouts.public title="About" description="How Edunova teaches, and who teaches here.">
     <section class="border-b border-ink-200">
         <div class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
             <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">About the academy</p>

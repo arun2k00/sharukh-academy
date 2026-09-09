@@ -1,6 +1,6 @@
 @props(['course'])
 
-<article {{ $attributes->merge(['class' => 'group flex flex-col border border-ink-200 bg-white transition-colors hover:border-ink-400']) }}>
+<article {{ $attributes->merge(['class' => 'group flex flex-col border border-ink-200 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-pine-300 hover:shadow-lg']) }}>
     <a href="{{ route('courses.show', $course) }}" class="block aspect-[16/9] overflow-hidden bg-ink-100">
         @if ($course->thumbnail_url)
             <img src="{{ $course->thumbnail_url }}" alt=""

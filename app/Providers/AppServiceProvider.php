@@ -74,7 +74,7 @@ class AppServiceProvider extends ServiceProvider
             [
                 'components.layouts.public', 'components.layouts.app', 'components.layouts.admin',
                 'components.layouts.learn', 'components.layouts.auth', 'components.layouts.error',
-                'components.site.logo', 'components.site.brand-head',
+                'components.site.logo', 'components.site.brand-head', 'components.site.certificate',
             ],
             function ($view): void {
                 $repository = $this->app->make(SettingsRepository::class);

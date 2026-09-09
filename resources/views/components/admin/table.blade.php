@@ -15,7 +15,7 @@
                 </tr>
             </thead>
         @endif
-        <tbody class="divide-y divide-ink-200">
+        <tbody class="divide-y divide-ink-200 [&>tr]:transition-colors [&>tr]:hover:bg-sand-50">
             {{ $slot }}
         </tbody>
     </table>

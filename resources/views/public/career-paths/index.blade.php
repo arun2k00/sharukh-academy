@@ -1,5 +1,5 @@
 <x-layouts.public title="Career paths"
-                  description="Staged learning journeys that sequence Oacer Academy courses into a job-ready programme.">
+                  description="Staged learning journeys that sequence Edunova courses into a job-ready programme.">
     <section class="border-b border-ink-200">
         <div class="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-20">
             <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">Career paths</p>
@@ -23,7 +23,7 @@
             <div class="grid gap-6 sm:grid-cols-2">
                 @foreach ($careerPaths as $careerPath)
                     <a href="{{ route('career-paths.show', $careerPath) }}"
-                       class="group flex flex-col justify-between border border-ink-200 bg-white p-6 transition-colors hover:border-ink-400">
+                       class="group flex flex-col justify-between border border-ink-200 bg-white p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-pine-300 hover:shadow-lg">
                         <div>
                             <p class="text-[0.6875rem] font-medium tracking-[0.14em] text-pine-700 uppercase">
                                 {{ $careerPath->courses_count }} {{ \Illuminate\Support\Str::plural('course', $careerPath->courses_count) }}

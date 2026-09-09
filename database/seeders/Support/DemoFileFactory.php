@@ -50,7 +50,7 @@ final class DemoFileFactory
             $y -= 16;
         }
 
-        $lines[] = 'BT /F1 9 Tf 60 60 Td ('.self::escape('Oacer Academy — demonstration resource').') Tj ET';
+        $lines[] = 'BT /F1 9 Tf 60 60 Td ('.self::escape('Edunova — demonstration resource').') Tj ET';
 
         $stream = implode("\n", $lines);
 

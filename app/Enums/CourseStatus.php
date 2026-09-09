@@ -13,7 +13,7 @@ enum CourseStatus: string
         return match ($this) {
             self::Draft => 'Draft',
             self::Published => 'Published',
-            self::Archived => 'Archived',
+            self::Archived => 'Courses Sold',
         };
     }
 

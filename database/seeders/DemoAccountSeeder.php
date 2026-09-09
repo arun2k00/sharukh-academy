@@ -127,17 +127,17 @@ class DemoAccountSeeder extends Seeder
         ContactMessage::query()->delete();
 
         ContactMessage::create([
-            'name' => 'Vikram Shah',
-            'email' => 'vikram@example.test',
+            'name' => 'Rahul Shah',
+            'email' => 'rahul@example.test',
             'subject' => 'Corporate enrolment for six people',
-            'message' => "Hello,\n\nWe would like to put six of our marketing team through Performance Marketing Foundations in the next quarter. Do you offer a group rate, and can the live sessions be scheduled for a single cohort?\n\nThank you,\nVikram",
+            'message' => "Hello,\n\nWe would like to put six of our data team through the SQL Server and Snowflake programmes in the next quarter. Do you offer a group rate, and can the live sessions be scheduled for a single cohort?\n\nThank you,\nRahul",
         ]);
 
         ContactMessage::create([
             'name' => 'Nadia Haddad',
             'email' => 'nadia@example.test',
             'subject' => 'Question before enrolling',
-            'message' => 'Is the brand identity course suitable if I mostly work in product design rather than brand? I want to be able to run an identity project end to end but my background is UI.',
+            'message' => 'Is the Python for Data Engineers course suitable if I already know SQL well but have never written a line of Python? I want to be able to build a full pipeline end to end but my background is entirely SQL-based reporting.',
             'is_read' => true,
         ]);
     }

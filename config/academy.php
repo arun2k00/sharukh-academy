@@ -13,13 +13,13 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Oacer Academy'),
+    'name' => env('APP_NAME', 'Edunova'),
 
     'currency' => env('ACADEMY_CURRENCY', 'INR'),
 
     'currency_symbol' => env('ACADEMY_CURRENCY_SYMBOL', '₹'),
 
-    'support_email' => env('ACADEMY_SUPPORT_EMAIL', 'support@oaceracademy.com'),
+    'support_email' => env('ACADEMY_SUPPORT_EMAIL', 'support@edunova.com'),
 
     'support_phone' => env('ACADEMY_SUPPORT_PHONE', '+91 00000 00000'),
 

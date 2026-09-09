@@ -171,12 +171,12 @@ class CertificateService
     }
 
     /**
-     * Human-readable, non-sequential identifier: OA-2026-K3F9QA.
+     * Human-readable, non-sequential identifier: EN-2026-K3F9QA.
      */
     private function generateNumber(): string
     {
         do {
-            $number = sprintf('OA-%s-%s', now()->format('Y'), Str::upper(Str::random(6)));
+            $number = sprintf('EN-%s-%s', now()->format('Y'), Str::upper(Str::random(6)));
         } while (Certificate::where('certificate_number', $number)->exists());
 
         return $number;

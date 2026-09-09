@@ -4,12 +4,12 @@
 @source '../../storage/framework/views/*.php';
 
 /*
-| Oacer Academy design tokens
+| Edunova design tokens
 |
-| A deliberately narrow palette: warm paper, near-black ink for text, one deep
-| pine green for anything interactive, and a muted brass reserved for ratings
-| and small emphasis. Headings use a serif for an editorial feel; everything
-| functional stays in the sans.
+| A deliberately narrow palette: warm paper, near-black ink for text, the
+| brand's emerald green for anything interactive, and a muted brass reserved
+| for ratings and small emphasis. Headings use a serif for an editorial feel;
+| everything functional stays in the sans.
 */
 @theme {
     --font-sans: 'Instrument Sans', 'Instrument Sans Fallback', ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -33,16 +33,16 @@
     --color-sand-300: #ded6c4;
     --color-sand-400: #c9bfa8;
 
-    --color-pine-50: #eff5f1;
-    --color-pine-100: #d8e8df;
-    --color-pine-200: #b2cfbe;
-    --color-pine-300: #82af95;
-    --color-pine-400: #518a6c;
-    --color-pine-500: #316b4d;
-    --color-pine-600: #22543b;
-    --color-pine-700: #1b4331;
-    --color-pine-800: #163527;
-    --color-pine-900: #102a1f;
+    --color-pine-50: #f1fbf6;
+    --color-pine-100: #d9f7e9;
+    --color-pine-200: #a3f5cd;
+    --color-pine-300: #5df6ac;
+    --color-pine-400: #12fd8b;
+    --color-pine-500: #00bf63;
+    --color-pine-600: #00994f;
+    --color-pine-700: #03753e;
+    --color-pine-800: #045b31;
+    --color-pine-900: #054023;
 
     --color-brass-50: #faf5ea;
     --color-brass-100: #f2e6cf;

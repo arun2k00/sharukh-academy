@@ -1,5 +1,9 @@
 @props(['certificate'])
 
+@php
+    $academyName = $academySettings['academy_name'] ?? config('academy.name');
+@endphp
+
 {{-- The certificate artwork itself, shared by the on-screen and print views.
      Sizing is in container-query units so it scales with whatever box it is
      placed in — the wrapper must set `container-type: inline-size`. --}}
@@ -10,10 +14,9 @@
     <div class="absolute inset-[7.5%] flex flex-col items-center justify-between text-center">
         <div class="flex flex-col items-center">
             <div class="flex items-center gap-[1cqw]">
-                <span class="flex aspect-square w-[4cqw] items-center justify-center border border-pine-700 font-serif text-[2cqw] text-pine-700">O</span>
+                <span class="flex aspect-square w-[4cqw] items-center justify-center border border-pine-700 font-serif text-[2cqw] text-pine-700">{{ str($academyName)->substr(0, 1) }}</span>
                 <span class="text-left leading-none">
-                    <span class="block font-serif text-[2.4cqw] text-ink-900">Oacer</span>
-                    <span class="mt-[0.3cqw] block text-[1cqw] font-medium tracking-[0.22em] text-ink-500 uppercase">Academy</span>
+                    <span class="block font-serif text-[2.4cqw] text-ink-900">{{ $academyName }}</span>
                 </span>
             </div>
 
