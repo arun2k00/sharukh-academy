@@ -47,7 +47,10 @@ class LearnController extends Controller
         CertificateService $certificates,
     ): View {
         Gate::authorize('learn', $course);
-        abort_unless($lesson->is_published, 404);
+
+        // Course-level access is necessary but not sufficient: the lesson's
+        // own module may still be locked by the content-drip schedule.
+        Gate::authorize('view', $lesson);
 
         $user = $request->user();
 
@@ -61,20 +64,35 @@ class LearnController extends Controller
             $this->progress->touchViewed($user, $lesson);
         }
 
+        $curriculum = $course->curriculum();
+        $enrolledAt = $enrollment?->enrolled_at;
+
         return view('student.learn.lesson', [
             'course' => $course,
             'lesson' => $lesson,
             'enrollment' => $enrollment,
-            'curriculum' => $course->curriculum(),
+            'curriculum' => $curriculum,
             'completedMap' => $this->progress->completedLessonMap($user, $course),
+            'bookmarkedIds' => $user->lessonBookmarks()->where('course_id', $course->id)->pluck('lesson_id')->flip()->all(),
+            'moduleUnlockMap' => $curriculum->mapWithKeys(fn ($module) => [
+                $module->id => [
+                    'unlocked' => $module->isUnlockedFor($enrolledAt),
+                    'unlocks_at' => $module->unlocksAt($enrolledAt),
+                ],
+            ]),
             'progressPercent' => $this->progress->percentFor($user, $course),
-            'previousLesson' => $this->curriculum->previousLesson($course, $lesson),
-            'nextLesson' => $this->curriculum->nextLesson($course, $lesson),
+            'previousLesson' => $this->curriculum->previousLesson($course, $lesson, $enrollment),
+            'nextLesson' => $this->curriculum->nextLesson($course, $lesson, $enrollment),
             'certificate' => $certificates->find($user, $course),
             'watchedPercent' => (int) LessonProgress::query()
                 ->where('user_id', $user->id)
                 ->where('lesson_id', $lesson->id)
                 ->value('watched_percent'),
+            'notes' => $user->lessonNotes()
+                ->where('lesson_id', $lesson->id)
+                ->orderByRaw('video_timestamp_seconds is null, video_timestamp_seconds')
+                ->orderBy('id')
+                ->get(),
         ]);
     }
 }

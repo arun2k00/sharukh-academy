@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'course_id', 'course_module_id', 'live_class_id', 'title', 'slug', 'type',
     'description', 'content', 'video_url', 'video_id', 'duration_minutes',
-    'sort_order', 'is_preview', 'is_published',
+    'sort_order', 'is_preview', 'is_published', 'is_required',
 ])]
 class Lesson extends Model
 {
@@ -34,6 +34,7 @@ class Lesson extends Model
             'type' => LessonType::class,
             'is_preview' => 'boolean',
             'is_published' => 'boolean',
+            'is_required' => 'boolean',
         ];
     }
 

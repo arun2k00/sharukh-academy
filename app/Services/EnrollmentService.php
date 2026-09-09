@@ -39,11 +39,16 @@ class EnrollmentService
             ]);
 
             if (! $enrollment->exists) {
+                $enrolledAt = now();
+
                 $enrollment->fill([
                     'status' => EnrollmentStatus::Active,
                     'source' => $source,
-                    'enrolled_at' => now(),
+                    'enrolled_at' => $enrolledAt,
                     'progress_percent' => 0,
+                    // The course's access policy (§9) decides how long this
+                    // grant lasts; lifetime access leaves this null.
+                    'expires_at' => $course->computeAccessExpiry($enrolledAt),
                 ]);
             }
 

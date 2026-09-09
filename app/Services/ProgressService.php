@@ -108,11 +108,12 @@ class ProgressService
     }
 
     /**
-     * Completion percentage over every published lesson in the course.
+     * Completion percentage over the lessons this course's completion mode
+     * counts — every published lesson, or only those marked required.
      */
     public function percentFor(User $user, Course $course): int
     {
-        $total = $course->lessons()->where('is_published', true)->count();
+        $total = $this->certificates->countableLessonsQuery($course)->count();
 
         if ($total === 0) {
             return 0;
@@ -125,11 +126,13 @@ class ProgressService
 
     public function completedLessonCount(User $user, Course $course): int
     {
+        $countableIds = $this->certificates->countableLessonsQuery($course)->pluck('id');
+
         return LessonProgress::query()
             ->where('user_id', $user->id)
             ->where('course_id', $course->id)
             ->where('is_completed', true)
-            ->whereHas('lesson', fn ($query) => $query->where('is_published', true))
+            ->whereIn('lesson_id', $countableIds)
             ->count();
     }
 

@@ -14,11 +14,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 #[Fillable([
     'course_id', 'instructor_id', 'title', 'slug', 'description', 'preparation_notes',
     'scheduled_at', 'duration_minutes', 'zoom_url', 'zoom_meeting_id', 'zoom_passcode',
-    'recording_url', 'status',
+    'recording_url', 'status', 'banner_path', 'is_featured',
 ])]
 class LiveClass extends Model
 {
@@ -38,6 +39,7 @@ class LiveClass extends Model
         return [
             'scheduled_at' => 'datetime',
             'status' => LiveClassStatus::class,
+            'is_featured' => 'boolean',
         ];
     }
 
@@ -76,6 +78,32 @@ class LiveClass extends Model
     public function lessons(): HasMany
     {
         return $this->hasMany(Lesson::class);
+    }
+
+    /**
+     * @return HasMany<LiveClassAttendance, $this>
+     */
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(LiveClassAttendance::class);
+    }
+
+    /**
+     * @return HasMany<LiveClassReminderLog, $this>
+     */
+    public function reminderLogs(): HasMany
+    {
+        return $this->hasMany(LiveClassReminderLog::class);
+    }
+
+    /**
+     * @return Attribute<string|null, never>
+     */
+    protected function bannerUrl(): Attribute
+    {
+        return Attribute::get(fn (): ?string => $this->banner_path
+            ? Storage::disk('public')->url($this->banner_path)
+            : null);
     }
 
     /**

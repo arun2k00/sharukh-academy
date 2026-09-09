@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Services\CurriculumService;
+use App\Services\EnrollmentService;
 use App\Services\ProgressService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ class LessonCompletionController extends Controller
     public function __construct(
         private readonly ProgressService $progress,
         private readonly CurriculumService $curriculum,
+        private readonly EnrollmentService $enrollments,
     ) {}
 
     public function store(Request $request, Course $course, Lesson $lesson): RedirectResponse
@@ -25,7 +27,8 @@ class LessonCompletionController extends Controller
         $user = $request->user();
         $this->progress->markComplete($user, $lesson);
 
-        $next = $this->curriculum->nextLesson($course, $lesson);
+        $enrollment = $this->enrollments->accessFor($user, $course);
+        $next = $this->curriculum->nextLesson($course, $lesson, $enrollment);
 
         if ($next !== null) {
             return redirect()->route('learn.lesson', [$course, $next]);

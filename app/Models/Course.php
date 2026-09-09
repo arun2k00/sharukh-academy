@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\CourseAccessType;
+use App\Enums\CourseCompletionMode;
 use App\Enums\CourseLevel;
 use App\Enums\CourseStatus;
 use App\Support\Duration;
 use App\Support\YouTube;
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Database\Factories\CourseFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -22,9 +26,11 @@ use Illuminate\Support\Facades\Storage;
 
 #[Fillable([
     'category_id', 'instructor_id', 'title', 'slug', 'short_description', 'description',
-    'thumbnail_path', 'preview_video_url', 'preview_video_id', 'price', 'compare_at_price',
+    'thumbnail_path', 'banner_path', 'preview_video_url', 'preview_video_id', 'price', 'compare_at_price',
     'level', 'language', 'status', 'is_featured', 'sort_order', 'outcomes', 'requirements',
     'audience', 'certificate_enabled', 'completion_threshold', 'published_at',
+    'certificate_template_id', 'access_type', 'access_duration_days', 'access_fixed_expiry_date',
+    'completion_mode', 'completion_requires_live_attendance',
 ])]
 class Course extends Model
 {
@@ -47,6 +53,10 @@ class Course extends Model
             'is_featured' => 'boolean',
             'certificate_enabled' => 'boolean',
             'published_at' => 'datetime',
+            'access_type' => CourseAccessType::class,
+            'access_fixed_expiry_date' => 'date',
+            'completion_mode' => CourseCompletionMode::class,
+            'completion_requires_live_attendance' => 'boolean',
         ];
     }
 
@@ -145,6 +155,38 @@ class Course extends Model
         return $this->hasMany(Order::class);
     }
 
+    /**
+     * @return BelongsTo<CertificateTemplate, $this>
+     */
+    public function certificateTemplate(): BelongsTo
+    {
+        return $this->belongsTo(CertificateTemplate::class);
+    }
+
+    /**
+     * @return HasMany<CourseReview, $this>
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(CourseReview::class);
+    }
+
+    /**
+     * @return HasMany<CourseAnnouncement, $this>
+     */
+    public function announcements(): HasMany
+    {
+        return $this->hasMany(CourseAnnouncement::class);
+    }
+
+    /**
+     * @return HasMany<CourseQuestion, $this>
+     */
+    public function questions(): HasMany
+    {
+        return $this->hasMany(CourseQuestion::class);
+    }
+
     public function isPublished(): bool
     {
         return $this->status === CourseStatus::Published;
@@ -153,6 +195,21 @@ class Course extends Model
     public function isFree(): bool
     {
         return (float) $this->price <= 0.0;
+    }
+
+    /**
+     * The enrolment expiry date this course's access policy implies, computed
+     * from the moment a student enrols. Null means access never expires.
+     */
+    public function computeAccessExpiry(CarbonInterface $enrolledAt): ?CarbonImmutable
+    {
+        return match ($this->access_type) {
+            CourseAccessType::LimitedDuration => $this->access_duration_days
+                ? $enrolledAt->toImmutable()->addDays($this->access_duration_days)
+                : null,
+            CourseAccessType::FixedExpiry => $this->access_fixed_expiry_date?->toImmutable()->endOfDay(),
+            default => null,
+        };
     }
 
     /**
@@ -174,6 +231,16 @@ class Course extends Model
                     ->orderBy('id');
             }])
             ->get();
+    }
+
+    /**
+     * @return Attribute<string|null, never>
+     */
+    protected function bannerUrl(): Attribute
+    {
+        return Attribute::get(fn (): ?string => $this->banner_path
+            ? Storage::disk('public')->url($this->banner_path)
+            : null);
     }
 
     /**

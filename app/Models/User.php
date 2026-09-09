@@ -86,6 +86,54 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Order::class);
     }
 
+    /**
+     * @return HasMany<LessonNote, $this>
+     */
+    public function lessonNotes(): HasMany
+    {
+        return $this->hasMany(LessonNote::class);
+    }
+
+    /**
+     * @return HasMany<LessonBookmark, $this>
+     */
+    public function lessonBookmarks(): HasMany
+    {
+        return $this->hasMany(LessonBookmark::class);
+    }
+
+    /**
+     * @return HasMany<CourseReview, $this>
+     */
+    public function courseReviews(): HasMany
+    {
+        return $this->hasMany(CourseReview::class);
+    }
+
+    /**
+     * @return HasMany<CourseQuestion, $this>
+     */
+    public function courseQuestions(): HasMany
+    {
+        return $this->hasMany(CourseQuestion::class);
+    }
+
+    /**
+     * @return HasMany<SupportTicket, $this>
+     */
+    public function supportTickets(): HasMany
+    {
+        return $this->hasMany(SupportTicket::class);
+    }
+
+    /**
+     * @return HasMany<LiveClassAttendance, $this>
+     */
+    public function liveClassAttendances(): HasMany
+    {
+        return $this->hasMany(LiveClassAttendance::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === UserRole::Admin;

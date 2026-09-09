@@ -14,7 +14,8 @@ use Illuminate\Database\Eloquent\Collection;
 class CurriculumService
 {
     /**
-     * Every published lesson of a course in curriculum order.
+     * Every published lesson of a course in curriculum order, regardless of
+     * content-drip state. Used for the full outline display.
      *
      * @return Collection<int, Lesson>
      */
@@ -24,7 +25,33 @@ class CurriculumService
             ->where('lessons.course_id', $course->id)
             ->when($publishedOnly, fn ($query) => $query->where('lessons.is_published', true))
             ->inCurriculumOrder()
+            ->with('module')
             ->get();
+    }
+
+    /**
+     * The subset of lessons a student may actually be routed to right now:
+     * every ordered lesson whose module has unlocked for their enrolment.
+     *
+     * A null enrolment (e.g. an admin previewing) skips drip filtering
+     * entirely — server-side authorization is still enforced separately by
+     * `LessonPolicy`, so this only ever affects *where navigation points*,
+     * never what is actually reachable.
+     *
+     * @return Collection<int, Lesson>
+     */
+    public function accessibleLessons(Course $course, ?Enrollment $enrollment): Collection
+    {
+        $lessons = $this->orderedLessons($course);
+
+        if ($enrollment === null) {
+            return $lessons;
+        }
+
+        return $lessons
+            ->filter(fn (Lesson $lesson): bool => $lesson->module === null
+                || $lesson->module->isUnlockedFor($enrollment->enrolled_at))
+            ->values();
     }
 
     public function firstLesson(Course $course): ?Lesson
@@ -32,19 +59,20 @@ class CurriculumService
         return $this->orderedLessons($course)->first();
     }
 
-    public function nextLesson(Course $course, Lesson $current): ?Lesson
+    public function nextLesson(Course $course, Lesson $current, ?Enrollment $enrollment = null): ?Lesson
     {
-        return $this->neighbour($course, $current, 1);
+        return $this->neighbour($this->accessibleLessons($course, $enrollment), $current, 1);
     }
 
-    public function previousLesson(Course $course, Lesson $current): ?Lesson
+    public function previousLesson(Course $course, Lesson $current, ?Enrollment $enrollment = null): ?Lesson
     {
-        return $this->neighbour($course, $current, -1);
+        return $this->neighbour($this->accessibleLessons($course, $enrollment), $current, -1);
     }
 
     /**
-     * Where a returning student should land: the lesson they last opened, or
-     * failing that the first lesson they have not completed yet.
+     * Where a returning student should land: the lesson they last opened (if
+     * it is still unlocked), or failing that the first unlocked lesson they
+     * have not completed yet.
      */
     public function resumeLesson(User $user, Course $course, ?Enrollment $enrollment = null): ?Lesson
     {
@@ -53,7 +81,7 @@ class CurriculumService
             ->where('course_id', $course->id)
             ->first();
 
-        $lessons = $this->orderedLessons($course);
+        $lessons = $this->accessibleLessons($course, $enrollment);
 
         if ($lessons->isEmpty()) {
             return null;
@@ -77,9 +105,11 @@ class CurriculumService
             ?? $lessons->first();
     }
 
-    private function neighbour(Course $course, Lesson $current, int $offset): ?Lesson
+    /**
+     * @param  Collection<int, Lesson>  $lessons
+     */
+    private function neighbour(Collection $lessons, Lesson $current, int $offset): ?Lesson
     {
-        $lessons = $this->orderedLessons($course);
         $index = $lessons->search(fn (Lesson $lesson): bool => $lesson->id === $current->id);
 
         if ($index === false) {
