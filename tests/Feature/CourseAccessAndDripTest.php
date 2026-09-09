@@ -196,7 +196,11 @@ class CourseAccessAndDripTest extends TestCase
         $final = Lesson::factory()->create(['course_id' => $course->id, 'course_module_id' => $finalModule->id, 'sort_order' => 1]);
 
         $student = $this->student();
-        Enrollment::factory()->create(['user_id' => $student->id, 'course_id' => $course->id]);
+        Enrollment::factory()->create([
+            'user_id' => $student->id,
+            'course_id' => $course->id,
+            'enrolled_at' => now(),
+        ]);
 
         $next = app(CurriculumService::class)->nextLesson(
             $course,
