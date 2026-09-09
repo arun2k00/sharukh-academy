@@ -18,6 +18,9 @@ class AcademyNotification extends Notification
 {
     /**
      * @param  array<string, string>  $mailVariables
+     * @param  array<string, mixed>  $extra  Additional fields merged into the
+     *                                       stored database payload — used where a notification needs to be
+     *                                       matched later, e.g. de-duplicating a scheduled reminder.
      */
     public function __construct(
         public readonly string $kind,
@@ -26,6 +29,7 @@ class AcademyNotification extends Notification
         public readonly ?string $url = null,
         public readonly ?string $mailTemplateKey = null,
         public readonly array $mailVariables = [],
+        public readonly array $extra = [],
     ) {}
 
     /**
@@ -46,6 +50,7 @@ class AcademyNotification extends Notification
             'title' => $this->title,
             'body' => $this->body,
             'url' => $this->url,
+            ...$this->extra,
         ];
     }
 

@@ -170,7 +170,21 @@ class NotificationDispatcher
             title: 'Your access to '.$enrollment->course->title.' expires soon',
             body: 'Your enrolment ends in '.$daysLeft.' '.str('day')->plural($daysLeft).'. Finish up any lessons you want to keep.',
             url: route('learn.course', $enrollment->course),
+            extra: ['enrollment_id' => $enrollment->id],
         ));
+    }
+
+    /**
+     * Whether an access-expiring notification has already been sent for this
+     * enrolment, so the daily reminder sweep never repeats itself.
+     */
+    public function hasSentAccessExpiringNotice(Enrollment $enrollment): bool
+    {
+        return $enrollment->loadMissing('user')->user->notifications()
+            ->where('type', AcademyNotification::class)
+            ->whereJsonContains('data->kind', 'access_expiring')
+            ->whereJsonContains('data->enrollment_id', $enrollment->id)
+            ->exists();
     }
 
     /**
