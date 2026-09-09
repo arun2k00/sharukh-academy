@@ -84,6 +84,12 @@ return [
 
         'resource_max_kb' => 20480,
         'resource_mimes' => ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv', 'txt', 'zip', 'jpg', 'jpeg', 'png', 'webp'],
+
+        // Certificate artwork is composited at native resolution for print
+        // and social-share quality, so it gets a larger allowance and only
+        // the two raster formats GD can read for this purpose.
+        'certificate_max_kb' => 10240,
+        'certificate_mimes' => ['png', 'jpg', 'jpeg'],
     ],
 
 ];

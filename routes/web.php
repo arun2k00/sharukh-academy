@@ -7,6 +7,7 @@ use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\CourseCatalogController;
 use App\Http\Controllers\CoursePreviewController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LiveClassCalendarController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Student;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,13 @@ Route::post('/contact', ContactMessageController::class)
 
 Route::get('/verify-certificate/{certificate:certificate_number}', CertificateVerificationController::class)
     ->name('certificates.verify');
+Route::get('/verify-certificate/{certificate:certificate_number}/image', Student\CertificateImageController::class)
+    ->name('certificates.verify-image');
+
+// Live class detail doubles as its own public "share" preview page (§5):
+// guests and non-enrolled students see a restricted view with no Zoom URL;
+// only an enrolled, authenticated student is ever offered the join action.
+Route::get('/live-classes/{liveClass:slug}', [Student\LiveClassController::class, 'show'])->name('live-classes.show');
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +98,7 @@ Route::middleware($studentMiddleware)->group(function (): void {
     Route::get('my-courses', Student\MyCourseController::class)->name('my-courses');
 
     Route::post('courses/{course:slug}/enroll', Student\EnrollmentController::class)->name('courses.enroll');
+    Route::post('courses/{course:slug}/reviews', Student\CourseReviewController::class)->name('courses.reviews.store');
 
     // Learning
     Route::get('learn/{course:slug}', [Student\LearnController::class, 'show'])->name('learn.course');
@@ -107,6 +116,25 @@ Route::middleware($studentMiddleware)->group(function (): void {
         ->scopeBindings()
         ->middleware('throttle:progress')
         ->name('lessons.watch');
+    Route::post('learn/{course:slug}/lesson/{lesson:slug}/bookmark', Student\LessonBookmarkController::class)
+        ->scopeBindings()
+        ->name('lessons.bookmark');
+
+    // Private lesson notes
+    Route::post('learn/{course:slug}/lesson/{lesson:slug}/notes', [Student\LessonNoteController::class, 'store'])
+        ->scopeBindings()
+        ->name('notes.store');
+    Route::put('notes/{note}', [Student\LessonNoteController::class, 'update'])->name('notes.update');
+    Route::delete('notes/{note}', [Student\LessonNoteController::class, 'destroy'])->name('notes.destroy');
+
+    Route::get('bookmarks', Student\BookmarkListController::class)->name('bookmarks.index');
+
+    // Course Q&A
+    Route::get('learn/{course:slug}/questions', [Student\CourseQuestionController::class, 'index'])->name('questions.index');
+    Route::post('learn/{course:slug}/questions', [Student\CourseQuestionController::class, 'store'])->name('questions.store');
+    Route::delete('questions/{question}', [Student\CourseQuestionController::class, 'destroy'])->name('questions.destroy');
+    Route::post('questions/{question}/replies', Student\CourseQuestionReplyController::class)->name('questions.replies.store');
+    Route::delete('question-replies/{reply}', Student\CourseQuestionReplyDestroyController::class)->name('questions.replies.destroy');
 
     // Protected downloads
     Route::get('resources/lessons/{resource}', Student\LessonResourceDownloadController::class)->name('resources.lesson');
@@ -114,13 +142,27 @@ Route::middleware($studentMiddleware)->group(function (): void {
 
     // Live classes
     Route::get('live-classes', [Student\LiveClassController::class, 'index'])->name('live-classes.index');
-    Route::get('live-classes/{liveClass:slug}', [Student\LiveClassController::class, 'show'])->name('live-classes.show');
     Route::get('live-classes/{liveClass:slug}/join', Student\LiveClassJoinController::class)->name('live-classes.join');
+    Route::get('live-classes/{liveClass:slug}/calendar.ics', LiveClassCalendarController::class)->name('live-classes.calendar');
+    Route::get('my-attendance', Student\AttendanceController::class)->name('attendance.index');
 
     // Certificates
     Route::get('certificates', [Student\CertificateController::class, 'index'])->name('certificates.index');
     Route::get('certificates/{certificate:certificate_number}', [Student\CertificateController::class, 'show'])->name('certificates.show');
     Route::get('certificates/{certificate:certificate_number}/print', [Student\CertificateController::class, 'print'])->name('certificates.print');
+    Route::get('certificates/{certificate:certificate_number}/image', Student\CertificateImageController::class)->name('certificates.image');
+
+    // Notifications
+    Route::get('notifications', [Student\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/{notification}/read', [Student\NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::post('notifications/read-all', [Student\NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+
+    // Support
+    Route::get('support', [Student\SupportTicketController::class, 'index'])->name('support.index');
+    Route::get('support/create', [Student\SupportTicketController::class, 'create'])->name('support.create');
+    Route::post('support', [Student\SupportTicketController::class, 'store'])->name('support.store');
+    Route::get('support/{ticket}', [Student\SupportTicketController::class, 'show'])->name('support.show');
+    Route::post('support/{ticket}/replies', Student\SupportTicketReplyController::class)->name('support.replies.store');
 
     // Profile
     Route::get('profile', [Student\ProfileController::class, 'edit'])->name('profile.edit');
@@ -166,6 +208,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('live-classes', Admin\LiveClassController::class)->parameters(['live-classes' => 'liveClass']);
     Route::post('live-classes/{liveClass}/resources', [Admin\LiveClassResourceController::class, 'store'])->name('live-classes.resources.store');
     Route::delete('live-class-resources/{resource}', [Admin\LiveClassResourceController::class, 'destroy'])->name('live-classes.resources.destroy');
+    Route::get('live-classes/{liveClass}/attendance', [Admin\LiveClassAttendanceController::class, 'edit'])->name('live-classes.attendance.edit');
+    Route::put('live-classes/{liveClass}/attendance', [Admin\LiveClassAttendanceController::class, 'update'])->name('live-classes.attendance.update');
 
     Route::resource('students', Admin\StudentController::class);
 
@@ -178,10 +222,34 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('certificates', [Admin\CertificateController::class, 'index'])->name('certificates.index');
     Route::delete('certificates/{certificate}', [Admin\CertificateController::class, 'destroy'])->name('certificates.destroy');
 
+    Route::resource('certificate-templates', Admin\CertificateTemplateController::class)
+        ->parameters(['certificate-templates' => 'certificate_template'])
+        ->except(['show']);
+    Route::get('certificate-templates/{certificate_template}/preview', [Admin\CertificateTemplateController::class, 'preview'])
+        ->name('certificate-templates.preview');
+
     Route::resource('categories', Admin\CategoryController::class)->except(['show']);
     Route::resource('instructors', Admin\InstructorController::class)->except(['show']);
     Route::resource('testimonials', Admin\TestimonialController::class)->except(['show']);
     Route::resource('faqs', Admin\FaqController::class)->except(['show']);
+    Route::resource('announcements', Admin\CourseAnnouncementController::class)->except(['show']);
+
+    Route::get('reviews', [Admin\CourseReviewController::class, 'index'])->name('reviews.index');
+    Route::patch('reviews/{review}/toggle', [Admin\CourseReviewController::class, 'toggle'])->name('reviews.toggle');
+    Route::delete('reviews/{review}', [Admin\CourseReviewController::class, 'destroy'])->name('reviews.destroy');
+
+    Route::get('questions', [Admin\CourseQuestionController::class, 'index'])->name('questions.index');
+
+    Route::get('support-tickets', [Admin\SupportTicketController::class, 'index'])->name('support-tickets.index');
+    Route::get('support-tickets/{ticket}', [Admin\SupportTicketController::class, 'show'])->name('support-tickets.show');
+    Route::patch('support-tickets/{ticket}/status', [Admin\SupportTicketController::class, 'updateStatus'])->name('support-tickets.status');
+    Route::post('support-tickets/{ticket}/replies', Admin\SupportTicketReplyController::class)->name('support-tickets.replies.store');
+
+    Route::get('email-templates', [Admin\EmailTemplateController::class, 'index'])->name('email-templates.index');
+    Route::get('email-templates/{emailTemplate}/edit', [Admin\EmailTemplateController::class, 'edit'])->name('email-templates.edit');
+    Route::put('email-templates/{emailTemplate}', [Admin\EmailTemplateController::class, 'update'])->name('email-templates.update');
+
+    Route::get('activity-log', Admin\ActivityLogController::class)->name('activity-log.index');
 
     Route::get('messages', [Admin\ContactMessageController::class, 'index'])->name('messages.index');
     Route::get('messages/{message}', [Admin\ContactMessageController::class, 'show'])->name('messages.show');

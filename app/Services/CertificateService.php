@@ -23,6 +23,10 @@ use Illuminate\Support\Str;
  */
 class CertificateService
 {
+    public function __construct(
+        private readonly NotificationDispatcher $notifications,
+    ) {}
+
     /**
      * Whether the student has met this course's completion requirements.
      *
@@ -103,7 +107,7 @@ class CertificateService
             ->where('course_id', $course->id)
             ->first();
 
-        return DB::transaction(fn (): Certificate => Certificate::firstOrCreate(
+        $certificate = DB::transaction(fn (): Certificate => Certificate::firstOrCreate(
             ['user_id' => $user->id, 'course_id' => $course->id],
             [
                 'certificate_number' => $this->generateNumber(),
@@ -114,6 +118,12 @@ class CertificateService
                 'issued_at' => now(),
             ],
         ));
+
+        if ($certificate->wasRecentlyCreated) {
+            $this->notifications->certificateIssued($user, $certificate);
+        }
+
+        return $certificate;
     }
 
     public function find(User $user, Course $course): ?Certificate

@@ -1,6 +1,9 @@
 <x-layouts.auth title="Sign in" heading="Sign in" subheading="Continue where you left off.">
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
+        @if ($redirectTo ?? null)
+            <input type="hidden" name="redirect" value="{{ $redirectTo }}">
+        @endif
 
         <x-ui.field label="Email address" for="email" :error="$errors->first('email')">
             <x-ui.input id="email" name="email" type="email" value="{{ old('email') }}"

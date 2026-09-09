@@ -18,6 +18,7 @@ class EnrollmentService
 {
     public function __construct(
         private readonly ProgressService $progress,
+        private readonly NotificationDispatcher $notifications,
     ) {}
 
     /**
@@ -62,7 +63,13 @@ class EnrollmentService
                 $enrollment->order_id = $order->id;
             }
 
+            $isNewGrant = ! $enrollment->exists || $enrollment->isDirty('status');
+
             $enrollment->save();
+
+            if ($isNewGrant) {
+                $this->notifications->enrollmentConfirmed($user, $course);
+            }
 
             return $enrollment;
         });
