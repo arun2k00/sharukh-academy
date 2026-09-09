@@ -29,7 +29,10 @@ class LiveClassAttendanceController extends Controller
             ->orderBy('name')
             ->get();
 
-        $existing = $liveClass->attendances()->pluck('status', 'user_id');
+        // Normalised to plain strings so the view never has to guess whether
+        // the enum cast applied to a given pluck() result.
+        $existing = $liveClass->attendances()->pluck('status', 'user_id')
+            ->map(fn ($status) => $status instanceof AttendanceStatus ? $status->value : $status);
 
         return view('admin.live-classes.attendance', [
             'liveClass' => $liveClass,

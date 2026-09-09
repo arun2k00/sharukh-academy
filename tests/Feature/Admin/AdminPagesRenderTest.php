@@ -3,11 +3,17 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Category;
+use App\Models\CertificateTemplate;
 use App\Models\ContactMessage;
+use App\Models\CourseAnnouncement;
 use App\Models\CourseModule;
+use App\Models\CourseQuestion;
+use App\Models\CourseReview;
+use App\Models\Enrollment;
 use App\Models\Faq;
 use App\Models\Instructor;
 use App\Models\LiveClass;
+use App\Models\SupportTicket;
 use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -35,6 +41,13 @@ class AdminPagesRenderTest extends TestCase
         $faq = Faq::factory()->create();
         $message = ContactMessage::factory()->create();
         $student = $this->student();
+        Enrollment::factory()->create(['user_id' => $student->id, 'course_id' => $course->id]);
+
+        $certificateTemplate = CertificateTemplate::factory()->create();
+        $announcement = CourseAnnouncement::factory()->create(['course_id' => $course->id]);
+        $review = CourseReview::factory()->create(['course_id' => $course->id, 'user_id' => $student->id]);
+        $question = CourseQuestion::factory()->create(['course_id' => $course->id, 'user_id' => $student->id]);
+        $ticket = SupportTicket::factory()->create(['user_id' => $student->id]);
 
         $urls = [
             route('admin.dashboard'),
@@ -74,6 +87,20 @@ class AdminPagesRenderTest extends TestCase
             route('admin.messages.index'),
             route('admin.messages.show', $message),
             route('admin.settings.edit'),
+            route('admin.certificate-templates.index'),
+            route('admin.certificate-templates.create'),
+            route('admin.certificate-templates.edit', $certificateTemplate),
+            route('admin.announcements.index'),
+            route('admin.announcements.create'),
+            route('admin.announcements.edit', $announcement),
+            route('admin.reviews.index'),
+            route('admin.questions.index'),
+            route('admin.support-tickets.index'),
+            route('admin.support-tickets.show', $ticket),
+            route('admin.email-templates.index'),
+            route('admin.email-templates.edit', 'welcome'),
+            route('admin.activity-log.index'),
+            route('admin.live-classes.attendance.edit', $liveClass),
         ];
 
         foreach ($urls as $url) {
