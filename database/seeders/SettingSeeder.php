@@ -13,7 +13,7 @@ class SettingSeeder extends Seeder
         $settings->setMany([
             'academy_name' => 'Edunova',
             'site_tagline' => 'Job-ready data engineering training with live classes, real projects and certification.',
-            'hero_heading' => 'Get job-ready in data engineering, taught by people who build it for a living.',
+            'hero_heading' => 'Stop learning theory. Start building pipelines.',
             'hero_subheading' => 'Six focused programmes across the modern data stack — SQL Server, Python, Azure Data Factory, Snowflake, dbt and Power BI — each with live classes, production-grade projects and a certificate that means something.',
             'contact_email' => 'hello@edunova.com',
             'contact_phone' => '+91 80 4718 2200',

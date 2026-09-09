@@ -12,6 +12,7 @@ use App\Models\Instructor;
 use App\Models\Lesson;
 use App\Models\LiveClass;
 use App\Models\Testimonial;
+use Database\Seeders\Support\DemoAvatarFactory;
 use Database\Seeders\Support\DemoFileFactory;
 use Database\Seeders\Support\DemoThumbnailFactory;
 use Illuminate\Database\Seeder;
@@ -133,7 +134,8 @@ class CatalogSeeder extends Seeder
 
         $instructors = [];
 
-        foreach ($rows as $row) {
+        foreach ($rows as $index => $row) {
+            $row['avatar_path'] = DemoAvatarFactory::make($row['slug'], $row['name'], $index);
             $instructors[$row['slug']] = Instructor::updateOrCreate(['slug' => $row['slug']], $row);
         }
 
@@ -172,6 +174,11 @@ class CatalogSeeder extends Seeder
                     $definition['title'],
                     $definition['category'],
                     $definition['level']->value,
+                ),
+                'banner_path' => DemoThumbnailFactory::makeBanner(
+                    $definition['slug'],
+                    $definition['title'],
+                    $definition['category'],
                 ),
                 'preview_video_id' => self::DEMO_VIDEO_IDS[0],
                 'preview_video_url' => 'https://www.youtube.com/watch?v='.self::DEMO_VIDEO_IDS[0],

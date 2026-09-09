@@ -8,6 +8,13 @@
             ]" />
         </div>
 
+        @if ($course->banner_url || $course->thumbnail_url)
+            <div class="mx-auto mt-6 max-w-6xl px-5 lg:px-8">
+                <img src="{{ $course->banner_url ?? $course->thumbnail_url }}" alt=""
+                     class="aspect-[3/1] w-full border border-ink-200 object-cover">
+            </div>
+        @endif
+
         <div class="mx-auto grid max-w-6xl gap-10 px-5 py-10 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-14">
             <div class="lg:col-span-7">
                 @if ($course->category)

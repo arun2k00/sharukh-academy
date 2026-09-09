@@ -54,7 +54,7 @@ final class DemoThumbnailFactory
             .'<line x1="80" y1="600" x2="1200" y2="600" stroke="@accent" stroke-opacity="0.3"/>'
             .'<text x="80" y="132" fill="@accent" font-family="Helvetica, Arial, sans-serif" font-size="22" letter-spacing="5">@category</text>'
             .'@title'
-            .'<text x="80" y="646" fill="@accent" font-family="Helvetica, Arial, sans-serif" font-size="21" letter-spacing="3.5">OACER ACADEMY</text>'
+            .'<text x="80" y="646" fill="@accent" font-family="Helvetica, Arial, sans-serif" font-size="21" letter-spacing="3.5">EDUNOVA</text>'
             .'<text x="1200" y="646" fill="@accent" fill-opacity="0.75" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="21">@level</text>'
             .'</svg>',
             [
@@ -67,6 +67,37 @@ final class DemoThumbnailFactory
         );
 
         $path = 'courses/'.$courseSlug.'.svg';
+
+        Storage::disk('public')->put($path, $svg);
+
+        return $path;
+    }
+
+    /**
+     * Write a wide banner-format header image for the course's own page and
+     * return its path on the public disk.
+     */
+    public static function makeBanner(string $courseSlug, string $title, string $categorySlug): string
+    {
+        [$background, $accent] = self::PALETTE[$categorySlug] ?? self::PALETTE['design'];
+
+        $svg = strtr(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" width="1500" height="500" role="img">'
+            .'<rect width="1500" height="500" fill="@bg"/>'
+            .'<rect x="60" y="60" width="1380" height="380" fill="none" stroke="@accent" stroke-opacity="0.25"/>'
+            .'<text x="120" y="225" fill="@accent" font-family="Helvetica, Arial, sans-serif" font-size="24" letter-spacing="5">@category</text>'
+            .'<text x="118" y="305" fill="#ffffff" font-family="Georgia, serif" font-size="54">@title</text>'
+            .'<text x="120" y="400" fill="@accent" fill-opacity="0.75" font-family="Helvetica, Arial, sans-serif" font-size="21" letter-spacing="3.5">EDUNOVA</text>'
+            .'</svg>',
+            [
+                '@bg' => $background,
+                '@accent' => $accent,
+                '@category' => htmlspecialchars(Str::upper($categorySlug), ENT_XML1),
+                '@title' => htmlspecialchars(Str::limit($title, 46), ENT_XML1),
+            ],
+        );
+
+        $path = 'courses/banners/'.$courseSlug.'.svg';
 
         Storage::disk('public')->put($path, $svg);
 

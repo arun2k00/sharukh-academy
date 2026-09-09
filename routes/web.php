@@ -30,6 +30,7 @@ Route::get('/career-paths', [CareerPathController::class, 'index'])->name('caree
 Route::get('/career-paths/{careerPath:slug}', [CareerPathController::class, 'show'])->name('career-paths.show');
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/our-faculty', [PageController::class, 'faculty'])->name('faculty');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', ContactMessageController::class)
     ->middleware('throttle:contact')

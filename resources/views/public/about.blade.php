@@ -51,40 +51,15 @@
         </div>
     </section>
 
-    @if ($instructors->isNotEmpty())
-        <section class="border-y border-ink-200 bg-white">
-            <div class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
-                <x-ui.section-heading eyebrow="The faculty" title="Who teaches here" />
-
-                <div class="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-                    @foreach ($instructors as $instructor)
-                        <article>
-                            @if ($instructor->avatar_url)
-                                <img src="{{ $instructor->avatar_url }}" alt="{{ $instructor->name }}"
-                                     class="aspect-[4/5] w-full object-cover" loading="lazy">
-                            @else
-                                <div class="flex aspect-[4/5] w-full items-center justify-center bg-ink-900">
-                                    <span class="font-serif text-4xl text-sand-200">{{ str($instructor->name)->substr(0, 1) }}</span>
-                                </div>
-                            @endif
-
-                            <h3 class="mt-5 text-lg">{{ $instructor->name }}</h3>
-                            @if ($instructor->headline)
-                                <p class="mt-1 text-[0.8125rem] text-ink-500">{{ $instructor->headline }}</p>
-                            @endif
-                            <p class="mt-3 text-sm/6 text-ink-600">
-                                {{ \Illuminate\Support\Str::limit(strip_tags((string) $instructor->bio), 180) }}
-                            </p>
-                            <p class="mt-3 text-[0.8125rem] text-ink-500">
-                                {{ $instructor->courses_count }} {{ str('course')->plural($instructor->courses_count) }} ·
-                                {{ $instructor->experience_years }} years in practice
-                            </p>
-                        </article>
-                    @endforeach
-                </div>
+    <section class="border-y border-ink-200 bg-white">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 px-5 py-12 lg:px-8">
+            <div>
+                <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">The faculty</p>
+                <h2 class="mt-3 text-[1.5rem] leading-tight">Meet the people who teach here</h2>
             </div>
-        </section>
-    @endif
+            <x-ui.button :href="route('faculty')" variant="outline" icon-after="arrow-right">Our Faculty</x-ui.button>
+        </div>
+    </section>
 
     @if ($testimonials->isNotEmpty())
         <section class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">

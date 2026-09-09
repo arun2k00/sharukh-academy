@@ -14,7 +14,6 @@ class PageController extends Controller
     public function about(): View
     {
         return view('public.about', [
-            'instructors' => Instructor::query()->withCount(['courses' => fn ($query) => $query->published()])->get(),
             'testimonials' => Testimonial::query()->published()->take(4)->get(),
             'stats' => [
                 'courses' => Course::query()->published()->count(),
@@ -28,6 +27,17 @@ class PageController extends Controller
     {
         return view('public.contact', [
             'settings' => $settings->all(),
+        ]);
+    }
+
+    public function faculty(): View
+    {
+        return view('public.faculty', [
+            'instructors' => Instructor::query()
+                ->withCount(['courses' => fn ($query) => $query->published()])
+                ->orderByDesc('is_featured')
+                ->orderBy('id')
+                ->get(),
         ]);
     }
 }

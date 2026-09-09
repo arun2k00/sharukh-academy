@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Faq;
-use App\Models\Instructor;
 use App\Models\LiveClass;
 use App\Models\Testimonial;
 use App\Services\SettingsRepository;
@@ -52,8 +51,6 @@ class HomeController extends Controller
             'settings' => $settings->all(),
             'featuredCourses' => $featured,
             'upcomingClasses' => $upcomingClasses,
-            'leadInstructor' => Instructor::query()->where('is_featured', true)->first()
-                ?? Instructor::query()->oldest('id')->first(),
             'testimonials' => Testimonial::query()->published()->where('is_featured', true)->take(3)->get(),
             'faqs' => Faq::query()->published()->whereNull('course_id')->take(6)->get(),
             'categories' => Category::query()->orderBy('sort_order')->get(),

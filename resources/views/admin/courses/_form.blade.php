@@ -232,9 +232,9 @@
             </div>
         </x-ui.panel>
 
-        <x-ui.panel title="Banner image" description="Wide image used on the live-class share page for this course's sessions.">
+        <x-ui.panel title="Banner image" description="Wide header image shown at the top of this course's public page. Recommended ratio 3:1.">
             @if ($course->banner_url)
-                <img src="{{ $course->banner_url }}" alt="" class="mb-4 aspect-[16/9] w-full border border-ink-200 object-cover">
+                <img src="{{ $course->banner_url }}" alt="" class="mb-4 aspect-[3/1] w-full border border-ink-200 object-cover">
             @endif
             <x-ui.field label="Banner" for="banner" :error="$errors->first('banner')">
                 <input id="banner" name="banner" type="file" accept="image/*"

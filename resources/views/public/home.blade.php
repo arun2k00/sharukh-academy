@@ -138,59 +138,6 @@
         </div>
     </section>
 
-    {{-- Instructor --}}
-    @if ($leadInstructor)
-        <section class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
-            <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
-                <div class="lg:col-span-4">
-                    @if ($leadInstructor->avatar_url)
-                        <img src="{{ $leadInstructor->avatar_url }}" alt="{{ $leadInstructor->name }}"
-                             class="aspect-[4/5] w-full object-cover" loading="lazy">
-                    @else
-                        <div class="flex aspect-[4/5] w-full items-center justify-center bg-ink-900">
-                            <span class="font-serif text-5xl text-sand-200">{{ str($leadInstructor->name)->substr(0, 1) }}</span>
-                        </div>
-                    @endif
-                </div>
-
-                <div class="lg:col-span-8">
-                    <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">Who teaches here</p>
-                    <h2 class="mt-4 text-[1.75rem] leading-tight">{{ $leadInstructor->name }}</h2>
-                    @if ($leadInstructor->headline)
-                        <p class="mt-2 text-[0.975rem] text-ink-600">{{ $leadInstructor->headline }}</p>
-                    @endif
-
-                    @if ($leadInstructor->bio)
-                        <div class="prose-academy mt-6 max-w-2xl">
-                            @foreach (preg_split('/\r\n|\r|\n/', $leadInstructor->bio) as $paragraph)
-                                @if (trim($paragraph) !== '')
-                                    <p>{{ $paragraph }}</p>
-                                @endif
-                            @endforeach
-                        </div>
-                    @endif
-
-                    @if (! empty($leadInstructor->credentials))
-                        <ul class="mt-8 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
-                            @foreach ($leadInstructor->credentials as $credential)
-                                <li class="flex gap-2.5 text-sm text-ink-700">
-                                    <x-ui.icon name="check" class="mt-1 size-3.5 shrink-0 text-pine-600" />
-                                    {{ $credential }}
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
-
-                    @if ($leadInstructor->experience_years)
-                        <p class="mt-8 border-t border-ink-200 pt-5 text-[0.8125rem] text-ink-500">
-                            {{ $leadInstructor->experience_years }} years in practice
-                        </p>
-                    @endif
-                </div>
-            </div>
-        </section>
-    @endif
-
     {{-- Testimonials --}}
     @if ($testimonials->isNotEmpty())
         <section class="border-y border-ink-200 bg-white">

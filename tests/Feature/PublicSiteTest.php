@@ -29,7 +29,7 @@ class PublicSiteTest extends TestCase
         $this->get(route('home'))->assertOk()->assertSee($featured->title);
     }
 
-    public function test_the_homepage_shows_the_featured_instructor_and_testimonials(): void
+    public function test_the_homepage_shows_testimonials_and_faqs_but_not_instructors(): void
     {
         $instructor = Instructor::factory()->featured()->create();
         $testimonial = Testimonial::factory()->featured()->create();
@@ -37,9 +37,19 @@ class PublicSiteTest extends TestCase
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee($instructor->name)
             ->assertSee($testimonial->name)
-            ->assertSee('Do you offer refunds?');
+            ->assertSee('Do you offer refunds?')
+            ->assertDontSee($instructor->name);
+    }
+
+    public function test_the_faculty_page_shows_every_instructor_with_the_featured_one_leading(): void
+    {
+        $lead = Instructor::factory()->featured()->create(['name' => 'Priyanka Lead']);
+        $other = Instructor::factory()->create(['name' => 'Rahul Support']);
+
+        $this->get(route('faculty'))
+            ->assertOk()
+            ->assertSeeInOrder([$lead->name, $other->name]);
     }
 
     public function test_the_catalogue_lists_published_courses_and_filters_by_category(): void
