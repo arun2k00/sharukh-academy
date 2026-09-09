@@ -1,4 +1,4 @@
-@props(['title', 'heading' => null, 'description' => null, 'academySettings' => []])
+@props(['title', 'heading' => null, 'description' => null, 'academySettings' => [], 'unreadNotifications' => 0])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
@@ -32,7 +32,7 @@
 
     <div class="mx-auto flex max-w-7xl gap-10 px-5 py-8 lg:px-8 lg:py-10">
         <aside class="hidden w-52 shrink-0 lg:block">
-            <div class="sticky top-24"><x-student.nav /></div>
+            <div class="sticky top-24"><x-student.nav :unread-notifications="$unreadNotifications" /></div>
         </aside>
 
         {{-- Mobile navigation drawer --}}
@@ -47,7 +47,7 @@
                         <x-ui.icon name="close" class="size-5" />
                     </button>
                 </div>
-                <x-student.nav />
+                <x-student.nav :unread-notifications="$unreadNotifications" />
             </div>
         </div>
 

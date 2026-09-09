@@ -11,15 +11,27 @@
     </p>
 
     <div class="mt-7 border border-ink-200 bg-white p-4 sm:p-8" style="container-type: inline-size;">
-        <x-site.certificate :certificate="$certificate" />
+        <x-site.certificate-display :certificate="$certificate" :image-route="route('certificates.image', $certificate)" />
     </div>
 
     <div class="mt-6 flex flex-wrap gap-3">
-        <x-ui.button :href="route('certificates.print', $certificate)" target="_blank" rel="noopener">
-            Open printable version
-        </x-ui.button>
-        <x-ui.button :href="route('certificates.verify', $certificate)" variant="outline" target="_blank" rel="noopener"
-                     icon-after="external-link">
+        @if ($certificate->course->certificateTemplate)
+            <x-ui.button :href="route('certificates.image', ['certificate' => $certificate, 'download' => 1])" icon="download">
+                Download certificate
+            </x-ui.button>
+            <x-ui.button :href="route('certificates.print', $certificate)" variant="outline" target="_blank" rel="noopener">
+                Open printable version
+            </x-ui.button>
+        @else
+            <x-ui.button :href="route('certificates.print', $certificate)" target="_blank" rel="noopener">
+                Open printable version
+            </x-ui.button>
+        @endif
+        <x-ui.share-menu :url="route('certificates.verify', $certificate)" :title="'My certificate — '.$certificate->course_title" label="Share certificate" />
+    </div>
+
+    <div class="mt-4">
+        <x-ui.button :href="route('certificates.verify', $certificate)" variant="ghost" size="sm" target="_blank" rel="noopener" icon-after="external-link">
             Public verification page
         </x-ui.button>
     </div>

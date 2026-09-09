@@ -27,6 +27,7 @@ class SupportTicketController extends Controller
     {
         return view('student.support.index', [
             'tickets' => $request->user()->supportTickets()->latest('id')->get(),
+            'categories' => self::CATEGORIES,
         ]);
     }
 

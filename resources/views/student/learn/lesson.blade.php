@@ -23,8 +23,22 @@
 
         <x-ui.flash />
 
-        <p class="text-[0.8125rem] text-ink-500">{{ $lesson->module->title }}</p>
-        <h1 class="mt-1.5 text-[1.5rem] leading-tight">{{ $lesson->title }}</h1>
+        <div class="flex items-start justify-between gap-4">
+            <div>
+                <p class="text-[0.8125rem] text-ink-500">{{ $lesson->module->title }}</p>
+                <h1 class="mt-1.5 text-[1.5rem] leading-tight">{{ $lesson->title }}</h1>
+            </div>
+
+            <form method="POST" action="{{ route('lessons.bookmark', [$course, $lesson]) }}" class="shrink-0">
+                @csrf
+                <button type="submit"
+                        class="flex items-center gap-1.5 border px-3 py-1.5 text-[0.8125rem] {{ isset($bookmarkedIds[$lesson->id]) ? 'border-brass-500 bg-brass-50 text-brass-700' : 'border-ink-300 text-ink-600 hover:bg-sand-100' }}"
+                        title="{{ isset($bookmarkedIds[$lesson->id]) ? 'Remove bookmark' : 'Bookmark this lesson' }}">
+                    <x-ui.icon name="tag" class="size-3.5" />
+                    {{ isset($bookmarkedIds[$lesson->id]) ? 'Bookmarked' : 'Bookmark' }}
+                </button>
+            </form>
+        </div>
 
         {{-- Lesson body: the shape depends entirely on the lesson type --}}
         <div class="mt-6">
@@ -106,6 +120,62 @@
                 </ul>
             </section>
         @endif
+
+        {{-- Private notes (§15) — visible only to the author, never the instructor or admin. --}}
+        <section class="mt-9">
+            <h2 class="font-sans text-[0.6875rem] font-medium tracking-[0.12em] text-ink-500 uppercase">
+                My notes
+            </h2>
+
+            @if ($notes->isNotEmpty())
+                <ul class="mt-3 divide-y divide-ink-200 border-y border-ink-200">
+                    @foreach ($notes as $note)
+                        <li class="py-3">
+                            <div class="flex items-start justify-between gap-4">
+                                <div class="min-w-0">
+                                    @if ($note->timestamp_label)
+                                        <span class="mr-2 font-mono text-[0.75rem] text-pine-700">{{ $note->timestamp_label }}</span>
+                                    @endif
+                                    <span class="text-[0.9375rem] whitespace-pre-line text-ink-700">{{ $note->content }}</span>
+                                </div>
+                                <form method="POST" action="{{ route('notes.destroy', $note) }}" class="shrink-0"
+                                      onsubmit="return confirm('Delete this note?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-[0.75rem] text-ink-400 hover:text-red-700">Delete</button>
+                                </form>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+
+            <form method="POST" action="{{ route('notes.store', [$course, $lesson]) }}" class="mt-4 space-y-3">
+                @csrf
+                <x-ui.textarea name="content" rows="2" required placeholder="Write a private note about this lesson…"></x-ui.textarea>
+                <div class="flex flex-wrap items-center gap-3">
+                    <label class="flex items-center gap-2 text-[0.8125rem] text-ink-600">
+                        Timestamp (mm:ss, optional)
+                        <input type="text" name="video_timestamp_display" x-ref="noteTimestampDisplay"
+                               pattern="[0-9]+:[0-5][0-9]" placeholder="12:34"
+                               class="w-20 border border-ink-300 px-2 py-1 text-sm"
+                               @input="$refs.noteTimestampSeconds.value = (() => {
+                                   const parts = $event.target.value.split(':');
+                                   return parts.length === 2 ? (parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10)) : '';
+                               })()">
+                        <input type="hidden" name="video_timestamp_seconds" x-ref="noteTimestampSeconds">
+                    </label>
+                    @if ($lesson->type === \App\Enums\LessonType::Video)
+                        <button type="button" variant="outline"
+                                @click="const p = currentPosition(); if (p) { const m = Math.floor(p.seconds / 60); const s = String(p.seconds % 60).padStart(2, '0'); $refs.noteTimestampDisplay.value = m + ':' + s; $refs.noteTimestampSeconds.value = p.seconds; }"
+                                class="border border-ink-300 px-3 py-1.5 text-[0.8125rem] text-ink-600 hover:bg-sand-100">
+                            Use current video time
+                        </button>
+                    @endif
+                </div>
+                <x-ui.button type="submit" size="sm">Save note</x-ui.button>
+            </form>
+        </section>
 
         {{-- Completion --}}
         <section class="mt-9 border border-ink-200 bg-white p-5">

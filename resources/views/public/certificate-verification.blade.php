@@ -1,5 +1,6 @@
 <x-layouts.public title="Certificate verification"
-                  description="Confirm that a certificate issued by Oacer Academy is genuine.">
+                  :description="$certificate->student_name.' completed '.$certificate->course_title.' — verified certificate '.$certificate->certificate_number"
+                  :og-image="$certificate->course->certificateTemplate ? route('certificates.verify-image', $certificate) : null">
     <div class="mx-auto max-w-3xl px-5 py-16 lg:px-8 lg:py-20">
         <x-ui.badge class="bg-pine-50 text-pine-700">Verified certificate</x-ui.badge>
 
@@ -7,6 +8,13 @@
         <p class="mt-4 text-[0.975rem]/7 text-ink-600">
             The record below was issued by {{ config('academy.name') }} and has not been altered.
         </p>
+
+        @if ($certificate->course->certificateTemplate)
+            <div class="mt-8 bg-sand-100 p-4">
+                <x-site.certificate-display :certificate="$certificate" :image-route="route('certificates.verify-image', $certificate)"
+                                            class="border border-ink-200 shadow-sm" />
+            </div>
+        @endif
 
         <dl class="mt-10 divide-y divide-ink-200 border-y border-ink-200">
             <div class="grid gap-1 py-5 sm:grid-cols-3 sm:gap-6">

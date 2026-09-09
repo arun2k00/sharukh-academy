@@ -24,6 +24,11 @@
             </div>
 
             <div class="flex items-center gap-3">
+                <a href="{{ route('questions.index', $course) }}"
+                   class="hidden items-center gap-1.5 text-[0.8125rem] text-ink-600 hover:text-ink-900 sm:flex">
+                    <x-ui.icon name="message" class="size-4" />
+                    Questions
+                </a>
                 {{ $headerMeta ?? '' }}
                 <button type="button" @click="curriculum = true"
                         class="flex items-center gap-2 border border-ink-300 px-3 py-1.5 text-[0.8125rem] text-ink-700 xl:hidden">

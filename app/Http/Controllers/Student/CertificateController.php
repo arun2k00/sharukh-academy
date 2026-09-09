@@ -15,7 +15,7 @@ class CertificateController extends Controller
         return view('student.certificates.index', [
             'certificates' => Certificate::query()
                 ->where('user_id', $request->user()->id)
-                ->with('course')
+                ->with('course.certificateTemplate')
                 ->latest('issued_at')
                 ->get(),
         ]);
@@ -25,7 +25,7 @@ class CertificateController extends Controller
     {
         Gate::authorize('view', $certificate);
 
-        $certificate->load('course');
+        $certificate->load('course.certificateTemplate');
 
         return view('student.certificates.show', [
             'certificate' => $certificate,
@@ -40,6 +40,8 @@ class CertificateController extends Controller
     public function print(Certificate $certificate): View
     {
         Gate::authorize('view', $certificate);
+
+        $certificate->load('course.certificateTemplate');
 
         return view('student.certificates.print', [
             'certificate' => $certificate,

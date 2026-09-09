@@ -86,5 +86,10 @@ class AppServiceProvider extends ServiceProvider
             $view->with('openSupportTickets', SupportTicket::query()->whereNot('status', SupportTicketStatus::Resolved)->count());
             $view->with('unansweredQuestions', CourseQuestion::query()->doesntHave('replies')->count());
         });
+
+        View::composer('components.layouts.app', function ($view): void {
+            $user = auth()->user();
+            $view->with('unreadNotifications', $user?->unreadNotifications()->count() ?? 0);
+        });
     }
 }

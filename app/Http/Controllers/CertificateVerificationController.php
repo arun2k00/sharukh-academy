@@ -14,6 +14,8 @@ class CertificateVerificationController extends Controller
 {
     public function __invoke(Certificate $certificate): View
     {
+        $certificate->load('course.certificateTemplate');
+
         return view('public.certificate-verification', [
             'certificate' => $certificate,
         ]);

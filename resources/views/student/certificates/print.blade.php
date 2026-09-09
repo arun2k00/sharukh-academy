@@ -13,7 +13,8 @@
         </div>
 
         <div style="container-type: inline-size;">
-            <x-site.certificate :certificate="$certificate" class="shadow-sm print:shadow-none" />
+            <x-site.certificate-display :certificate="$certificate" :image-route="route('certificates.image', $certificate)"
+                                        class="shadow-sm print:shadow-none" />
         </div>
 
         <p class="mt-4 text-center text-[0.75rem] text-ink-500 print:mt-2">
