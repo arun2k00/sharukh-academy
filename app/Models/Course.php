@@ -124,6 +124,16 @@ class Course extends Model
     }
 
     /**
+     * @return BelongsToMany<CareerPath, $this>
+     */
+    public function careerPaths(): BelongsToMany
+    {
+        return $this->belongsToMany(CareerPath::class)
+            ->withPivot(['stage_label', 'sort_order'])
+            ->withTimestamps();
+    }
+
+    /**
      * @return HasMany<Testimonial, $this>
      */
     public function testimonials(): HasMany

@@ -58,6 +58,7 @@ class CatalogSeeder extends Seeder
             ['name' => 'Design', 'slug' => 'design', 'description' => 'Identity, systems and the craft of visual decisions.'],
             ['name' => 'Business', 'slug' => 'business', 'description' => 'Running the commercial side of a practice.'],
             ['name' => 'Analytics', 'slug' => 'analytics', 'description' => 'Turning numbers into decisions people act on.'],
+            ['name' => 'Data Engineering', 'slug' => 'data-engineering', 'description' => 'Building the pipelines and warehouses everything else runs on.'],
         ];
 
         $categories = [];
@@ -114,6 +115,33 @@ class CatalogSeeder extends Seeder
                     'Chartered Accountant, 18 years in practice',
                     'Fractional CFO to 20+ founder-led companies',
                     'Advised on raises totalling ₹300 crore',
+                ],
+            ],
+            [
+                'slug' => 'vikram-nair',
+                'name' => 'Vikram Nair',
+                'headline' => 'Senior data engineer, ex-Flipkart, 12 years building pipelines',
+                'is_featured' => true,
+                'experience_years' => 12,
+                'bio' => "I have spent twelve years moving data from wherever it is produced to wherever someone needs to trust it — first at two e-commerce companies during their highest-growth years, then as a consultant to teams rebuilding pipelines that had outgrown their original design.\n\nMost data engineering teaching starts with syntax. I start with the failure modes: what happens when the source schema changes without warning, when a job runs twice, when yesterday's numbers do not match today's backfill. Everything here is written to survive contact with a real production system, not just a tutorial dataset.",
+                'credentials' => [
+                    'Built the order-events pipeline handling 40M+ daily records at Flipkart',
+                    'Led the migration of three legacy warehouses onto Snowflake',
+                    'Azure Data Engineer Associate (DP-203) certified',
+                    'Independent consultant to data teams at four Series B+ startups',
+                ],
+            ],
+            [
+                'slug' => 'ananya-krishnan',
+                'name' => 'Ananya Krishnan',
+                'headline' => 'Analytics engineering lead, dbt and BI specialist',
+                'experience_years' => 9,
+                'bio' => "I sit at the point where raw pipelines become numbers an executive will actually act on — nine years split between warehouse modelling and the dashboards built on top of it.\n\nThe gap I keep finding is not technical skill, it is discipline: models nobody documented, dashboards nobody can trace back to a source table, metrics that quietly mean two different things in two different reports. I teach the workflow that closes that gap — tested models, documented sources, and a BI layer that traces cleanly back to where every number came from.",
+                'credentials' => [
+                    'Analytics engineering lead for a 200-person fintech data team',
+                    'Migrated a 300+ model warehouse from stored procedures to dbt',
+                    'Microsoft Certified: Power BI Data Analyst Associate',
+                    'Built the executive reporting layer used in board decks at two companies',
                 ],
             ],
         ];

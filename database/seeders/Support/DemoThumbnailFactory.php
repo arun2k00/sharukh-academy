@@ -24,6 +24,7 @@ final class DemoThumbnailFactory
         'design' => ['#1a1a18', '#ece7db'],
         'business' => ['#6f4d26', '#f2e6cf'],
         'analytics' => ['#102a1f', '#b2cfbe'],
+        'data-engineering' => ['#0f1f33', '#bcd4f0'],
     ];
 
     /**

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Auth;
+use App\Http\Controllers\CareerPathController;
 use App\Http\Controllers\CertificateVerificationController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\CourseCatalogController;
@@ -24,6 +25,9 @@ Route::get('/courses/{course:slug}', [CourseCatalogController::class, 'show'])->
 Route::get('/courses/{course:slug}/preview/{lesson:slug}', CoursePreviewController::class)
     ->scopeBindings()
     ->name('courses.preview');
+
+Route::get('/career-paths', [CareerPathController::class, 'index'])->name('career-paths.index');
+Route::get('/career-paths/{careerPath:slug}', [CareerPathController::class, 'show'])->name('career-paths.show');
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
@@ -229,6 +233,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         ->name('certificate-templates.preview');
 
     Route::resource('categories', Admin\CategoryController::class)->except(['show']);
+    Route::resource('career-paths', Admin\CareerPathController::class)
+        ->parameters(['career-paths' => 'career_path'])
+        ->except(['show']);
     Route::resource('instructors', Admin\InstructorController::class)->except(['show']);
     Route::resource('testimonials', Admin\TestimonialController::class)->except(['show']);
     Route::resource('faqs', Admin\FaqController::class)->except(['show']);

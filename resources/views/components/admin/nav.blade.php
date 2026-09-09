@@ -8,6 +8,7 @@
         ],
         'Learning' => [
             ['label' => 'Courses', 'icon' => 'book-open', 'route' => 'admin.courses.index', 'pattern' => 'admin.courses.*'],
+            ['label' => 'Career paths', 'icon' => 'layers', 'route' => 'admin.career-paths.index', 'pattern' => 'admin.career-paths.*'],
             ['label' => 'Live classes', 'icon' => 'broadcast', 'route' => 'admin.live-classes.index', 'pattern' => 'admin.live-classes.*'],
             ['label' => 'Certificates', 'icon' => 'award', 'route' => 'admin.certificates.index', 'pattern' => 'admin.certificates.index|admin.certificates.destroy'],
             ['label' => 'Certificate templates', 'icon' => 'sliders', 'route' => 'admin.certificate-templates.index', 'pattern' => 'admin.certificate-templates.*'],

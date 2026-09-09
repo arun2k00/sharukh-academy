@@ -18,6 +18,16 @@
 
                 <p class="mt-5 max-w-2xl text-[1.0625rem]/8 text-ink-600">{{ $course->short_description }}</p>
 
+                @if ($course->careerPaths->isNotEmpty())
+                    <p class="mt-4 text-[0.8125rem] text-ink-500">
+                        Part of
+                        @foreach ($course->careerPaths as $careerPath)
+                            <a href="{{ route('career-paths.show', $careerPath) }}"
+                               class="font-medium text-pine-700 hover:underline">{{ $careerPath->title }}</a>{{ ! $loop->last ? ',' : '' }}
+                        @endforeach
+                    </p>
+                @endif
+
                 @if ($course->instructor)
                     <div class="mt-7 flex items-center gap-3">
                         <x-ui.avatar :src="$course->instructor->avatar_url" :name="$course->instructor->name" size="sm" />

@@ -54,6 +54,7 @@ class CourseCatalogController extends Controller
             'instructor',
             'category',
             'testimonials' => fn ($query) => $query->published()->take(3),
+            'careerPaths' => fn ($query) => $query->published(),
         ]);
 
         $curriculum = $course->curriculum();

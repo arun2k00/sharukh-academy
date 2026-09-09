@@ -14,9 +14,11 @@ production** — assets are compiled during development and the built files are 
 
 **Public website**
 Homepage, course catalogue with title search and category filtering, full course detail
-pages with curriculum, instructor, reviews and FAQ sections, free preview lessons, about
-and contact pages, a public certificate verification page (with optional QR code), and a
-shareable live-class page that never exposes the Zoom link.
+pages with curriculum, instructor, reviews and FAQ sections, free preview lessons, career
+paths (a staged roadmap sequencing several courses into a job-ready programme, without
+turning them into a separate bundle to buy), about and contact pages, a public certificate
+verification page (with optional QR code), and a shareable live-class page that never
+exposes the Zoom link.
 
 **Student learning area**
 Dashboard with a resume-where-you-left-off panel, my-courses, the learning interface
@@ -33,7 +35,7 @@ desk, and profile and password management.
 Dashboard, course management (access policy, completion rules, drip), a curriculum
 builder with reliable ordering controls, lesson management for every lesson type,
 resource uploads, live class scheduling with attendance marking, a visual drag-to-position
-certificate template editor, students, enrolments, certificates, categories, instructors,
+certificate template editor, career paths, students, enrolments, certificates, categories, instructors,
 testimonials, FAQs, course announcements, review moderation, Q&A oversight, the support
 desk, editable email templates, an activity log, contact messages, brand settings (name,
 logo, favicon, accent colours — no code changes needed), and other site settings.
@@ -110,7 +112,7 @@ These are local demonstration credentials only. Change or remove them before goi
 php artisan test
 ```
 
-258 tests cover authentication and rate limiting, authorisation boundaries (guests,
+269 tests cover authentication and rate limiting, authorisation boundaries (guests,
 students and administrators), enrolment, progress and completion arithmetic, protected
 downloads, live-class join windows and reminder scheduling, certificate issuing and
 duplicate prevention, course access and content-drip enforcement, brand settings, and

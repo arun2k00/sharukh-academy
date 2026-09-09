@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\CareerPath;
 use App\Models\Category;
 use App\Models\CertificateTemplate;
 use App\Models\ContactMessage;
@@ -44,6 +45,8 @@ class AdminPagesRenderTest extends TestCase
         Enrollment::factory()->create(['user_id' => $student->id, 'course_id' => $course->id]);
 
         $certificateTemplate = CertificateTemplate::factory()->create();
+        $careerPath = CareerPath::factory()->create();
+        $careerPath->courses()->attach($course->id, ['stage_label' => 'FOUNDATION', 'sort_order' => 1]);
         $announcement = CourseAnnouncement::factory()->create(['course_id' => $course->id]);
         $review = CourseReview::factory()->create(['course_id' => $course->id, 'user_id' => $student->id]);
         $question = CourseQuestion::factory()->create(['course_id' => $course->id, 'user_id' => $student->id]);
@@ -75,6 +78,9 @@ class AdminPagesRenderTest extends TestCase
             route('admin.categories.index'),
             route('admin.categories.create'),
             route('admin.categories.edit', $category),
+            route('admin.career-paths.index'),
+            route('admin.career-paths.create'),
+            route('admin.career-paths.edit', $careerPath),
             route('admin.instructors.index'),
             route('admin.instructors.create'),
             route('admin.instructors.edit', $instructor),

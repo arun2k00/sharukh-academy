@@ -1,6 +1,7 @@
 @php
     $links = [
         ['label' => 'Courses', 'route' => 'courses.index', 'active' => request()->routeIs('courses.*')],
+        ['label' => 'Career paths', 'route' => 'career-paths.index', 'active' => request()->routeIs('career-paths.*')],
         ['label' => 'About', 'route' => 'about', 'active' => request()->routeIs('about')],
         ['label' => 'Contact', 'route' => 'contact', 'active' => request()->routeIs('contact')],
     ];
