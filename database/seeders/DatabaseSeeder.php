@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             CatalogSeeder::class,
             CertificateTemplateSeeder::class,
             DemoAccountSeeder::class,
+            EngagementSeeder::class,
         ]);
 
         $this->command?->newLine();

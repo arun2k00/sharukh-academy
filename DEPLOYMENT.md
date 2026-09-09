@@ -195,14 +195,21 @@ Visit the site and confirm:
 
 ---
 
-## Optional: scheduled tasks
+## Scheduled tasks (live class reminders, access-expiry notices)
 
-The application works without cron. If you want Laravel's scheduler available for future
-tasks, add one cron entry:
+The academy sends live class reminders (24h / 1h / 15min before) and course
+access-expiry notices from a single scheduled command, `academy:send-reminders`,
+which runs every five minutes via Laravel's scheduler. It needs no permanent
+queue worker or daemon — just one cron entry pointed at `schedule:run`:
 
 ```
 * * * * * cd /home/youruser/oacer-academy && php artisan schedule:run >> /dev/null 2>&1
 ```
+
+Without this cron entry, the application still works normally, but scheduled
+reminder emails and expiry notices will not go out — the command is
+idempotent and safe to leave running from cron indefinitely, so add it during
+initial setup rather than waiting until reminders are needed.
 
 ---
 

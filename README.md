@@ -13,21 +13,30 @@ production** — assets are compiled during development and the built files are 
 ## What is included
 
 **Public website**
-Homepage, course catalogue with category filtering, full course detail pages with
-curriculum, instructor and FAQ sections, free preview lessons, about and contact pages,
-and a public certificate verification page.
+Homepage, course catalogue with title search and category filtering, full course detail
+pages with curriculum, instructor, reviews and FAQ sections, free preview lessons, about
+and contact pages, a public certificate verification page (with optional QR code), and a
+shareable live-class page that never exposes the Zoom link.
 
 **Student learning area**
 Dashboard with a resume-where-you-left-off panel, my-courses, the learning interface
 (YouTube lessons, text lessons, live-class lessons), per-lesson progress with automatic
-video watch tracking, protected downloadable resources, Zoom live classes, certificates
-(on-screen, printable and publicly verifiable), and profile and password management.
+video watch tracking, content drip (lessons unlock on a schedule an admin sets),
+time-limited or lifetime course access, protected downloadable resources, a full live
+class experience (before/during/after states, countdown, add-to-calendar, reminders,
+manual attendance), certificates (on-screen, printable and publicly verifiable, from an
+admin-designed template), a notification centre, course announcements, per-course
+Q&A, private per-lesson notes, lesson bookmarks, course reviews, a lightweight support
+desk, and profile and password management.
 
 **Administration panel**
-Dashboard, course management, a curriculum builder with reliable ordering controls,
-lesson management for every lesson type, resource uploads, live class scheduling,
-students, enrolments, certificates, categories, instructors, testimonials, FAQs, contact
-messages and editable site settings.
+Dashboard, course management (access policy, completion rules, drip), a curriculum
+builder with reliable ordering controls, lesson management for every lesson type,
+resource uploads, live class scheduling with attendance marking, a visual drag-to-position
+certificate template editor, students, enrolments, certificates, categories, instructors,
+testimonials, FAQs, course announcements, review moderation, Q&A oversight, the support
+desk, editable email templates, an activity log, contact messages, brand settings (name,
+logo, favicon, accent colours — no code changes needed), and other site settings.
 
 ---
 
@@ -35,7 +44,7 @@ messages and editable site settings.
 
 | | |
 |---|---|
-| PHP | 8.3 or newer (`pdo_mysql`, `mbstring`, `openssl`, `fileinfo`, `ctype`, `json`, `bcmath`) |
+| PHP | 8.3 or newer (`pdo_mysql`, `mbstring`, `openssl`, `fileinfo`, `ctype`, `json`, `bcmath`, `gd`) |
 | Database | MySQL 8+ or MariaDB 10.6+ |
 | Web server | Apache or LiteSpeed with `mod_rewrite`, or nginx |
 | Composer | 2.x |
@@ -101,10 +110,11 @@ These are local demonstration credentials only. Change or remove them before goi
 php artisan test
 ```
 
-180 tests cover authentication and rate limiting, authorisation boundaries (guests,
+258 tests cover authentication and rate limiting, authorisation boundaries (guests,
 students and administrators), enrolment, progress and completion arithmetic, protected
-downloads, live-class join windows, certificate issuing and duplicate prevention,
-curriculum ordering, and the rendering of every page in the application.
+downloads, live-class join windows and reminder scheduling, certificate issuing and
+duplicate prevention, course access and content-drip enforcement, brand settings, and
+the rendering of every page in the application.
 
 ---
 
@@ -137,6 +147,14 @@ Lesson videos accept any YouTube URL shape; only the extracted video ID is store
 embeds are served from `youtube-nocookie.com`. Zoom links are restricted to Zoom's own
 domains over HTTPS, are never rendered into a page, and are only handed out by a redirect
 to an enrolled student inside the join window.
+
+### Scheduled tasks
+
+Live class reminders and course access-expiry notices are sent by a single cron-driven
+command rather than a queue worker — see **[Scheduled tasks in
+DEPLOYMENT.md](DEPLOYMENT.md#scheduled-tasks-live-class-reminders-access-expiry-notices)**.
+Skipping this cron entry does not break the application, but those notifications will not
+go out.
 
 ---
 
