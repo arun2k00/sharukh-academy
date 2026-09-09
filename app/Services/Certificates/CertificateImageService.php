@@ -65,8 +65,9 @@ class CertificateImageService
         ob_start();
         imagepng($image, null, 6);
         $bytes = (string) ob_get_clean();
-        imagedestroy($image);
 
+        // No imagedestroy() call: it has done nothing since PHP 8.0 and PHP
+        // 8.5 now deprecates calling it — GC reclaims the GdImage instead.
         return $bytes;
     }
 
@@ -182,7 +183,6 @@ class CertificateImageService
             (int) round($targetWidth), (int) round($targetHeight),
             imagesx($signature), imagesy($signature),
         );
-        imagedestroy($signature);
     }
 
     private function overlayQrCode(GdImage $image, string $url): void
@@ -192,12 +192,12 @@ class CertificateImageService
         $size = (int) round(min($canvasWidth, $canvasHeight) * self::QR_SIZE_RATIO);
         $margin = (int) round($size * 0.25);
 
-        $result = Builder::create()
-            ->writer(new PngWriter)
-            ->data($url)
-            ->size($size)
-            ->margin(4)
-            ->build();
+        $result = (new Builder(
+            writer: new PngWriter,
+            data: $url,
+            size: $size,
+            margin: 4,
+        ))->build();
 
         $qr = @imagecreatefromstring($result->getString());
 
@@ -209,7 +209,6 @@ class CertificateImageService
         $destY = $canvasHeight - $size - $margin;
 
         imagecopy($image, $qr, $destX, $destY, 0, 0, imagesx($qr), imagesy($qr));
-        imagedestroy($qr);
     }
 
     private function allocateColor(GdImage $image, string $hex): int

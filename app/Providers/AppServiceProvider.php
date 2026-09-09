@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Enums\SupportTicketStatus;
 use App\Models\ContactMessage;
 use App\Models\Course;
+use App\Models\CourseQuestion;
+use App\Models\SupportTicket;
 use App\Services\Payments\PaymentGateway;
 use App\Services\Payments\PaymentManager;
 use App\Services\SettingsRepository;
@@ -80,6 +83,8 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('components.layouts.admin', function ($view): void {
             $view->with('unreadMessages', ContactMessage::query()->where('is_read', false)->count());
+            $view->with('openSupportTickets', SupportTicket::query()->whereNot('status', SupportTicketStatus::Resolved)->count());
+            $view->with('unansweredQuestions', CourseQuestion::query()->doesntHave('replies')->count());
         });
     }
 }

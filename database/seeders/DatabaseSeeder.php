@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SettingSeeder::class,
             CatalogSeeder::class,
+            CertificateTemplateSeeder::class,
             DemoAccountSeeder::class,
         ]);
 

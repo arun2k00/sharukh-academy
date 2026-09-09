@@ -67,10 +67,26 @@ class CertificateTemplateController extends Controller
     {
         Gate::authorize('update', $certificateTemplate);
 
+        $fields = [];
+
+        foreach ([...CertificateTemplate::REQUIRED_FIELDS, ...CertificateTemplate::OPTIONAL_FIELDS] as $key) {
+            $fields[$key] = [
+                ...$certificateTemplate->fieldConfig($key),
+                'enabled' => array_key_exists($key, $certificateTemplate->fields ?? []),
+            ];
+        }
+
+        // Required fields are always positioned, whether or not the admin
+        // has touched them yet.
+        foreach (CertificateTemplate::REQUIRED_FIELDS as $key) {
+            $fields[$key]['enabled'] = true;
+        }
+
         return view('admin.certificate-templates.edit', [
             'template' => $certificateTemplate,
             'fieldLabels' => CertificateTemplate::fieldLabels(),
             'fonts' => CertificateImageService::availableFonts(),
+            'initialFields' => $fields,
         ]);
     }
 

@@ -1,4 +1,4 @@
-@props(['title', 'heading' => null, 'description' => null, 'unreadMessages' => 0, 'academySettings' => []])
+@props(['title', 'heading' => null, 'description' => null, 'unreadMessages' => 0, 'openSupportTickets' => 0, 'unansweredQuestions' => 0, 'academySettings' => []])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
@@ -17,7 +17,7 @@
                 <x-site.logo tone="light" />
             </div>
             <div class="flex-1 overflow-y-auto px-2 py-4">
-                <x-admin.nav :unread-messages="$unreadMessages" />
+                <x-admin.nav :unread-messages="$unreadMessages" :open-support-tickets="$openSupportTickets" :unanswered-questions="$unansweredQuestions" />
             </div>
             <div class="border-t border-white/10 p-4">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 px-1 text-[0.8125rem] text-ink-400 hover:text-white">
@@ -74,7 +74,7 @@
                 </button>
             </div>
             <div class="flex-1 overflow-y-auto px-2 py-4">
-                <x-admin.nav :unread-messages="$unreadMessages" />
+                <x-admin.nav :unread-messages="$unreadMessages" :open-support-tickets="$openSupportTickets" :unanswered-questions="$unansweredQuestions" />
             </div>
         </div>
     </div>
