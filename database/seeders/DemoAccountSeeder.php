@@ -1,0 +1,144 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Enums\EnrollmentSource;
+use App\Enums\UserRole;
+use App\Models\ContactMessage;
+use App\Models\Course;
+use App\Models\Lesson;
+use App\Models\User;
+use App\Services\EnrollmentService;
+use App\Services\ProgressService;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+
+/**
+ * Demonstration accounts and the enrolment history behind them.
+ *
+ * Progress is recorded through the real services rather than written straight
+ * to the tables, so the seeded state matches what the application produces —
+ * including the certificates that completion triggers.
+ */
+class DemoAccountSeeder extends Seeder
+{
+    /**
+     * Password shared by every seeded account. Local demonstration only.
+     */
+    private const DEMO_PASSWORD = 'password';
+
+    public function run(EnrollmentService $enrollments, ProgressService $progress): void
+    {
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@oaceracademy.test'],
+            [
+                'name' => 'Arun Menon',
+                'password' => Hash::make(self::DEMO_PASSWORD),
+                'email_verified_at' => now(),
+            ],
+        );
+
+        // `role` is not mass assignable, so it is set explicitly.
+        $admin->forceFill(['role' => UserRole::Admin])->save();
+
+        $students = collect([
+            ['name' => 'Meera Sundaram', 'email' => 'meera@example.test'],
+            ['name' => 'Jude Mensah', 'email' => 'jude@example.test'],
+            ['name' => 'Rohit Bansal', 'email' => 'rohit@example.test'],
+            ['name' => 'Fiona Clarke', 'email' => 'fiona@example.test'],
+            ['name' => 'Kwame Boateng', 'email' => 'kwame@example.test'],
+            ['name' => 'Sara Iqbal', 'email' => 'sara@example.test'],
+            ['name' => 'Tom Whitfield', 'email' => 'tom@example.test'],
+        ])->map(function (array $row): User {
+            $user = User::updateOrCreate(
+                ['email' => $row['email']],
+                [
+                    'name' => $row['name'],
+                    'password' => Hash::make(self::DEMO_PASSWORD),
+                    'email_verified_at' => now(),
+                ],
+            );
+
+            $user->forceFill(['role' => UserRole::Student])->save();
+
+            return $user;
+        });
+
+        $courses = Course::query()->published()->with('lessons')->get();
+
+        if ($courses->isEmpty()) {
+            return;
+        }
+
+        // A spread of states: fully complete, part way through, and just started.
+        $plan = [
+            0 => [['course' => 0, 'complete' => 'all'], ['course' => 3, 'complete' => 'half']],
+            1 => [['course' => 1, 'complete' => 'all'], ['course' => 5, 'complete' => 'few']],
+            2 => [['course' => 2, 'complete' => 'half']],
+            3 => [['course' => 3, 'complete' => 'all'], ['course' => 4, 'complete' => 'few']],
+            4 => [['course' => 0, 'complete' => 'half']],
+            5 => [['course' => 4, 'complete' => 'few']],
+            6 => [['course' => 5, 'complete' => 'none']],
+        ];
+
+        foreach ($plan as $studentIndex => $entries) {
+            $student = $students[$studentIndex] ?? null;
+
+            if ($student === null) {
+                continue;
+            }
+
+            foreach ($entries as $entry) {
+                $course = $courses[$entry['course']] ?? null;
+
+                if ($course === null) {
+                    continue;
+                }
+
+                $enrollment = $enrollments->enroll(
+                    $student,
+                    $course,
+                    $course->isFree() ? EnrollmentSource::Free : EnrollmentSource::Admin,
+                );
+
+                $lessons = Lesson::query()
+                    ->where('lessons.course_id', $course->id)
+                    ->where('lessons.is_published', true)
+                    ->inCurriculumOrder()
+                    ->get();
+
+                $take = match ($entry['complete']) {
+                    'all' => $lessons->count(),
+                    'half' => (int) ceil($lessons->count() / 2),
+                    'few' => min(2, $lessons->count()),
+                    default => 0,
+                };
+
+                foreach ($lessons->take($take) as $lesson) {
+                    $progress->markComplete($student, $lesson);
+                }
+
+                if ($take > 0 && $take < $lessons->count()) {
+                    $enrollments->recordAccess($enrollment, $lessons[$take]);
+                }
+            }
+        }
+
+        ContactMessage::query()->delete();
+
+        ContactMessage::create([
+            'name' => 'Vikram Shah',
+            'email' => 'vikram@example.test',
+            'subject' => 'Corporate enrolment for six people',
+            'message' => "Hello,\n\nWe would like to put six of our marketing team through Performance Marketing Foundations in the next quarter. Do you offer a group rate, and can the live sessions be scheduled for a single cohort?\n\nThank you,\nVikram",
+        ]);
+
+        ContactMessage::create([
+            'name' => 'Nadia Haddad',
+            'email' => 'nadia@example.test',
+            'subject' => 'Question before enrolling',
+            'message' => 'Is the brand identity course suitable if I mostly work in product design rather than brand? I want to be able to run an identity project end to end but my background is UI.',
+            'is_read' => true,
+        ]);
+    }
+}

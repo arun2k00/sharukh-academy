@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Http\Requests\Admin;
+
+use App\Enums\CourseLevel;
+use App\Enums\CourseStatus;
+use App\Models\Course;
+use App\Rules\YouTubeUrl;
+use App\Support\UploadRules;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
+
+class CourseRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        $course = $this->route('course');
+
+        return $course instanceof Course
+            ? $this->user()->can('update', $course)
+            : $this->user()->can('create', Course::class);
+    }
+
+    /**
+     * Slug and the list fields are entered loosely and normalised here so the
+     * validation rules see the shape that will actually be stored.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'slug' => str($this->input('slug') ?: $this->input('title'))->slug()->value(),
+            'outcomes' => $this->linesToArray($this->input('outcomes')),
+            'requirements' => $this->linesToArray($this->input('requirements')),
+            'audience' => $this->linesToArray($this->input('audience')),
+            'is_featured' => $this->boolean('is_featured'),
+            'certificate_enabled' => $this->boolean('certificate_enabled'),
+        ]);
+    }
+
+    /**
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        $course = $this->route('course');
+
+        return [
+            'title' => ['required', 'string', 'max:180'],
+            'slug' => [
+                'required', 'string', 'max:180', 'regex:/^[a-z0-9-]+$/',
+                Rule::unique('courses', 'slug')->ignore($course)->withoutTrashed(),
+            ],
+            'short_description' => ['required', 'string', 'max:500'],
+            'description' => ['nullable', 'string', 'max:20000'],
+            'category_id' => ['nullable', Rule::exists('categories', 'id')],
+            'instructor_id' => ['nullable', Rule::exists('instructors', 'id')],
+            'thumbnail' => UploadRules::image(),
+            'preview_video_url' => ['nullable', 'string', 'max:255', new YouTubeUrl],
+            'price' => ['required', 'numeric', 'min:0', 'max:9999999'],
+            'compare_at_price' => ['nullable', 'numeric', 'min:0', 'max:9999999', 'gte:price'],
+            'level' => ['required', new Enum(CourseLevel::class)],
+            'language' => ['required', 'string', 'max:40'],
+            'status' => ['required', new Enum(CourseStatus::class)],
+            'is_featured' => ['boolean'],
+            'sort_order' => ['required', 'integer', 'min:0', 'max:9999'],
+            'outcomes' => ['nullable', 'array', 'max:20'],
+            'outcomes.*' => ['string', 'max:255'],
+            'requirements' => ['nullable', 'array', 'max:20'],
+            'requirements.*' => ['string', 'max:255'],
+            'audience' => ['nullable', 'array', 'max:20'],
+            'audience.*' => ['string', 'max:255'],
+            'certificate_enabled' => ['boolean'],
+            'completion_threshold' => ['required', 'integer', 'min:1', 'max:100'],
+        ];
+    }
+
+    /**
+     * @return list<string>|null
+     */
+    private function linesToArray(mixed $value): ?array
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        if (! is_string($value) || trim($value) === '') {
+            return null;
+        }
+
+        return collect(preg_split('/\r\n|\r|\n/', $value))
+            ->map(fn (string $line): string => trim($line))
+            ->filter()
+            ->values()
+            ->all();
+    }
+}

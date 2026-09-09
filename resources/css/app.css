@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+/*
+| Oacer Academy design tokens
+|
+| A deliberately narrow palette: warm paper, near-black ink for text, one deep
+| pine green for anything interactive, and a muted brass reserved for ratings
+| and small emphasis. Headings use a serif for an editorial feel; everything
+| functional stays in the sans.
+*/
+@theme {
+    --font-sans: 'Instrument Sans', 'Instrument Sans Fallback', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-serif: 'Source Serif 4', 'Source Serif 4 Fallback', ui-serif, Georgia, 'Times New Roman', serif;
+
+    --color-ink-50: #f7f7f6;
+    --color-ink-100: #ececeb;
+    --color-ink-200: #d8d8d5;
+    --color-ink-300: #b4b4af;
+    --color-ink-400: #8a8a84;
+    --color-ink-500: #6b6b65;
+    --color-ink-600: #55554f;
+    --color-ink-700: #454541;
+    --color-ink-800: #2c2c29;
+    --color-ink-900: #1a1a18;
+    --color-ink-950: #0e0e0d;
+
+    --color-sand-50: #fcfbf8;
+    --color-sand-100: #f6f3ec;
+    --color-sand-200: #ece7db;
+    --color-sand-300: #ded6c4;
+    --color-sand-400: #c9bfa8;
+
+    --color-pine-50: #eff5f1;
+    --color-pine-100: #d8e8df;
+    --color-pine-200: #b2cfbe;
+    --color-pine-300: #82af95;
+    --color-pine-400: #518a6c;
+    --color-pine-500: #316b4d;
+    --color-pine-600: #22543b;
+    --color-pine-700: #1b4331;
+    --color-pine-800: #163527;
+    --color-pine-900: #102a1f;
+
+    --color-brass-50: #faf5ea;
+    --color-brass-100: #f2e6cf;
+    --color-brass-500: #a8763a;
+    --color-brass-600: #8c6130;
+    --color-brass-700: #6f4d26;
+
+    --radius-panel: 0.25rem;
+}
+
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-sand-50 text-ink-800 antialiased;
+        font-feature-settings: 'kern', 'liga';
+    }
+
+    /* One consistent focus treatment across links, buttons and fields. */
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-pine-600;
+    }
+
+    h1, h2, h3, h4 {
+        @apply font-serif text-ink-900;
+        text-wrap: balance;
+    }
+
+    /* Reserve the browser's default number spinners for nothing. */
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    /*
+    | Long-form copy entered by an administrator. Styles are scoped here rather
+    | than sprinkled through the templates so every description reads the same.
+    */
+    .prose-academy {
+        @apply text-[0.975rem]/7 text-ink-700;
+    }
+
+    .prose-academy > * + * {
+        @apply mt-4;
+    }
+
+    .prose-academy h2 {
+        @apply mt-8 font-serif text-xl text-ink-900;
+    }
+
+    .prose-academy h3 {
+        @apply mt-6 font-serif text-lg text-ink-900;
+    }
+
+    .prose-academy ul {
+        @apply list-disc space-y-1.5 pl-5 marker:text-ink-300;
+    }
+
+    .prose-academy ol {
+        @apply list-decimal space-y-1.5 pl-5 marker:text-ink-400;
+    }
+
+    .prose-academy a {
+        @apply text-pine-700 underline underline-offset-2 hover:text-pine-800;
+    }
+
+    .prose-academy strong {
+        @apply font-semibold text-ink-900;
+    }
+}
+
+@media print {
+    .print\:hidden {
+        display: none !important;
+    }
+}
