@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Course;
+use App\Models\CourseReview;
 use App\Models\Faq;
 use App\Services\EnrollmentService;
 use App\Services\Payments\PaymentManager;
@@ -22,10 +23,12 @@ class CourseCatalogController extends Controller
             ->filter(fn (Category $category): bool => $category->courses_count > 0);
 
         $activeCategory = $categories->firstWhere('slug', $request->string('category')->toString());
+        $search = $request->string('q')->trim()->toString();
 
         $courses = Course::query()
             ->published()
             ->when($activeCategory, fn ($query) => $query->where('category_id', $activeCategory->id))
+            ->when($search !== '', fn ($query) => $query->where('title', 'like', '%'.$search.'%'))
             ->with(['instructor', 'category'])
             ->withCount(['lessons' => fn ($query) => $query->where('is_published', true)])
             ->ordered()
@@ -35,6 +38,7 @@ class CourseCatalogController extends Controller
             'courses' => $courses,
             'categories' => $categories,
             'activeCategory' => $activeCategory,
+            'search' => $search,
         ]);
     }
 
@@ -55,6 +59,13 @@ class CourseCatalogController extends Controller
         $curriculum = $course->curriculum();
         $user = $request->user();
 
+        $reviews = CourseReview::query()
+            ->where('course_id', $course->id)
+            ->approved()
+            ->with('user')
+            ->latest('id')
+            ->get();
+
         return view('public.courses.show', [
             'course' => $course,
             'curriculum' => $curriculum,
@@ -64,6 +75,9 @@ class CourseCatalogController extends Controller
             'enrollment' => $user !== null ? $enrollments->find($user, $course) : null,
             'hasAccess' => $user !== null && $enrollments->hasAccess($user, $course),
             'paymentsOnline' => $payments->processesPaymentsOnline(),
+            'reviews' => $reviews,
+            'averageRating' => $reviews->isNotEmpty() ? round($reviews->avg('rating'), 1) : null,
+            'myReview' => $user !== null ? CourseReview::where('course_id', $course->id)->where('user_id', $user->id)->first() : null,
             'faqs' => Faq::query()
                 ->published()
                 ->where(fn ($query) => $query->where('course_id', $course->id)->orWhereNull('course_id'))

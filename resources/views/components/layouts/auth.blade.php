@@ -6,7 +6,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $title }} — {{ config('academy.name') }}</title>
+    <title>{{ $title }} — {{ $academySettings['academy_name'] ?? config('academy.name') }}</title>
+    <x-site.brand-head />
     {{ Vite::fonts() }}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -26,7 +27,7 @@
                 </p>
             </div>
 
-            <p class="text-[0.8125rem] text-white/40">&copy; {{ now()->year }} {{ config('academy.name') }}</p>
+            <p class="text-[0.8125rem] text-white/40">&copy; {{ now()->year }} {{ $academySettings['academy_name'] ?? config('academy.name') }}</p>
         </div>
 
         <div class="flex flex-col justify-center px-5 py-12 sm:px-10 lg:px-16">

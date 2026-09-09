@@ -269,6 +269,60 @@
         </section>
     @endif
 
+    {{-- Student reviews --}}
+    <section class="border-t border-ink-200 bg-white">
+        <div class="mx-auto max-w-6xl px-5 py-14 lg:px-8 lg:py-16">
+            <div class="flex flex-wrap items-end justify-between gap-4">
+                <h2 class="text-[1.5rem] leading-tight">Student reviews</h2>
+                @if ($averageRating)
+                    <div class="flex items-center gap-2">
+                        <x-ui.rating :value="round($averageRating)" />
+                        <span class="text-sm text-ink-600">{{ $averageRating }} · {{ $reviews->count() }} {{ str('review')->plural($reviews->count()) }}</span>
+                    </div>
+                @endif
+            </div>
+
+            @if ($hasAccess)
+                <div class="mt-8 border border-ink-200 bg-sand-50 p-5">
+                    <h3 class="font-sans text-[0.9375rem] font-medium text-ink-900">
+                        {{ $myReview ? 'Update your review' : 'Leave a review' }}
+                    </h3>
+                    <form method="POST" action="{{ route('courses.reviews.store', $course) }}" class="mt-4 space-y-4">
+                        @csrf
+                        <div>
+                            <x-ui.label for="rating">Rating</x-ui.label>
+                            <x-ui.select id="rating" name="rating" class="mt-1.5 w-32">
+                                @for ($i = 5; $i >= 1; $i--)
+                                    <option value="{{ $i }}" @selected(old('rating', $myReview?->rating ?? 5) == $i)>{{ $i }} {{ str('star')->plural($i) }}</option>
+                                @endfor
+                            </x-ui.select>
+                        </div>
+                        <x-ui.textarea name="review" rows="3" placeholder="Optional — what stood out?">{{ old('review', $myReview?->review) }}</x-ui.textarea>
+                        <x-ui.button type="submit" size="sm">{{ $myReview ? 'Update review' : 'Submit review' }}</x-ui.button>
+                    </form>
+                </div>
+            @endif
+
+            @if ($reviews->isEmpty())
+                <p class="mt-8 text-sm text-ink-500">No reviews yet — be the first once you are enrolled.</p>
+            @else
+                <div class="mt-8 grid gap-8 sm:grid-cols-2">
+                    @foreach ($reviews as $review)
+                        <div class="border-t border-ink-200 pt-5">
+                            <x-ui.rating :value="$review->rating" />
+                            @if ($review->review)
+                                <p class="mt-3 text-[0.9375rem]/7 text-ink-700">{{ $review->review }}</p>
+                            @endif
+                            <p class="mt-3 text-[0.8125rem] text-ink-500">
+                                {{ $review->user->name }} · {{ $review->created_at->format('j M Y') }}
+                            </p>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    </section>
+
     {{-- FAQ --}}
     @if ($faqs->isNotEmpty())
         <section class="border-t border-ink-200 bg-white">

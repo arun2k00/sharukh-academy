@@ -119,6 +119,30 @@
         @endif
     </section>
 
+    {{-- Upcoming live classes --}}
+    @if ($upcomingClasses->isNotEmpty())
+        <section class="border-b border-ink-200 bg-white">
+            <div class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">
+                <x-ui.section-heading eyebrow="Live sessions" title="Upcoming live classes" />
+
+                <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($upcomingClasses as $liveClass)
+                        <a href="{{ route('live-classes.show', $liveClass) }}" class="group block border border-ink-200 p-5 hover:border-ink-400">
+                            <p class="text-[0.6875rem] font-medium tracking-[0.12em] text-pine-700 uppercase">{{ $liveClass->course->title }}</p>
+                            <h3 class="mt-2 text-[1.0625rem] leading-snug group-hover:underline group-hover:underline-offset-4">
+                                {{ $liveClass->title }}
+                            </h3>
+                            <p class="mt-3 flex items-center gap-1.5 text-[0.8125rem] text-ink-600">
+                                <x-ui.icon name="calendar" class="size-3.5 text-ink-400" />
+                                {{ $liveClass->scheduled_at->format('j F, g:ia') }}
+                            </p>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
     {{-- How it works --}}
     <section class="border-y border-ink-200 bg-white">
         <div class="mx-auto max-w-6xl px-5 py-16 lg:px-8 lg:py-20">

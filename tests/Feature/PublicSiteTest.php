@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\ContactMessage;
 use App\Models\Course;
+use App\Models\CourseReview;
 use App\Models\Faq;
 use App\Models\Instructor;
 use App\Models\Testimonial;
@@ -126,5 +127,39 @@ class PublicSiteTest extends TestCase
         $this->get('/no-such-page')
             ->assertNotFound()
             ->assertSee('We could not find that page');
+    }
+
+    public function test_course_search_filters_by_title(): void
+    {
+        $match = Course::factory()->create(['title' => 'Advanced Copywriting Workshop']);
+        $other = Course::factory()->create(['title' => 'Financial Modelling Basics']);
+
+        $filtered = $this->get(route('courses.index', ['q' => 'copywriting']))
+            ->assertOk()
+            ->viewData('courses');
+
+        $this->assertTrue($filtered->contains('id', $match->id));
+        $this->assertFalse($filtered->contains('id', $other->id));
+    }
+
+    public function test_approved_reviews_are_shown_on_the_course_page_but_hidden_ones_are_not(): void
+    {
+        $course = $this->courseWithCurriculum();
+
+        $visible = CourseReview::factory()->create([
+            'course_id' => $course->id,
+            'review' => 'Genuinely excellent, changed how I plan a quarter.',
+            'is_approved' => true,
+        ]);
+        $hidden = CourseReview::factory()->create([
+            'course_id' => $course->id,
+            'review' => 'This review was hidden by moderation.',
+            'is_approved' => false,
+        ]);
+
+        $this->get(route('courses.show', $course))
+            ->assertOk()
+            ->assertSee('Genuinely excellent, changed how I plan a quarter.')
+            ->assertDontSee('This review was hidden by moderation.');
     }
 }

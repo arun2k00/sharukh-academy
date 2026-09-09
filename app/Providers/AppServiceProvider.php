@@ -71,9 +71,18 @@ class AppServiceProvider extends ServiceProvider
     private function shareViewData(): void
     {
         View::composer(
-            ['components.layouts.public', 'components.layouts.app', 'components.layouts.admin', 'components.layouts.learn'],
+            [
+                'components.layouts.public', 'components.layouts.app', 'components.layouts.admin',
+                'components.layouts.learn', 'components.layouts.auth', 'components.layouts.error',
+                'components.site.logo', 'components.site.brand-head',
+            ],
             function ($view): void {
-                $view->with('academySettings', $this->app->make(SettingsRepository::class)->all());
+                $repository = $this->app->make(SettingsRepository::class);
+                $view->with('academySettings', [
+                    ...$repository->all(),
+                    'logo_url' => $repository->imageUrl('logo_path'),
+                    'favicon_url' => $repository->imageUrl('favicon_path'),
+                ]);
             },
         );
 

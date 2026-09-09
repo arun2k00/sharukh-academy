@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title }} — {{ config('academy.name') }}</title>
+    <title>{{ $title }} — {{ $academySettings['academy_name'] ?? config('academy.name') }}</title>
     {{ Vite::fonts() }}
     @vite(['resources/css/app.css'])
 </head>

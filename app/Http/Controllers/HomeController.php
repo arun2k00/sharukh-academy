@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Faq;
 use App\Models\Instructor;
+use App\Models\LiveClass;
 use App\Models\Testimonial;
 use App\Services\SettingsRepository;
 use Illuminate\View\View;
@@ -36,9 +37,21 @@ class HomeController extends Controller
                 ->get();
         }
 
+        $upcomingClasses = LiveClass::query()
+            ->upcoming()
+            ->where('is_featured', true)
+            ->with('course')
+            ->take(3)
+            ->get();
+
+        if ($upcomingClasses->isEmpty()) {
+            $upcomingClasses = LiveClass::query()->upcoming()->with('course')->take(3)->get();
+        }
+
         return view('public.home', [
             'settings' => $settings->all(),
             'featuredCourses' => $featured,
+            'upcomingClasses' => $upcomingClasses,
             'leadInstructor' => Instructor::query()->where('is_featured', true)->first()
                 ?? Instructor::query()->oldest('id')->first(),
             'testimonials' => Testimonial::query()->published()->where('is_featured', true)->take(3)->get(),

@@ -1,7 +1,8 @@
 @props(['title' => null, 'description' => null, 'academySettings' => [], 'ogImage' => null])
 
 @php
-    $pageTitle = $title ? $title.' — '.config('academy.name') : config('academy.name');
+    $brandName = $academySettings['academy_name'] ?? config('academy.name');
+    $pageTitle = $title ? $title.' — '.$brandName : $brandName;
     $pageDescription = $description ?? ($academySettings['site_tagline'] ?? 'Expert-led online courses with live classes, practical resources and certification.');
 @endphp
 
@@ -28,6 +29,7 @@
         <meta name="twitter:card" content="summary">
     @endif
 
+    <x-site.brand-head />
     {{ Vite::fonts() }}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

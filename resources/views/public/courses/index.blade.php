@@ -9,6 +9,14 @@
                 We deliberately keep this list short. Each programme is taught by someone who does the work,
                 maintained as the field changes, and paired with live sessions where the questions get answered.
             </p>
+
+            <form method="GET" class="mt-8 flex max-w-sm gap-2">
+                @if ($activeCategory)
+                    <input type="hidden" name="category" value="{{ $activeCategory->slug }}">
+                @endif
+                <x-ui.input type="search" name="q" value="{{ $search }}" placeholder="Search course titles…" class="flex-1" />
+                <x-ui.button type="submit" variant="outline" icon="search">Search</x-ui.button>
+            </form>
         </div>
     </section>
 
@@ -40,10 +48,10 @@
 
         @if ($courses->isEmpty())
             <x-ui.empty-state
-                :title="$activeCategory ? 'Nothing in '.$activeCategory->name.' yet' : 'The catalogue is being prepared'"
+                :title="$search !== '' ? 'No courses match “'.$search.'”' : ($activeCategory ? 'Nothing in '.$activeCategory->name.' yet' : 'The catalogue is being prepared')"
                 description="New programmes are announced by email first. Tell us what you are looking for and we will let you know.">
                 <x-ui.button :href="route('contact')">Contact the academy</x-ui.button>
-                @if ($activeCategory)
+                @if ($activeCategory || $search !== '')
                     <x-ui.button :href="route('courses.index')" variant="outline">See all courses</x-ui.button>
                 @endif
             </x-ui.empty-state>
