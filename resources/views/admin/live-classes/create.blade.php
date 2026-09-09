@@ -2,7 +2,7 @@
     <x-admin.page-header title="Schedule a live class" :back="route('admin.live-classes.index')"
                          back-label="All live classes" />
 
-    <form method="POST" action="{{ route('admin.live-classes.store') }}">
+    <form method="POST" action="{{ route('admin.live-classes.store') }}" enctype="multipart/form-data">
         @csrf
         @include('admin.live-classes._form')
 

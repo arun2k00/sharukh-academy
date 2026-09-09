@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\CourseAccessType;
+use App\Enums\CourseCompletionMode;
 use App\Enums\CourseLevel;
 use App\Enums\CourseStatus;
 use App\Models\Course;
@@ -36,6 +38,7 @@ class CourseRequest extends FormRequest
             'audience' => $this->linesToArray($this->input('audience')),
             'is_featured' => $this->boolean('is_featured'),
             'certificate_enabled' => $this->boolean('certificate_enabled'),
+            'completion_requires_live_attendance' => $this->boolean('completion_requires_live_attendance'),
         ]);
     }
 
@@ -73,6 +76,16 @@ class CourseRequest extends FormRequest
             'audience.*' => ['string', 'max:255'],
             'certificate_enabled' => ['boolean'],
             'completion_threshold' => ['required', 'integer', 'min:1', 'max:100'],
+            'certificate_template_id' => ['nullable', Rule::exists('certificate_templates', 'id')],
+
+            'access_type' => ['required', new Enum(CourseAccessType::class)],
+            'access_duration_days' => ['nullable', 'required_if:access_type,limited_duration', 'integer', 'min:1', 'max:3650'],
+            'access_fixed_expiry_date' => ['nullable', 'required_if:access_type,fixed_expiry', 'date', 'after:today'],
+
+            'completion_mode' => ['required', new Enum(CourseCompletionMode::class)],
+            'completion_requires_live_attendance' => ['boolean'],
+
+            'banner' => UploadRules::image(),
         ];
     }
 

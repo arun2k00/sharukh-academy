@@ -121,6 +121,10 @@
                 <x-ui.checkbox name="is_preview" value="1" label="Free preview"
                                hint="Anyone can watch this lesson from the public course page."
                                :checked="(bool) old('is_preview', $lesson->is_preview)" />
+
+                <x-ui.checkbox name="is_required" value="1" label="Required for completion"
+                               hint="Uncheck for optional material when the course only requires marked lessons."
+                               :checked="(bool) old('is_required', $lesson->is_required ?? true)" />
             </div>
         </x-ui.panel>
     </div>

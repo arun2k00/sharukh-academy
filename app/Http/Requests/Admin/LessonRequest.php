@@ -29,6 +29,7 @@ class LessonRequest extends FormRequest
             'slug' => str($this->input('slug') ?: $this->input('title'))->slug()->value(),
             'is_preview' => $this->boolean('is_preview'),
             'is_published' => $this->boolean('is_published'),
+            'is_required' => $this->boolean('is_required', true),
         ]);
     }
 
@@ -62,6 +63,7 @@ class LessonRequest extends FormRequest
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:9999'],
             'is_preview' => ['boolean'],
             'is_published' => ['boolean'],
+            'is_required' => ['boolean'],
         ];
     }
 

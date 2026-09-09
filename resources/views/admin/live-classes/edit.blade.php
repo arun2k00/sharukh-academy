@@ -2,7 +2,7 @@
     <x-admin.page-header :title="$liveClass->title" :back="route('admin.live-classes.index')"
                          back-label="All live classes" />
 
-    <form method="POST" action="{{ route('admin.live-classes.update', $liveClass) }}">
+    <form method="POST" action="{{ route('admin.live-classes.update', $liveClass) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         @include('admin.live-classes._form')

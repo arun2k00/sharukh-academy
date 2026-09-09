@@ -8,6 +8,9 @@ use App\Http\Requests\Admin\LiveClassRequest;
 use App\Models\Course;
 use App\Models\Instructor;
 use App\Models\LiveClass;
+use App\Services\AdminActivityLogger;
+use App\Services\NotificationDispatcher;
+use App\Services\ResourceStorageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -16,6 +19,10 @@ use Illuminate\View\View;
 
 class LiveClassController extends Controller
 {
+    public function __construct(
+        private readonly ResourceStorageService $storage,
+    ) {}
+
     public function index(Request $request): View
     {
         Gate::authorize('viewAny', LiveClass::class);
@@ -50,12 +57,20 @@ class LiveClassController extends Controller
         ]);
     }
 
-    public function store(LiveClassRequest $request): RedirectResponse
-    {
-        $liveClass = LiveClass::create($request->validated());
+    public function store(
+        LiveClassRequest $request,
+        NotificationDispatcher $notifications,
+        AdminActivityLogger $activity,
+    ): RedirectResponse {
+        $liveClass = new LiveClass($request->safe()->except('banner'));
+        $this->applyBanner($liveClass, $request);
+        $liveClass->save();
+
+        $notifications->newLiveClassScheduled($liveClass);
+        $activity->log('live_class.created', $liveClass, "Scheduled live class \"{$liveClass->title}\"");
 
         return redirect()->route('admin.live-classes.edit', $liveClass)
-            ->with('status', 'Live class scheduled.');
+            ->with('status', 'Live class scheduled. Enrolled students have been notified.');
     }
 
     public function show(LiveClass $liveClass): RedirectResponse
@@ -75,9 +90,23 @@ class LiveClassController extends Controller
         ]);
     }
 
-    public function update(LiveClassRequest $request, LiveClass $liveClass): RedirectResponse
-    {
-        $liveClass->update($request->validated());
+    public function update(
+        LiveClassRequest $request,
+        LiveClass $liveClass,
+        NotificationDispatcher $notifications,
+        AdminActivityLogger $activity,
+    ): RedirectResponse {
+        $hadNoRecording = blank($liveClass->recording_url);
+
+        $liveClass->fill($request->safe()->except('banner'));
+        $this->applyBanner($liveClass, $request);
+        $liveClass->save();
+
+        if ($hadNoRecording && filled($liveClass->recording_url)) {
+            $notifications->recordingAvailable($liveClass);
+        }
+
+        $activity->log('live_class.updated', $liveClass, "Updated live class \"{$liveClass->title}\"");
 
         return redirect()->route('admin.live-classes.edit', $liveClass)
             ->with('status', 'Live class updated.');
@@ -102,5 +131,13 @@ class LiveClassController extends Controller
             'courses' => Course::query()->orderBy('title')->get(),
             'instructors' => Instructor::query()->orderBy('name')->get(),
         ];
+    }
+
+    private function applyBanner(LiveClass $liveClass, LiveClassRequest $request): void
+    {
+        if ($request->hasFile('banner')) {
+            $this->storage->deleteImage($liveClass->banner_path);
+            $liveClass->banner_path = $this->storage->storeImage($request->file('banner'), 'live-classes/banners');
+        }
     }
 }

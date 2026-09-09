@@ -21,8 +21,17 @@
                             </span>
                             <div class="min-w-0">
                                 <h2 class="truncate font-serif text-[1.0625rem] text-ink-900">{{ $module->title }}</h2>
-                                <p class="text-[0.8125rem] text-ink-500">
+                                <p class="flex items-center gap-1.5 text-[0.8125rem] text-ink-500">
                                     {{ $module->lessons->count() }} {{ str('lesson')->plural($module->lessons->count()) }}
+                                    @unless ($module->unlock_type === \App\Enums\ModuleUnlockType::Immediate)
+                                        <span aria-hidden="true">·</span>
+                                        <x-ui.icon name="lock" class="size-3 text-brass-600" />
+                                        <span class="text-brass-700">
+                                            {{ $module->unlock_type === \App\Enums\ModuleUnlockType::FixedDate
+                                                ? 'Unlocks '.$module->unlock_at?->format('j M Y')
+                                                : 'Unlocks '.$module->unlock_after_days.'d after enrolment' }}
+                                        </span>
+                                    @endunless
                                 </p>
                             </div>
                         </div>
@@ -147,6 +156,8 @@
                 <x-ui.textarea id="module_description" name="description" rows="2"
                                :invalid="$errors->has('description')">{{ old('description') }}</x-ui.textarea>
             </x-ui.field>
+
+            @include('admin.modules._unlock-fields', ['module' => null])
 
             <x-ui.button type="submit" icon="plus">Add module</x-ui.button>
         </form>

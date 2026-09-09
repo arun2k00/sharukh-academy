@@ -105,10 +105,23 @@
                     </x-ui.select>
                 </x-ui.field>
 
+                <x-ui.checkbox name="is_featured" value="1" label="Feature on the homepage"
+                               :checked="(bool) old('is_featured', $liveClass->is_featured)" />
+
                 <p class="border-t border-ink-200 pt-4 text-[0.8125rem] text-ink-500">
                     The join button unlocks {{ config('academy.live_join_window') }} minutes before the start time.
                 </p>
             </div>
+        </x-ui.panel>
+
+        <x-ui.panel title="Banner image" description="Shown at the top of this class's public share page.">
+            @if ($liveClass->banner_url)
+                <img src="{{ $liveClass->banner_url }}" alt="" class="mb-4 aspect-[16/9] w-full border border-ink-200 object-cover">
+            @endif
+            <x-ui.field label="Banner" for="banner" :error="$errors->first('banner')">
+                <input id="banner" name="banner" type="file" accept="image/*"
+                       class="block w-full text-sm text-ink-600 file:mr-3 file:border file:border-ink-300 file:bg-white file:px-3 file:py-1.5 file:text-sm file:text-ink-800 hover:file:bg-sand-100" />
+            </x-ui.field>
         </x-ui.panel>
     </div>
 </div>

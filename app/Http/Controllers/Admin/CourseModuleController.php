@@ -18,7 +18,7 @@ class CourseModuleController extends Controller
         Gate::authorize('update', $course);
 
         $course->modules()->create([
-            ...$request->safe()->only(['title', 'description']),
+            ...$request->safe()->only(['title', 'description', 'unlock_type', 'unlock_after_days', 'unlock_at']),
             'sort_order' => $request->integer('sort_order') ?: $ordering->nextPositionForModule($course->id),
         ]);
 
@@ -44,7 +44,9 @@ class CourseModuleController extends Controller
 
         Gate::authorize('update', $module->course);
 
-        $module->update($request->safe()->only(['title', 'description', 'sort_order']));
+        $module->update($request->safe()->only([
+            'title', 'description', 'sort_order', 'unlock_type', 'unlock_after_days', 'unlock_at',
+        ]));
 
         return redirect()->route('admin.courses.curriculum', $module->course)
             ->with('status', 'Module updated.');

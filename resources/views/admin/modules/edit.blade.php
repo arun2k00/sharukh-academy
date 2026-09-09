@@ -24,6 +24,10 @@
                                 value="{{ old('sort_order', $module->sort_order) }}" :invalid="$errors->has('sort_order')" />
                 </x-ui.field>
 
+                <div class="border-t border-ink-200 pt-5">
+                    @include('admin.modules._unlock-fields', ['module' => $module])
+                </div>
+
                 <div class="flex items-center gap-3">
                     <x-ui.button type="submit">Save module</x-ui.button>
                     <x-ui.button :href="route('admin.courses.curriculum', $course)" variant="ghost">Cancel</x-ui.button>

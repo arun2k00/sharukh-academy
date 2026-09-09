@@ -33,6 +33,8 @@ class CourseManagementTest extends TestCase
             'requirements' => 'A spreadsheet',
             'audience' => 'Marketers',
             'completion_threshold' => 100,
+            'access_type' => 'lifetime',
+            'completion_mode' => 'all_lessons',
         ], $overrides);
     }
 

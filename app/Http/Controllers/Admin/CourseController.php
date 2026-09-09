@@ -6,6 +6,7 @@ use App\Enums\CourseStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CourseRequest;
 use App\Models\Category;
+use App\Models\CertificateTemplate;
 use App\Models\Course;
 use App\Models\Instructor;
 use App\Services\ResourceStorageService;
@@ -65,7 +66,7 @@ class CourseController extends Controller
 
     public function store(CourseRequest $request): RedirectResponse
     {
-        $course = new Course($request->safe()->except(['thumbnail', 'preview_video_url']));
+        $course = new Course($request->safe()->except(['thumbnail', 'banner', 'preview_video_url']));
 
         $this->applyMedia($course, $request);
 
@@ -96,7 +97,7 @@ class CourseController extends Controller
 
     public function update(CourseRequest $request, Course $course): RedirectResponse
     {
-        $course->fill($request->safe()->except(['thumbnail', 'preview_video_url']));
+        $course->fill($request->safe()->except(['thumbnail', 'banner', 'preview_video_url']));
 
         $this->applyMedia($course, $request);
 
@@ -123,13 +124,17 @@ class CourseController extends Controller
     }
 
     /**
-     * @return array{categories: Collection<int, Category>, instructors: Collection<int, Instructor>}
+     * @return array{categories: Collection<int, Category>, instructors: Collection<int, Instructor>, certificateTemplates: Collection<int, CertificateTemplate>}
      */
     private function formOptions(): array
     {
         return [
             'categories' => Category::query()->orderBy('name')->get(),
             'instructors' => Instructor::query()->orderBy('name')->get(),
+            // Every template is offered, not just active ones — otherwise a
+            // course already using a template an admin later deactivated
+            // would appear to have silently lost its selection.
+            'certificateTemplates' => CertificateTemplate::query()->orderByDesc('is_active')->orderBy('name')->get(),
         ];
     }
 
@@ -138,6 +143,11 @@ class CourseController extends Controller
         if ($request->hasFile('thumbnail')) {
             $this->storage->deleteImage($course->thumbnail_path);
             $course->thumbnail_path = $this->storage->storeImage($request->file('thumbnail'), 'courses');
+        }
+
+        if ($request->hasFile('banner')) {
+            $this->storage->deleteImage($course->banner_path);
+            $course->banner_path = $this->storage->storeImage($request->file('banner'), 'courses/banners');
         }
 
         // Only the extracted video ID is stored, never the raw pasted URL.
