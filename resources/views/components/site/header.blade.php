@@ -39,41 +39,52 @@
         </button>
     </div>
 
-    {{-- Mobile drawer --}}
-    <div x-show="open" x-cloak class="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
-        <div class="absolute inset-0 bg-ink-950/40" @click="open = false"></div>
-        <div class="absolute inset-y-0 right-0 flex w-[min(20rem,85vw)] flex-col bg-sand-50"
-             x-transition:enter="transition duration-200 ease-out"
-             x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
-             x-transition:leave="transition duration-150 ease-in"
-             x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full">
-            <div class="flex h-16 items-center justify-between border-b border-ink-200 px-5">
-                <x-site.logo />
+    {{-- Full-screen menu (mobile and tablet). Teleported to the end of
+         <body> because the header's backdrop-blur establishes a containing
+         block for fixed-position descendants — left in place, this panel
+         would be trapped inside the header's own 4rem height instead of
+         covering the viewport. --}}
+    <template x-teleport="body">
+        <div x-show="open" x-cloak
+             class="fixed inset-0 z-50 flex flex-col bg-ink-950 lg:hidden"
+             x-transition:enter="transition duration-300 ease-out"
+             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+             x-transition:leave="transition duration-200 ease-in"
+             x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+             role="dialog" aria-modal="true">
+            <div class="flex h-16 shrink-0 items-center justify-between px-6 sm:px-10">
+                <x-site.logo tone="light" />
                 <button type="button" @click="open = false"
-                        class="-mr-2.5 flex size-11 items-center justify-center text-ink-700"
+                        class="-mr-2.5 flex size-11 items-center justify-center text-white/80 hover:text-white"
                         aria-label="Close menu">
-                    <x-ui.icon name="close" class="size-5" />
+                    <x-ui.icon name="close" class="size-6" />
                 </button>
             </div>
 
-            <nav class="flex flex-col divide-y divide-ink-200 border-b border-ink-200" aria-label="Mobile">
+            <nav class="flex flex-1 flex-col justify-center gap-1 px-6 sm:px-10" aria-label="Mobile">
                 @foreach ($links as $link)
                     <a href="{{ route($link['route']) }}"
-                       class="px-5 py-3.5 text-[0.95rem] {{ $link['active'] ? 'bg-sand-100 font-medium text-ink-900' : 'text-ink-800' }}"
-                       @if($link['active']) aria-current="page" @endif>{{ $link['label'] }}</a>
+                       class="flex items-center justify-between border-b border-white/10 py-4 font-serif text-3xl leading-none text-white/90 transition-colors hover:text-pine-300 sm:text-4xl {{ $link['active'] ? 'text-pine-300' : '' }}"
+                       @if($link['active']) aria-current="page" @endif>
+                        {{ $link['label'] }}
+                        <x-ui.icon name="arrow-right" class="size-6 shrink-0 text-white/30" />
+                    </a>
                 @endforeach
             </nav>
 
-            <div class="mt-auto space-y-3 p-5">
+            <div class="shrink-0 space-y-3 px-6 pt-6 pb-10 sm:px-10">
                 @auth
-                    <x-ui.button :href="auth()->user()->isAdmin() ? route('admin.dashboard') : route('dashboard')" class="w-full">
+                    <x-ui.button :href="auth()->user()->isAdmin() ? route('admin.dashboard') : route('dashboard')" size="lg" class="w-full">
                         {{ auth()->user()->isAdmin() ? 'Admin panel' : 'My learning' }}
                     </x-ui.button>
                 @else
-                    <x-ui.button :href="route('register')" class="w-full">Enrol now</x-ui.button>
-                    <x-ui.button :href="route('login')" variant="outline" class="w-full">Sign in</x-ui.button>
+                    <x-ui.button :href="route('register')" size="lg" class="w-full">Enrol now</x-ui.button>
+                    <x-ui.button :href="route('login')" variant="outline" size="lg"
+                                 class="w-full !border-white/25 !bg-transparent !text-white hover:!bg-white/10">
+                        Sign in
+                    </x-ui.button>
                 @endauth
             </div>
         </div>
-    </div>
+    </template>
 </header>

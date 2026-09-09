@@ -229,22 +229,28 @@
 
     {{-- Instructor --}}
     @if ($course->instructor)
-        <section class="border-y border-ink-200 bg-white">
-            <div class="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-16">
+        <section class="border-y border-ink-200 bg-lilac-50/60">
+            <div class="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-16 lg:px-8 lg:py-20">
                 <div class="lg:col-span-4">
-                    @if ($course->instructor->avatar_url)
-                        <img src="{{ $course->instructor->avatar_url }}" alt="{{ $course->instructor->name }}"
-                             class="aspect-square w-full max-w-xs object-cover" loading="lazy">
-                    @else
-                        <div class="flex aspect-square w-full max-w-xs items-center justify-center bg-ink-900">
-                            <span class="font-serif text-5xl text-sand-200">{{ str($course->instructor->name)->substr(0, 1) }}</span>
-                        </div>
-                    @endif
+                    <div class="relative max-w-xs">
+                        <div class="absolute -inset-3 -z-10 rounded-3xl bg-pine-100/70" aria-hidden="true"></div>
+                        @if ($course->instructor->avatar_url)
+                            <img src="{{ $course->instructor->avatar_url }}" alt="{{ $course->instructor->name }}"
+                                 class="aspect-square w-full rounded-2xl object-cover shadow-lg" loading="lazy">
+                        @else
+                            <div class="flex aspect-square w-full items-center justify-center rounded-2xl bg-ink-900 shadow-lg">
+                                <span class="font-serif text-5xl text-sand-200">{{ str($course->instructor->name)->substr(0, 1) }}</span>
+                            </div>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="lg:col-span-8">
-                    <p class="text-[0.6875rem] font-medium tracking-[0.14em] text-pine-700 uppercase">Your instructor</p>
-                    <h2 class="mt-4 text-[1.5rem] leading-tight">{{ $course->instructor->name }}</h2>
+                    <p class="flex items-center gap-2 text-[0.6875rem] font-medium tracking-[0.14em] text-pine-700 uppercase">
+                        <x-ui.icon name="graduation-cap" class="size-4" />
+                        Your instructor
+                    </p>
+                    <h2 class="mt-4 font-serif text-[1.75rem] leading-tight text-ink-900">{{ $course->instructor->name }}</h2>
                     @if ($course->instructor->headline)
                         <p class="mt-2 text-[0.9375rem] text-ink-600">{{ $course->instructor->headline }}</p>
                     @endif
@@ -260,14 +266,17 @@
                     @endif
 
                     @if (! empty($course->instructor->credentials))
-                        <ul class="mt-7 grid gap-x-8 gap-y-2 sm:grid-cols-2">
-                            @foreach ($course->instructor->credentials as $credential)
-                                <li class="flex gap-2.5 text-sm text-ink-700">
-                                    <x-ui.icon name="check" class="mt-1 size-3.5 shrink-0 text-pine-600" />
+                        <div class="mt-7 flex flex-wrap gap-2.5">
+                            @foreach ($course->instructor->credentials as $index => $credential)
+                                @php
+                                    $pastels = ['bg-pine-100 text-pine-800', 'bg-sky-100 text-sky-600', 'bg-blush-100 text-blush-600', 'bg-lilac-100 text-lilac-600'];
+                                @endphp
+                                <span class="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[0.8125rem] {{ $pastels[$index % count($pastels)] }}">
+                                    <x-ui.icon name="check" class="size-3.5 shrink-0" />
                                     {{ $credential }}
-                                </li>
+                                </span>
                             @endforeach
-                        </ul>
+                        </div>
                     @endif
                 </div>
             </div>

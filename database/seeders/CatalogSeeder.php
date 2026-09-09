@@ -169,12 +169,16 @@ class CatalogSeeder extends Seeder
                 'audience' => $definition['audience'],
                 'certificate_enabled' => true,
                 'completion_threshold' => 100,
-                'thumbnail_path' => DemoThumbnailFactory::stockPhotoPath() ?? DemoThumbnailFactory::make(
+                // Thumbnail: a distinct placeholder per course (swap for real
+                // photography per course from the admin course form).
+                'thumbnail_path' => DemoThumbnailFactory::make(
                     $definition['slug'],
                     $definition['title'],
                     $definition['category'],
                     $definition['level']->value,
                 ),
+                // Banner: the same fixed header image on every course page —
+                // see public/bannerheader.jpg.
                 'banner_path' => DemoThumbnailFactory::stockPhotoPath() ?? DemoThumbnailFactory::makeBanner(
                     $definition['slug'],
                     $definition['title'],

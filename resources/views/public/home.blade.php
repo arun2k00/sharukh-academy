@@ -1,18 +1,18 @@
 <x-layouts.public :description="$settings['site_tagline'] ?? null">
     {{-- Hero --}}
-    <section class="border-b border-ink-200">
-        <div class="mx-auto grid max-w-[1600px] gap-12 px-5 py-16 lg:grid-cols-12 lg:gap-16 lg:px-8 lg:py-24">
-            <div class="lg:col-span-7">
+    <section class="border-b border-ink-200 overflow-hidden">
+        <div class="mx-auto grid max-w-[1600px] gap-12 px-5 py-16 lg:grid-cols-12 lg:items-center lg:gap-16 lg:px-8 lg:py-20 xl:py-28">
+            <div class="lg:col-span-7 xl:col-span-6">
                 <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">
                     A focused data engineering academy
                 </p>
 
-                <h1 class="mt-5 text-[2.25rem] leading-[1.1] sm:text-[3rem] lg:text-[3.25rem]">
+                <h1 class="mt-5 max-w-2xl text-[2.125rem] leading-[1.15] whitespace-pre-line sm:text-[2.75rem] lg:text-[2.75rem] xl:text-[3rem]">
                     {{ $settings['hero_heading'] ?? 'Learn one craft properly, from people who practise it.' }}
                 </h1>
 
-                <p class="mt-6 max-w-xl text-[1.0625rem]/8 text-ink-600">
-                    {{ $settings['hero_subheading'] ?? 'A small, deliberate catalogue of programmes. Recorded lessons you can work through at your own pace, live sessions with your instructor, and the material you need to apply it the same week.' }}
+                <p class="mt-6 max-w-md text-balance text-[1.0625rem]/8 text-ink-600">
+                    {{ $settings['hero_subheading'] ?? 'Six focused programmes, each with live classes, production-grade projects and a certificate that means something.' }}
                 </p>
 
                 <div class="mt-9 flex flex-wrap items-center gap-3">
@@ -25,23 +25,13 @@
                 </p>
             </div>
 
-            <div class="relative lg:col-span-5">
+            <div class="relative lg:col-span-5 xl:col-span-6">
                 {{-- Soft brand-coloured field behind the artwork, rather than a hard image edge. --}}
                 <div class="absolute inset-0 -z-10 scale-90 rounded-full bg-linear-to-br from-pine-200 via-pine-100 to-sand-100 blur-2xl"
                      aria-hidden="true"></div>
 
                 <img src="{{ asset('banner.png') }}" alt=""
-                     class="mx-auto w-full max-w-md object-contain drop-shadow-xl transition-transform duration-500 hover:-translate-y-1 lg:max-w-none">
-
-                <div class="absolute -bottom-4 left-1/2 flex w-[calc(100%-2.5rem)] max-w-xs -translate-x-1/2 items-center gap-3 border border-ink-200 bg-white/95 px-5 py-4 shadow-lg backdrop-blur-sm sm:left-4 sm:w-auto sm:translate-x-0">
-                    <span class="flex size-10 shrink-0 items-center justify-center bg-pine-50 text-pine-700">
-                        <x-ui.icon name="award" class="size-5" />
-                    </span>
-                    <div>
-                        <p class="font-serif text-lg leading-none text-ink-900">3000+</p>
-                        <p class="mt-1 text-[0.75rem] text-ink-500">students trained</p>
-                    </div>
-                </div>
+                     class="mx-auto w-full max-w-md object-contain drop-shadow-xl transition-transform duration-500 hover:-translate-y-1 lg:max-w-lg xl:max-w-xl">
             </div>
         </div>
     </section>
@@ -113,6 +103,21 @@
                                 <x-ui.icon name="calendar" class="size-3.5 text-ink-400" />
                                 {{ $liveClass->scheduled_at->format('j F, g:ia') }}
                             </p>
+
+                            <div x-data="{
+                                    target: new Date('{{ $liveClass->scheduled_at->toIso8601String() }}').getTime(),
+                                    remaining: 0,
+                                    tick() { this.remaining = Math.max(0, this.target - Date.now()); },
+                                    get d() { return Math.floor(this.remaining / 86400000); },
+                                    get h() { return Math.floor((this.remaining % 86400000) / 3600000); },
+                                    get m() { return Math.floor((this.remaining % 3600000) / 60000); },
+                                 }"
+                                 x-init="tick(); setInterval(() => tick(), 30000)"
+                                 class="mt-4 inline-flex items-center gap-1.5 rounded-full bg-blush-50 px-3 py-1 text-[0.75rem] font-medium text-blush-600">
+                                <x-ui.icon name="clock" class="size-3.5 shrink-0" />
+                                <span x-show="d > 0">Starts in <span x-text="d"></span>d <span x-text="h"></span>h</span>
+                                <span x-show="d === 0">Starts in <span x-text="h"></span>h <span x-text="m"></span>m</span>
+                            </div>
                         </a>
                     @endforeach
                 </div>

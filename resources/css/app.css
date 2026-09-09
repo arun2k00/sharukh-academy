@@ -50,6 +50,17 @@
     --color-brass-600: #8c6130;
     --color-brass-700: #6f4d26;
 
+    /* A small set of pastels for badges and section washes — used sparingly. */
+    --color-sky-50: #f0f6fb;
+    --color-sky-100: #dceaf5;
+    --color-sky-600: #4b7ba3;
+    --color-blush-50: #fdf1f3;
+    --color-blush-100: #fbe1e6;
+    --color-blush-600: #b25a6d;
+    --color-lilac-50: #f5f2fb;
+    --color-lilac-100: #e9e2f6;
+    --color-lilac-600: #7d63ad;
+
     --radius-panel: 0.25rem;
 }
 
