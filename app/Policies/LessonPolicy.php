@@ -71,16 +71,16 @@ class LessonPolicy
 
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isTrainer();
     }
 
     public function update(User $user, Lesson $lesson): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $lesson->loadMissing('course')->course->isOwnedBy($user);
     }
 
     public function delete(User $user, Lesson $lesson): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $lesson->loadMissing('course')->course->isOwnedBy($user);
     }
 }

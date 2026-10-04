@@ -1,9 +1,21 @@
-@props(['course'])
+@props(['course', 'hasAccess' => false])
+
+@php
+    // A couple of courses still fall back to the wide shared stock photo
+    // (see CatalogSeeder) rather than a cover generated for them specifically.
+    // Rotating ITS crop across a few framings keeps those from reading as the
+    // same image repeated — remove this once every course has its own cover.
+    $usesSharedStockPhoto = str($course->thumbnail_url)->contains('stock-photo');
+    $stockPhotoCrops = ['75% 30%', '38% 55%', '92% 40%', '55% 20%'];
+    $thumbnailPosition = $usesSharedStockPhoto ? $stockPhotoCrops[$course->id % count($stockPhotoCrops)] : '50% 35%';
+    $ctaHref = $hasAccess ? route('learn.course', $course) : route('courses.show', $course);
+    $ctaLabel = $hasAccess ? 'Continue' : 'View course';
+@endphp
 
 <article {{ $attributes->merge(['class' => 'card-interactive group flex flex-col overflow-hidden border border-ink-100 bg-white']) }}>
-    <a href="{{ route('courses.show', $course) }}" class="relative block aspect-[16/9] overflow-hidden bg-ink-100">
+    <a href="{{ $ctaHref }}" class="relative block aspect-[16/9] overflow-hidden bg-ink-100">
         @if ($course->thumbnail_url)
-            <img src="{{ $course->thumbnail_url }}" alt=""
+            <img src="{{ $course->thumbnail_url }}" alt="" style="object-position: {{ $thumbnailPosition }}"
                  class="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-110" loading="lazy">
             <div class="absolute inset-0 bg-linear-to-t from-ink-950/25 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
         @else
@@ -19,7 +31,7 @@
         @endif
 
         <h3 class="mt-2 text-lg leading-snug">
-            <a href="{{ route('courses.show', $course) }}"
+            <a href="{{ $ctaHref }}"
                class="transition-colors duration-200 group-hover:text-pine-700">{{ $course->title }}</a>
         </h3>
 
@@ -45,10 +57,11 @@
                 @endif
                 <p class="mt-0.5 font-serif text-lg text-ink-900">{{ $course->price_label }}</p>
             </div>
-            <span class="flex shrink-0 items-center gap-1.5 text-[0.8125rem] font-medium text-pine-700">
-                View course
+            <a href="{{ $ctaHref }}"
+               class="flex shrink-0 items-center gap-1.5 text-[0.8125rem] font-medium text-pine-700 hover:text-pine-800">
+                {{ $ctaLabel }}
                 <x-ui.icon name="arrow-right" class="size-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
-            </span>
+            </a>
         </div>
     </div>
 </article>

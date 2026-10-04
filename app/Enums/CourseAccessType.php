@@ -12,7 +12,7 @@ enum CourseAccessType: string
     {
         return match ($this) {
             self::Lifetime => 'Lifetime access',
-            self::LimitedDuration => 'Limited duration from enrolment',
+            self::LimitedDuration => 'Limited duration from enrollment',
             self::FixedExpiry => 'Fixed expiry date',
         };
     }

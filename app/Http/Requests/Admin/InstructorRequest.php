@@ -34,6 +34,10 @@ class InstructorRequest extends FormRequest
                 'required', 'string', 'max:120', 'regex:/^[a-z0-9-]+$/',
                 Rule::unique('instructors', 'slug')->ignore($this->route('instructor')),
             ],
+            'user_id' => [
+                'nullable', Rule::exists('users', 'id'),
+                Rule::unique('instructors', 'user_id')->ignore($this->route('instructor')),
+            ],
             'headline' => ['nullable', 'string', 'max:180'],
             'bio' => ['nullable', 'string', 'max:5000'],
             'avatar' => UploadRules::image(),

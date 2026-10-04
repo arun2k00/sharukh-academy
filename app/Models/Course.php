@@ -166,6 +166,14 @@ class Course extends Model
     }
 
     /**
+     * @return HasMany<InviteCode, $this>
+     */
+    public function inviteCodes(): HasMany
+    {
+        return $this->hasMany(InviteCode::class);
+    }
+
+    /**
      * @return BelongsTo<CertificateTemplate, $this>
      */
     public function certificateTemplate(): BelongsTo
@@ -205,6 +213,15 @@ class Course extends Model
     public function isFree(): bool
     {
         return (float) $this->price <= 0.0;
+    }
+
+    /**
+     * Whether the given user is the Trainer this course is attributed to —
+     * the ownership check every Tutor-dashboard policy is built on.
+     */
+    public function isOwnedBy(User $user): bool
+    {
+        return $user->instructor !== null && $this->instructor_id === $user->instructor->id;
     }
 
     /**

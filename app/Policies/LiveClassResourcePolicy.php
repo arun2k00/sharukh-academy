@@ -15,11 +15,11 @@ class LiveClassResourcePolicy
 
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isTrainer();
     }
 
     public function delete(User $user, LiveClassResource $resource): bool
     {
-        return $user->isAdmin();
+        return Gate::forUser($user)->allows('update', $resource->loadMissing('liveClass')->liveClass);
     }
 }

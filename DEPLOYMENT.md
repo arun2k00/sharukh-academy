@@ -266,3 +266,27 @@ The configuration is cached. Run `php artisan config:cache` again.
 **Students report they never receive the verification email.**
 Set `ACADEMY_REQUIRE_EMAIL_VERIFICATION=false`, run `php artisan route:clear`, and fix the
 mail settings before turning it back on.
+
+---
+
+## 11. This project's two live targets
+
+| Target | Domain | App directory | Web root |
+|---|---|---|---|
+| Sandbox | sharuk.azflow.io | `~/domains/azflow.io/sharukh_app` | `~/domains/azflow.io/public_html/sharukh` |
+| Production | lms.sharukhacademy.com | `~/domains/sharukhacademy.com/lms_app` | `~/domains/sharukhacademy.com/public_html/lms` |
+
+Both use the **Alternative** layout from section 3: the app sits outside the web
+root and only `public/`'s contents are exposed, with `index.php` patched to
+point one level up. Deploy with `./deploy.sh sandbox` or `./deploy.sh production`,
+which updates both halves. Updating only the app directory leaves the site
+serving new HTML against the previously built CSS and JS.
+
+Requires SSH host aliases `sharukh-sandbox` and `sharukh-prod` in `~/.ssh/config`,
+and shell access enabled for the hosting account (hPanel → Advanced → SSH Access).
+
+Before the first deploy of each target: create the database and user, copy
+`.env.example` to `.env` on the server and fill it in, then run
+`php artisan key:generate` and `php artisan storage:link` — plus the matching
+symlink in the web root, since `storage:link` only creates one inside the app
+directory's own `public/`.

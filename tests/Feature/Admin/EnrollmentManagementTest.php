@@ -4,7 +4,9 @@ namespace Tests\Feature\Admin;
 
 use App\Enums\EnrollmentSource;
 use App\Enums\EnrollmentStatus;
+use App\Enums\OrderStatus;
 use App\Models\Enrollment;
+use App\Models\Order;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -97,6 +99,40 @@ class EnrollmentManagementTest extends TestCase
                 'expires_at' => now()->subWeek()->toDateString(),
             ])
             ->assertSessionHasErrors('expires_at');
+    }
+
+    public function test_manually_enrolling_a_student_settles_their_dangling_pending_order(): void
+    {
+        $course = $this->courseWithCurriculum(['price' => 7999]);
+        $student = $this->student();
+        $order = Order::factory()->create([
+            'user_id' => $student->id,
+            'course_id' => $course->id,
+            'amount' => 7999,
+            'status' => OrderStatus::Pending,
+        ]);
+
+        $this->actingAs($this->admin())
+            ->post(route('admin.enrollments.store'), [
+                'user_id' => $student->id,
+                'course_id' => $course->id,
+                'status' => 'active',
+            ])
+            ->assertRedirect(route('admin.enrollments.index'));
+
+        $this->assertSame(OrderStatus::Paid, $order->fresh()->status);
+
+        $this->assertDatabaseHas('payments', [
+            'order_id' => $order->id,
+            'gateway' => 'manual',
+            'status' => 'successful',
+        ]);
+
+        $this->assertDatabaseHas('enrollments', [
+            'user_id' => $student->id,
+            'course_id' => $course->id,
+            'order_id' => $order->id,
+        ]);
     }
 
     public function test_a_student_cannot_enrol_themselves_through_the_admin_endpoint(): void

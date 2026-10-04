@@ -212,7 +212,7 @@
                 </x-ui.field>
 
                 <div x-show="accessType === 'limited_duration'" x-cloak>
-                    <x-ui.field label="Days of access from enrolment" for="access_duration_days"
+                    <x-ui.field label="Days of access from enrollment" for="access_duration_days"
                                 :error="$errors->first('access_duration_days')">
                         <x-ui.input id="access_duration_days" name="access_duration_days" type="number" min="1" max="3650"
                                     value="{{ old('access_duration_days', $course->access_duration_days) }}"

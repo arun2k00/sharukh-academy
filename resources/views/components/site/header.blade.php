@@ -9,7 +9,7 @@
 @endphp
 
 <header x-data="{ open: false }" class="sticky top-0 z-40 border-b border-ink-200 bg-sand-50/95 backdrop-blur-sm">
-    <div class="mx-auto flex h-16 max-w-[1600px] items-center justify-between gap-6 px-6 lg:px-12">
+    <div class="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-6 px-6 lg:px-12">
         <x-site.logo />
 
         <nav class="hidden items-center gap-6 lg:flex" aria-label="Main">
@@ -28,7 +28,7 @@
                 </x-ui.button>
             @else
                 <a href="{{ route('login') }}" class="text-sm text-ink-600 hover:text-ink-900">Sign in</a>
-                <x-ui.button :href="route('register')" size="sm">Enrol now</x-ui.button>
+                <x-ui.button :href="route('register')" size="sm">Enroll now</x-ui.button>
             @endauth
         </div>
 
@@ -78,7 +78,7 @@
                         {{ auth()->user()->isAdmin() ? 'Admin panel' : 'My learning' }}
                     </x-ui.button>
                 @else
-                    <x-ui.button :href="route('register')" size="lg" class="w-full">Enrol now</x-ui.button>
+                    <x-ui.button :href="route('register')" size="lg" class="w-full">Enroll now</x-ui.button>
                     <x-ui.button :href="route('login')" variant="outline" size="lg"
                                  class="w-full !border-white/25 !bg-transparent !text-white hover:!bg-white/10">
                         Sign in

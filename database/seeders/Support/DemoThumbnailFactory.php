@@ -34,6 +34,27 @@ final class DemoThumbnailFactory
     }
 
     /**
+     * A distinct per-course cover generated for the demonstration catalogue —
+     * see public/course/covers/{slug}.jpg. Returns null when a given course
+     * has no generated cover yet, so callers can fall back to the shared
+     * stock photo.
+     */
+    public static function coursePhotoPath(string $courseSlug): ?string
+    {
+        $source = public_path("course/covers/{$courseSlug}.jpg");
+
+        if (! is_file($source)) {
+            return null;
+        }
+
+        $path = "courses/covers/{$courseSlug}.jpg";
+
+        Storage::disk('public')->put($path, file_get_contents($source));
+
+        return $path;
+    }
+
+    /**
      * Background and accent per category slug.
      *
      * @var array<string, array{0: string, 1: string}>

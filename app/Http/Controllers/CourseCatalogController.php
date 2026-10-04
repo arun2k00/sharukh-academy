@@ -76,6 +76,7 @@ class CourseCatalogController extends Controller
             'enrollment' => $user !== null ? $enrollments->find($user, $course) : null,
             'hasAccess' => $user !== null && $enrollments->hasAccess($user, $course),
             'paymentsOnline' => $payments->processesPaymentsOnline(),
+            'availableGateways' => $payments->availableOnlineDrivers(),
             'reviews' => $reviews,
             'averageRating' => $reviews->isNotEmpty() ? round($reviews->avg('rating'), 1) : null,
             'myReview' => $user !== null ? CourseReview::where('course_id', $course->id)->where('user_id', $user->id)->first() : null,

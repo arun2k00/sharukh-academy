@@ -27,10 +27,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->command?->newLine();
-        $this->command?->info('Demonstration accounts (password: password)');
-        $this->command?->line('  Administrator  admin@oaceracademy.test');
-        $this->command?->line('  Student        meera@example.test   (one course finished, one in progress)');
-        $this->command?->line('  Student        rohit@example.test   (part way through)');
-        $this->command?->line('  Student        tom@example.test     (enrolled, nothing started)');
+        $this->command?->info('Demonstration accounts');
+        $this->command?->line('  Administrator  admin@aixone.site  <DEMO_SEED_PASSWORD>');
+        $this->command?->line('  Trainer        trainer@aixone.site  <DEMO_SEED_PASSWORD>');
+        $this->command?->line('  Student        student@aixone.site  <DEMO_SEED_PASSWORD>  (one course finished, one in progress)');
+        $this->command?->line('  Student        rohit@example.test  <DEMO_SEED_PASSWORD>  (part way through)');
+        $this->command?->line('  Student        tom@example.test  <DEMO_SEED_PASSWORD>  (enrolled, nothing started)');
     }
 }

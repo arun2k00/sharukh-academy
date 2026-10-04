@@ -7,7 +7,7 @@
     <x-admin.page-header :title="$careerPath->title" :back="route('admin.career-paths.index')" back-label="All Career Plus paths" />
     <div class="max-w-3xl">
         <x-ui.panel>
-            <form method="POST" action="{{ route('admin.career-paths.update', $careerPath) }}">
+            <form method="POST" action="{{ route('admin.career-paths.update', $careerPath) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 @include('admin.career-paths._form')

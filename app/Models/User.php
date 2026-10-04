@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AccountType;
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -11,16 +12,19 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * `role` is deliberately left out of the fillable list: it is only ever set
- * explicitly, so no registration or profile payload can escalate privileges.
+ * `role`, `account_type` and the suspension fields are deliberately left out
+ * of the fillable list: they are only ever set explicitly, so no registration
+ * or profile payload can escalate privileges or lift a suspension.
  */
 #[Fillable(['name', 'email', 'password', 'phone', 'bio', 'avatar_path'])]
 #[Hidden(['password', 'remember_token'])]
@@ -39,7 +43,28 @@ class User extends Authenticatable implements MustVerifyEmail
             'last_login_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
+            'account_type' => AccountType::class,
+            'suspended_at' => 'datetime',
         ];
+    }
+
+    /**
+     * The public instructor profile this Trainer manages, if any. A Trainer
+     * whose account has not yet been linked from the admin panel has none.
+     *
+     * @return HasOne<Instructor, $this>
+     */
+    public function instructor(): HasOne
+    {
+        return $this->hasOne(Instructor::class);
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function suspendedBy(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'suspended_by');
     }
 
     /**
@@ -139,9 +164,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->role === UserRole::Admin;
     }
 
+    public function isTrainer(): bool
+    {
+        return $this->role === UserRole::Trainer;
+    }
+
     public function isStudent(): bool
     {
         return $this->role === UserRole::Student;
+    }
+
+    public function isPro(): bool
+    {
+        return $this->account_type === AccountType::Pro;
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->suspended_at !== null;
     }
 
     /**
@@ -198,6 +238,26 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function admins(Builder $query): Builder
     {
         return $query->where('role', UserRole::Admin);
+    }
+
+    /**
+     * @param  Builder<User>  $query
+     * @return Builder<User>
+     */
+    #[Scope]
+    protected function trainers(Builder $query): Builder
+    {
+        return $query->where('role', UserRole::Trainer);
+    }
+
+    /**
+     * @param  Builder<User>  $query
+     * @return Builder<User>
+     */
+    #[Scope]
+    protected function suspended(Builder $query): Builder
+    {
+        return $query->whereNotNull('suspended_at');
     }
 
     /**

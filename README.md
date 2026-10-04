@@ -92,12 +92,17 @@ The seeder creates a complete working academy — 6 published courses, 1 draft, 
 modules, 57 lessons, live classes, enrolments at various stages of completion, and the
 certificates those completions produced.
 
-| Role | Email | Password | State |
-|---|---|---|---|
-| Administrator | `admin@oaceracademy.test` | `password` | Full admin access |
-| Student | `meera@example.test` | `password` | One course finished, one half done |
-| Student | `rohit@example.test` | `password` | Part way through a free course |
-| Student | `tom@example.test` | `password` | Enrolled, nothing started |
+| Role | Email | State |
+|---|---|---|
+| Administrator | `admin@aixone.site` | Full admin access |
+| Trainer | `trainer@aixone.site` | Owns the seeded course catalogue |
+| Student | `student@aixone.site` | One course finished, one half done |
+| Student | `rohit@example.test` | Part way through a free course |
+| Student | `tom@example.test` | Enrolled, nothing started |
+
+They all share whatever you set `DEMO_SEED_PASSWORD` to in your local `.env`
+(`password` if unset), and the administrator can be given its own with
+`DEMO_SEED_ADMIN_PASSWORD`. No real credential is stored in this repository.
 
 These are local demonstration credentials only. Change or remove them before going live.
 

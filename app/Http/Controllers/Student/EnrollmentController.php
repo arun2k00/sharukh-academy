@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Services\EnrollmentService;
 use App\Services\OrderService;
+use App\Services\Payments\PaymentGatewayUnavailable;
 use App\Services\Payments\PaymentManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,8 +17,9 @@ use Illuminate\Support\Facades\Gate;
  * Self-service enrolment.
  *
  * Free courses open immediately. Paid courses create a pending order and hand
- * off to the configured gateway — with the default manual gateway that means an
- * administrator confirms the enrolment, and no access is granted here.
+ * off to a configured online gateway. If none is configured (or the one asked
+ * for by name no longer is), this falls back to the manual gateway: an
+ * administrator confirms the enrolment by hand, and no access is granted here.
  */
 class EnrollmentController extends Controller
 {
@@ -40,7 +42,14 @@ class EnrollmentController extends Controller
         }
 
         $order = $orders->openFor($user, $course);
-        $session = $payments->driver()->createCheckout($order);
+
+        try {
+            $gateway = $payments->driver($request->string('gateway')->toString() ?: null);
+        } catch (PaymentGatewayUnavailable) {
+            $gateway = $payments->driver('manual');
+        }
+
+        $session = $gateway->createCheckout($order);
 
         if ($session->redirectUrl !== null) {
             return redirect()->away($session->redirectUrl);

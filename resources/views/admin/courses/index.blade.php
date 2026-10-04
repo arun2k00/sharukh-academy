@@ -28,7 +28,7 @@
 
     @if ($showingDeleted)
         <x-ui.alert variant="info" class="mb-5">
-            Deleted courses keep their curriculum, enrolments, progress and certificates. Restoring one puts it back
+            Deleted courses keep their curriculum, enrollments, progress and certificates. Restoring one puts it back
             exactly as it was.
         </x-ui.alert>
     @endif

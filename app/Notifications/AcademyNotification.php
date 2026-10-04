@@ -4,18 +4,28 @@ namespace App\Notifications;
 
 use App\Services\EmailTemplateRenderer;
 use App\Services\NotificationDispatcher;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Queue\InteractsWithQueue;
 
 /**
  * One notification class for every kind of academy event, discriminated by
- * `kind` in its stored data. Deliberately not queued: sent synchronously so
- * the application never depends on a permanent queue worker being present.
+ * `kind` in its stored data.
+ *
+ * Queued so a slow or unreachable SMTP host cannot stall the request that
+ * triggered it (signup and password reset most of all). Under the default
+ * `QUEUE_CONNECTION=sync` this still runs inline and needs no worker; set the
+ * connection to `database` and run the cron in DEPLOYMENT.md to get it off the
+ * request path.
  *
  * @see NotificationDispatcher for the events that fire this.
  */
-class AcademyNotification extends Notification
+class AcademyNotification extends Notification implements ShouldQueue
 {
+    use InteractsWithQueue, Queueable;
+
     /**
      * @param  array<string, string>  $mailVariables
      * @param  array<string, mixed>  $extra  Additional fields merged into the

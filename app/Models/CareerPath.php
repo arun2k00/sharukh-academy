@@ -6,11 +6,13 @@ use Database\Factories\CareerPathFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * A curated, ordered sequence of existing courses ("Career Plus") — a
@@ -22,8 +24,8 @@ use Illuminate\Support\Collection;
  * taking every step separately.
  */
 #[Fillable([
-    'slug', 'title', 'subtitle', 'description', 'capstone_title',
-    'capstone_description', 'bundle_course_id', 'is_published', 'is_featured', 'sort_order',
+    'slug', 'title', 'subtitle', 'description', 'capstone_title', 'capstone_description',
+    'banner_path', 'bundle_course_id', 'is_published', 'is_featured', 'sort_order',
 ])]
 class CareerPath extends Model
 {
@@ -71,6 +73,16 @@ class CareerPath extends Model
     public function hasCapstone(): bool
     {
         return filled($this->capstone_title) || filled($this->capstone_description);
+    }
+
+    /**
+     * @return Attribute<string|null, never>
+     */
+    protected function bannerUrl(): Attribute
+    {
+        return Attribute::get(fn (): ?string => $this->banner_path
+            ? Storage::disk('public')->url($this->banner_path)
+            : null);
     }
 
     /**

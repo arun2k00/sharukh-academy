@@ -26,6 +26,17 @@
                        :invalid="$errors->has('description')">{{ old('description', $careerPath->description) }}</x-ui.textarea>
     </x-ui.field>
 
+    <div>
+        @if ($careerPath->banner_url)
+            <img src="{{ $careerPath->banner_url }}" alt="" class="mb-2 aspect-[3/1] w-full max-w-md object-cover">
+        @endif
+        <x-ui.field label="Banner image" for="banner" :error="$errors->first('banner')"
+                    hint="Wide header image for the roadmap page. Recommended ratio 3:1.">
+            <input id="banner" name="banner" type="file" accept="image/png,image/jpeg,image/webp"
+                   class="block w-full text-sm text-ink-600 file:mr-3 file:border file:border-ink-300 file:bg-white file:px-3 file:py-1.5 file:text-sm file:text-ink-800 hover:file:bg-sand-100" />
+        </x-ui.field>
+    </div>
+
     <div class="grid gap-5 sm:grid-cols-2">
         <x-ui.field label="Capstone title" for="capstone_title" :error="$errors->first('capstone_title')"
                     hint='Optional final step, e.g. "Real-world project".'>
@@ -45,7 +56,7 @@
     </x-ui.field>
 
     <x-ui.field label="All-in-one bundle course" for="bundle_course_id" :error="$errors->first('bundle_course_id')"
-                hint="Optional. A single course that covers this whole path — highlighted at the top of the roadmap page as the one-enrolment alternative.">
+                hint="Optional. A single course that covers this whole path — highlighted at the top of the roadmap page as the one-enrollment alternative.">
         <x-ui.select id="bundle_course_id" name="bundle_course_id" :invalid="$errors->has('bundle_course_id')">
             <option value="">None</option>
             @foreach ($courses as $course)

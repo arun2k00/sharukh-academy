@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 #[Fillable([
-    'name', 'slug', 'headline', 'bio', 'avatar_path', 'credentials',
+    'user_id', 'name', 'slug', 'headline', 'bio', 'avatar_path', 'credentials',
     'experience_years', 'linkedin_url', 'website_url', 'is_featured',
 ])]
 class Instructor extends Model
@@ -28,6 +29,18 @@ class Instructor extends Model
             'credentials' => 'array',
             'is_featured' => 'boolean',
         ];
+    }
+
+    /**
+     * The login account this profile belongs to, if the instructor is also
+     * a Trainer who signs in to manage their own courses. Content-only
+     * profiles (no login) leave this null.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**

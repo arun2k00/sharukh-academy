@@ -1,5 +1,28 @@
 <x-layouts.auth title="Create account" heading="Create your account"
                 subheading="It takes a minute, and gives you the full curriculum and preview lessons.">
+    @if (config('academy.demo_login_enabled'))
+        <div class="mb-8 border border-dashed border-ink-300 bg-sand-50 p-5">
+            <p class="mt-1 text-[0.8125rem] text-ink-600">Preview the experience with a demo account. Nothing you do can be saved or changed.</p>
+
+            <div class="mt-4 grid grid-cols-2 gap-2">
+                <form method="POST" action="{{ route('demo-login', 'trainer') }}">
+                    @csrf
+                    <x-ui.button type="submit" variant="outline" size="sm" class="w-full">New Trainer (Demo)</x-ui.button>
+                </form>
+                <form method="POST" action="{{ route('demo-login', 'student') }}">
+                    @csrf
+                    <x-ui.button type="submit" variant="outline" size="sm" class="w-full">Existing Student (Demo)</x-ui.button>
+                </form>
+            </div>
+        </div>
+
+        <div class="mb-6 flex items-center gap-3 text-[0.75rem] text-ink-400">
+            <span class="h-px flex-1 bg-ink-200"></span>
+            Or create your own account
+            <span class="h-px flex-1 bg-ink-200"></span>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('register') }}" class="space-y-5">
         @csrf
 

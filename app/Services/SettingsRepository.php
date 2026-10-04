@@ -42,9 +42,9 @@ class SettingsRepository
         return $path !== null ? Storage::disk('public')->url($path) : null;
     }
 
-    public function set(string $key, ?string $value): void
+    public function set(string $key, ?string $value, string $group = 'general'): void
     {
-        Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        Setting::updateOrCreate(['key' => $key], ['value' => $value, 'group' => $group]);
 
         $this->flush();
     }
@@ -52,10 +52,10 @@ class SettingsRepository
     /**
      * @param  array<string, string|null>  $values
      */
-    public function setMany(array $values): void
+    public function setMany(array $values, string $group = 'general'): void
     {
         foreach ($values as $key => $value) {
-            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+            Setting::updateOrCreate(['key' => $key], ['value' => $value, 'group' => $group]);
         }
 
         $this->flush();

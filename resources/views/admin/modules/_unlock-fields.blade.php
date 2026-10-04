@@ -10,7 +10,7 @@
     </x-ui.field>
 
     <div x-show="unlockType === 'days_after_enrollment'" x-cloak>
-        <x-ui.field label="Days after enrolment" for="unlock_after_days" :error="$errors->first('unlock_after_days')">
+        <x-ui.field label="Days after enrollment" for="unlock_after_days" :error="$errors->first('unlock_after_days')">
             <x-ui.input id="unlock_after_days" name="unlock_after_days" type="number" min="1" max="3650"
                         value="{{ old('unlock_after_days', $module?->unlock_after_days) }}"
                         :invalid="$errors->has('unlock_after_days')" />

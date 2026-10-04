@@ -24,7 +24,7 @@ class EmailTemplateRenderer
             'body' => "Hello {{ student_name }},\n\nYour account is ready. You can browse the course catalogue and start learning right away.\n\n{{ academy_name }}",
         ],
         'enrollment_confirmation' => [
-            'name' => 'Enrolment confirmation',
+            'name' => 'Enrollment confirmation',
             'subject' => "You're enrolled in {{ course_name }}",
             'body' => "Hello {{ student_name }},\n\nYou now have access to {{ course_name }}. Head to your dashboard to start the first lesson.\n\n{{ academy_name }}",
         ],

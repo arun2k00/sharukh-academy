@@ -4,6 +4,7 @@ namespace App\Services\Certificates;
 
 use App\Models\CertificateTemplate;
 use App\Support\ImageRatio;
+use App\Support\WebpImage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -21,7 +22,7 @@ class CertificateTemplateService
     public function storeImage(UploadedFile $file): array
     {
         [$width, $height] = getimagesize($file->getRealPath()) ?: [0, 0];
-        $path = $file->store('certificate-templates', 'public');
+        $path = WebpImage::store($file, 'certificate-templates');
 
         return [
             'path' => $path,
@@ -33,7 +34,7 @@ class CertificateTemplateService
 
     public function storeSignature(UploadedFile $file): string
     {
-        return $file->store('certificate-templates/signatures', 'public');
+        return WebpImage::store($file, 'certificate-templates/signatures');
     }
 
     public function deleteImage(?string $path): void

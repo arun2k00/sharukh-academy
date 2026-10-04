@@ -29,7 +29,7 @@
                                         <span class="text-brass-700">
                                             {{ $module->unlock_type === \App\Enums\ModuleUnlockType::FixedDate
                                                 ? 'Unlocks '.$module->unlock_at?->format('j M Y')
-                                                : 'Unlocks '.$module->unlock_after_days.'d after enrolment' }}
+                                                : 'Unlocks '.$module->unlock_after_days.'d after enrollment' }}
                                         </span>
                                     @endunless
                                 </p>

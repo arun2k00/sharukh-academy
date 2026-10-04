@@ -37,16 +37,16 @@ class LiveClassPolicy
 
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isTrainer();
     }
 
     public function update(User $user, LiveClass $liveClass): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $liveClass->loadMissing('course')->course->isOwnedBy($user);
     }
 
     public function delete(User $user, LiveClass $liveClass): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $liveClass->loadMissing('course')->course->isOwnedBy($user);
     }
 }

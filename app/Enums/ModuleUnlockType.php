@@ -12,7 +12,7 @@ enum ModuleUnlockType: string
     {
         return match ($this) {
             self::Immediate => 'Available immediately',
-            self::DaysAfterEnrollment => 'Unlock a number of days after enrolment',
+            self::DaysAfterEnrollment => 'Unlock a number of days after enrollment',
             self::FixedDate => 'Unlock on a fixed date',
         };
     }

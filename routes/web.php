@@ -8,9 +8,12 @@ use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\CourseCatalogController;
 use App\Http\Controllers\CoursePreviewController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\LiveClassCalendarController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\Student;
+use App\Http\Controllers\Tutor;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +23,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 Route::get('/courses', [CourseCatalogController::class, 'index'])->name('courses.index');
 Route::get('/courses/{course:slug}', [CourseCatalogController::class, 'show'])->name('courses.show');
 Route::get('/courses/{course:slug}/preview/{lesson:slug}', CoursePreviewController::class)
@@ -35,6 +40,10 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', ContactMessageController::class)
     ->middleware('throttle:contact')
     ->name('contact.store');
+
+Route::get('/terms', [LegalController::class, 'terms'])->name('legal.terms');
+Route::get('/privacy', [LegalController::class, 'privacy'])->name('legal.privacy');
+Route::get('/refund-policy', [LegalController::class, 'refunds'])->name('legal.refunds');
 
 Route::get('/verify-certificate/{certificate:certificate_number}', CertificateVerificationController::class)
     ->name('certificates.verify');
@@ -54,10 +63,16 @@ Route::get('/live-classes/{liveClass:slug}', [Student\LiveClassController::class
 
 Route::middleware('guest')->group(function (): void {
     Route::get('register', [Auth\RegisteredUserController::class, 'create'])->name('register');
-    Route::post('register', [Auth\RegisteredUserController::class, 'store']);
+    // Throttled because every signup sends real mail through the academy's own
+    // mailbox: unlimited, it is a spam relay and a sender-reputation problem.
+    Route::post('register', [Auth\RegisteredUserController::class, 'store'])->middleware('throttle:register');
 
     Route::get('login', [Auth\AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('login', [Auth\AuthenticatedSessionController::class, 'store'])->middleware('throttle:login');
+
+    Route::post('demo-login/{role}', [Auth\DemoLoginController::class, 'login'])
+        ->middleware('throttle:6,1')
+        ->name('demo-login');
 
     Route::get('forgot-password', [Auth\PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('forgot-password', [Auth\PasswordResetLinkController::class, 'store'])
@@ -65,7 +80,9 @@ Route::middleware('guest')->group(function (): void {
         ->name('password.email');
 
     Route::get('reset-password/{token}', [Auth\NewPasswordController::class, 'create'])->name('password.reset');
-    Route::post('reset-password', [Auth\NewPasswordController::class, 'store'])->name('password.store');
+    Route::post('reset-password', [Auth\NewPasswordController::class, 'store'])
+        ->middleware('throttle:password-reset')
+        ->name('password.store');
 });
 
 Route::middleware('auth')->group(function (): void {
@@ -102,8 +119,16 @@ Route::middleware($studentMiddleware)->group(function (): void {
     Route::get('dashboard', Student\DashboardController::class)->name('dashboard');
     Route::get('my-courses', Student\MyCourseController::class)->name('my-courses');
 
-    Route::post('courses/{course:slug}/enroll', Student\EnrollmentController::class)->name('courses.enroll');
+    Route::post('courses/{course:slug}/enroll', Student\EnrollmentController::class)
+        ->middleware('throttle:checkout')
+        ->name('courses.enroll');
+    Route::post('courses/{course:slug}/enroll/invite', Student\InviteRedemptionController::class)
+        ->middleware('throttle:checkout')
+        ->name('courses.enroll.invite');
     Route::post('courses/{course:slug}/reviews', Student\CourseReviewController::class)->name('courses.reviews.store');
+
+    Route::get('payments/razorpay/callback/{order}', Student\PaymentCallbackController::class)->name('payments.razorpay.callback');
+    Route::get('payments/phonepe/callback/{order}', Student\PaymentCallbackController::class)->name('payments.phonepe.callback');
 
     // Learning
     Route::get('learn/{course:slug}', [Student\LearnController::class, 'show'])->name('learn.course');
@@ -194,6 +219,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Curriculum builder
     Route::get('courses/{course}/curriculum', Admin\CurriculumController::class)->name('courses.curriculum');
 
+    // Invite codes
+    Route::get('courses/{course}/invite-codes', [Admin\InviteCodeController::class, 'index'])->name('courses.invite-codes.index');
+    Route::post('courses/{course}/invite-codes', [Admin\InviteCodeController::class, 'store'])->name('courses.invite-codes.store');
+    Route::delete('invite-codes/{inviteCode}', [Admin\InviteCodeController::class, 'destroy'])->name('invite-codes.destroy');
+
     Route::post('courses/{course}/modules', [Admin\CourseModuleController::class, 'store'])->name('modules.store');
     Route::get('modules/{module}/edit', [Admin\CourseModuleController::class, 'edit'])->name('modules.edit');
     Route::put('modules/{module}', [Admin\CourseModuleController::class, 'update'])->name('modules.update');
@@ -223,6 +253,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('enrollments', [Admin\EnrollmentController::class, 'store'])->name('enrollments.store');
     Route::patch('enrollments/{enrollment}', [Admin\EnrollmentController::class, 'update'])->name('enrollments.update');
     Route::delete('enrollments/{enrollment}', [Admin\EnrollmentController::class, 'destroy'])->name('enrollments.destroy');
+
+    Route::get('orders', [Admin\OrderController::class, 'index'])->name('orders.index');
+    Route::get('orders/{order}', [Admin\OrderController::class, 'show'])->name('orders.show');
+    Route::post('orders/{order}/refund', Admin\OrderRefundController::class)->name('orders.refund');
 
     Route::get('certificates', [Admin\CertificateController::class, 'index'])->name('certificates.index');
     Route::delete('certificates/{certificate}', [Admin\CertificateController::class, 'destroy'])->name('certificates.destroy');
@@ -265,4 +299,51 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('settings', [Admin\SettingController::class, 'edit'])->name('settings.edit');
     Route::put('settings', [Admin\SettingController::class, 'update'])->name('settings.update');
+
+    Route::get('settings/payments', [Admin\PaymentSettingController::class, 'edit'])->name('settings.payments.edit');
+    Route::put('settings/payments', [Admin\PaymentSettingController::class, 'update'])->name('settings.payments.update');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Tutor dashboard
+|--------------------------------------------------------------------------
+|
+| A Trainer's own, owner-scoped course tools — a smaller parallel to the
+| Admin panel's course/curriculum/live-class management, restricted to
+| courses attributed to the Trainer's own linked Instructor profile.
+*/
+
+Route::middleware(['auth', 'trainer'])->prefix('tutor')->name('tutor.')->group(function (): void {
+    Route::get('pending', Tutor\PendingSetupController::class)->name('pending');
+
+    Route::get('/', Tutor\DashboardController::class)->name('dashboard');
+
+    Route::resource('courses', Tutor\CourseController::class);
+    Route::patch('courses/{course}/status', Tutor\CourseStatusController::class)->name('courses.status');
+    Route::get('courses/{course}/curriculum', Tutor\CurriculumController::class)->name('courses.curriculum');
+
+    Route::get('courses/{course}/invite-codes', [Tutor\InviteCodeController::class, 'index'])->name('courses.invite-codes.index');
+    Route::post('courses/{course}/invite-codes', [Tutor\InviteCodeController::class, 'store'])->name('courses.invite-codes.store');
+    Route::delete('invite-codes/{inviteCode}', [Tutor\InviteCodeController::class, 'destroy'])->name('invite-codes.destroy');
+
+    Route::post('courses/{course}/modules', [Tutor\CourseModuleController::class, 'store'])->name('modules.store');
+    Route::get('modules/{module}/edit', [Tutor\CourseModuleController::class, 'edit'])->name('modules.edit');
+    Route::put('modules/{module}', [Tutor\CourseModuleController::class, 'update'])->name('modules.update');
+    Route::delete('modules/{module}', [Tutor\CourseModuleController::class, 'destroy'])->name('modules.destroy');
+    Route::patch('modules/{module}/move', Tutor\CourseModuleOrderController::class)->name('modules.move');
+
+    Route::get('courses/{course}/lessons/create', [Tutor\LessonController::class, 'create'])->name('lessons.create');
+    Route::post('courses/{course}/lessons', [Tutor\LessonController::class, 'store'])->name('lessons.store');
+    Route::get('lessons/{lesson}/edit', [Tutor\LessonController::class, 'edit'])->name('lessons.edit');
+    Route::put('lessons/{lesson}', [Tutor\LessonController::class, 'update'])->name('lessons.update');
+    Route::delete('lessons/{lesson}', [Tutor\LessonController::class, 'destroy'])->name('lessons.destroy');
+    Route::patch('lessons/{lesson}/move', Tutor\LessonOrderController::class)->name('lessons.move');
+
+    Route::post('lessons/{lesson}/resources', [Tutor\LessonResourceController::class, 'store'])->name('lessons.resources.store');
+    Route::delete('lesson-resources/{resource}', [Tutor\LessonResourceController::class, 'destroy'])->name('lessons.resources.destroy');
+
+    Route::resource('live-classes', Tutor\LiveClassController::class)->parameters(['live-classes' => 'liveClass']);
+    Route::post('live-classes/{liveClass}/resources', [Tutor\LiveClassResourceController::class, 'store'])->name('live-classes.resources.store');
+    Route::delete('live-class-resources/{resource}', [Tutor\LiveClassResourceController::class, 'destroy'])->name('live-classes.resources.destroy');
 });

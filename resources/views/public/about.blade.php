@@ -1,6 +1,6 @@
-<x-layouts.public title="About" description="How Edunova teaches, and who teaches here.">
+<x-layouts.public title="About" description="How Sharukh Academy teaches, and who teaches here.">
     <section class="border-b border-ink-200">
-        <div class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
+        <div class="mx-auto max-w-[1400px] px-5 py-16 lg:px-8 lg:py-20">
             <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">About the academy</p>
             <h1 class="mt-5 max-w-3xl text-[2rem] leading-[1.15] sm:text-[2.75rem]">
                 A short catalogue, taught properly, by people who still do the work.
@@ -14,7 +14,7 @@
     </section>
 
     <section class="border-b border-ink-200 bg-texture-dots">
-        <dl class="mx-auto grid max-w-[1600px] divide-y divide-ink-200 px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:px-8">
+        <dl class="mx-auto grid max-w-[1400px] divide-y divide-ink-200 px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0 lg:px-8">
             <div class="py-8 sm:pr-8">
                 <dt class="text-[0.8125rem] text-ink-500">Programmes offered</dt>
                 <dd class="mt-2 font-serif text-3xl text-ink-900 tabular-nums">{{ $stats['courses'] }}</dd>
@@ -30,7 +30,7 @@
         </dl>
     </section>
 
-    <section class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
+    <section class="mx-auto max-w-[1400px] px-5 py-16 lg:px-8 lg:py-20">
         <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
             <div class="lg:col-span-4">
                 <h2 class="text-[1.5rem] leading-tight">How we teach</h2>
@@ -52,7 +52,7 @@
     </section>
 
     <section class="border-y border-ink-200 bg-texture-dots">
-        <div class="mx-auto flex max-w-[1600px] flex-wrap items-center justify-between gap-6 px-5 py-12 lg:px-8">
+        <div class="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-6 px-5 py-12 lg:px-8">
             <div>
                 <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">The faculty</p>
                 <h2 class="mt-3 text-[1.5rem] leading-tight">Meet the people who teach here</h2>
@@ -62,7 +62,7 @@
     </section>
 
     @if ($testimonials->isNotEmpty())
-        <section class="mx-auto max-w-[1600px] px-5 py-16 lg:px-8 lg:py-20">
+        <section class="mx-auto max-w-[1400px] px-5 py-16 lg:px-8 lg:py-20">
             <x-ui.section-heading eyebrow="From our students" title="What people say" />
             <div class="mt-12 grid gap-10 sm:grid-cols-2">
                 @foreach ($testimonials as $testimonial)
@@ -73,7 +73,7 @@
     @endif
 
     <section class="bg-ink-950">
-        <div class="mx-auto flex max-w-[1600px] flex-wrap items-end justify-between gap-8 px-5 py-16 lg:px-8">
+        <div class="mx-auto flex max-w-[1400px] flex-wrap items-end justify-between gap-8 px-5 py-16 lg:px-8">
             <h2 class="max-w-xl text-[1.75rem] leading-tight text-white">
                 Have a look at what we run.
             </h2>

@@ -18,11 +18,11 @@ class LessonResourcePolicy
 
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isTrainer();
     }
 
     public function delete(User $user, LessonResource $resource): bool
     {
-        return $user->isAdmin();
+        return Gate::forUser($user)->allows('update', $resource->loadMissing('lesson')->lesson);
     }
 }

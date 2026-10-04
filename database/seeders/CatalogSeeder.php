@@ -79,7 +79,7 @@ class CatalogSeeder extends Seeder
             [
                 'slug' => 'sharuk-shaik',
                 'name' => 'Sharuk Shaik',
-                'headline' => 'Enterprise data engineering trainer — 10+ years, 3000+ students trained',
+                'headline' => 'Enterprise data engineering trainer with 10+ years of experience and 3000+ students trained',
                 'is_featured' => true,
                 'experience_years' => 10,
                 'bio' => "Sharukh Sir is a seasoned data engineering professional with over a decade of experience building and managing enterprise data platforms across multiple industries including banking, insurance, retail, and healthcare.\n\nHaving worked with organizations ranging from fast-growing startups to Fortune 500 companies, he brings a unique perspective that blends deep technical knowledge with practical business understanding.\n\nHis teaching philosophy is simple: theory without practice is incomplete. Every concept is taught with real-world context, every module ends with hands-on exercises, and every student graduates with production-grade project experience.\n\nHis mission is to make every student industry-ready from day one — not just in tools and technology, but in mindset, problem-solving, and professional communication.",
@@ -169,14 +169,17 @@ class CatalogSeeder extends Seeder
                 'audience' => $definition['audience'],
                 'certificate_enabled' => true,
                 'completion_threshold' => 100,
-                // Thumbnail: a distinct placeholder per course (swap for real
-                // photography per course from the admin course form).
-                'thumbnail_path' => DemoThumbnailFactory::make(
-                    $definition['slug'],
-                    $definition['title'],
-                    $definition['category'],
-                    $definition['level']->value,
-                ),
+                // Thumbnail: a generated cover distinct to this course where
+                // one exists, the shared stock photo otherwise (swap for real
+                // per-course photography from the admin course form).
+                'thumbnail_path' => DemoThumbnailFactory::coursePhotoPath($definition['slug'])
+                    ?? DemoThumbnailFactory::stockPhotoPath()
+                    ?? DemoThumbnailFactory::make(
+                        $definition['slug'],
+                        $definition['title'],
+                        $definition['category'],
+                        $definition['level']->value,
+                    ),
                 // Banner: the same fixed header image on every course page —
                 // see public/bannerheader.jpg.
                 'banner_path' => DemoThumbnailFactory::stockPhotoPath() ?? DemoThumbnailFactory::makeBanner(
@@ -303,12 +306,12 @@ class CatalogSeeder extends Seeder
     private function seedGeneralFaqs(): void
     {
         $rows = [
-            ['How long do I keep access to a course?', 'Enrolment does not expire unless we tell you otherwise at the point of sale. Recorded lessons, resources and live-class recordings stay in your account.'],
+            ['How long do I keep access to a course?', 'Enrollment does not expire unless we tell you otherwise at the point of sale. Recorded lessons, resources and live-class recordings stay in your account.'],
             ['Do I need to attend the live classes?', 'No. They are scheduled for questions and critique, and every session is recorded and attached to the course afterwards. Attending is better, but the curriculum stands on its own.'],
             ['What happens if I fall behind?', 'Nothing. There is no cohort clock. Your progress is saved per lesson and the dashboard always shows you the next thing to watch.'],
             ['Is there a certificate?', 'Yes. Complete every published lesson in a course and the certificate is issued automatically, with a public link an employer can use to verify it.'],
             ['Can I pay in instalments?', 'Write to us before enrolling and we will arrange it. Payment is handled by our team directly at the moment.'],
-            ['Do you offer refunds?', 'If a course is not right for you, tell us within fourteen days of enrolling and we will refund it in full.'],
+            ['Do you offer refunds?', 'No. Every course is a digital product you get full access to the moment you enroll, so we do not offer refunds for a change of mind — please review the curriculum and free preview lessons carefully before enrolling. See our Refund Policy for the limited exceptions (like a duplicate charge) that we do correct.'],
         ];
 
         Faq::query()->whereNull('course_id')->delete();

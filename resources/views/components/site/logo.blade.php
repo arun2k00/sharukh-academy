@@ -13,7 +13,9 @@
 <a href="{{ route('home') }}" {{ $attributes->merge(['class' => 'inline-flex items-center gap-2.5']) }}>
     @if ($logoUrl)
         {{-- An uploaded logo replaces the drawn wordmark entirely (§23, §28). --}}
-        <img src="{{ $logoUrl }}" alt="{{ $name }}" class="h-8 w-auto {{ $imageFilter }}">
+        {{-- The wordmark is wide and carries its own internal padding, so it
+             needs more height than a square mark to read at the same weight. --}}
+        <img src="{{ $logoUrl }}" alt="{{ $name }}" class="h-10 w-auto lg:h-11 {{ $imageFilter }}">
     @else
         <span class="flex size-8 items-center justify-center border {{ $mark }} font-serif text-[0.95rem] leading-none">{{ str($name)->substr(0, 1) }}</span>
         <span class="font-serif text-[1.05rem] tracking-tight {{ $primary }}">{{ $name }}</span>

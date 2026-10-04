@@ -16,7 +16,8 @@
         ],
         'People' => [
             ['label' => 'Students', 'icon' => 'users', 'route' => 'admin.students.index', 'pattern' => 'admin.students.*'],
-            ['label' => 'Enrolments', 'icon' => 'graduation-cap', 'route' => 'admin.enrollments.index', 'pattern' => 'admin.enrollments.*'],
+            ['label' => 'Enrollments', 'icon' => 'graduation-cap', 'route' => 'admin.enrollments.index', 'pattern' => 'admin.enrollments.*'],
+            ['label' => 'Orders', 'icon' => 'tag', 'route' => 'admin.orders.index', 'pattern' => 'admin.orders.*'],
         ],
         'Support' => [
             ['label' => 'Support tickets', 'icon' => 'message', 'route' => 'admin.support-tickets.index', 'pattern' => 'admin.support-tickets.*', 'badge' => $openSupportTickets],
@@ -32,7 +33,8 @@
         ],
         'System' => [
             ['label' => 'Email templates', 'icon' => 'mail', 'route' => 'admin.email-templates.index', 'pattern' => 'admin.email-templates.*'],
-            ['label' => 'Settings', 'icon' => 'sliders', 'route' => 'admin.settings.edit', 'pattern' => 'admin.settings.*'],
+            ['label' => 'Settings', 'icon' => 'sliders', 'route' => 'admin.settings.edit', 'pattern' => 'admin.settings.edit|admin.settings.update'],
+            ['label' => 'Payments', 'icon' => 'tag', 'route' => 'admin.settings.payments.edit', 'pattern' => 'admin.settings.payments.*'],
         ],
     ];
 @endphp

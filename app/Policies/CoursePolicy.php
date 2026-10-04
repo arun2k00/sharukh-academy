@@ -22,11 +22,13 @@ class CoursePolicy
 
     /**
      * The public course page is visible while the course is published; staff
-     * can preview drafts.
+     * and the trainer it belongs to can preview it as a draft.
      */
     public function view(?User $user, Course $course): bool
     {
-        return $course->isPublished() || $user?->isAdmin() === true;
+        return $course->isPublished()
+            || $user?->isAdmin() === true
+            || ($user !== null && $course->isOwnedBy($user));
     }
 
     /**
@@ -51,17 +53,17 @@ class CoursePolicy
 
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isTrainer();
     }
 
     public function update(User $user, Course $course): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $course->isOwnedBy($user);
     }
 
     public function delete(User $user, Course $course): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $course->isOwnedBy($user);
     }
 
     public function restore(User $user, Course $course): bool

@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 /**
  * The flagship career path: a staged roadmap through the data engineering
  * catalogue seeded by CatalogSeeder. Each course stays independently
- * enrollable — this only sequences and groups them for the journey page.
+ * enrollable. This only sequences and groups them for the journey page.
  */
 class CareerPathSeeder extends Seeder
 {
@@ -35,11 +35,11 @@ class CareerPathSeeder extends Seeder
         $careerPath = CareerPath::updateOrCreate(
             ['slug' => 'data-engineering-complete-job-ready-program'],
             [
-                'title' => 'Data Engineering — Complete Job-Ready Program',
-                'subtitle' => 'SQL and Python, then Azure Data Factory and Snowflake, then dbt and Power BI — in the order we would actually recommend.',
-                'description' => "One course teaches you a tool. This path teaches you the job: get comfortable with the languages first, learn to move and store data at scale, then transform it and present it the way a real data team does.\n\nEvery course below is a complete, independently enrollable programme on its own — this page is the recommended order to take them in, so what you learn in one course is already in place by the time you need it in the next. Prefer one enrolment instead of six? Master the Modern Data Stack covers this entire path in a single course.",
+                'title' => 'Data Engineering: The Complete, Job-Ready Program',
+                'subtitle' => 'SQL and Python first, then Azure Data Factory and Snowflake, then dbt and Power BI, in the order we would actually recommend.',
+                'description' => "One course teaches you a tool. This path teaches you the job: get comfortable with the languages first, learn to move and store data at scale, then transform it and present it the way a real data team does.\n\nEvery course below is a complete, independently enrollable programme on its own. This page simply shows the order we would take them in, so what you learn in one course is already in place by the time you need it in the next. Prefer one enrollment instead of six? Master the Modern Data Stack covers this entire path in a single course.",
                 'capstone_title' => 'Build an end-to-end data platform',
-                'capstone_description' => 'Combine every tool above into one project: pull data from an API with Python, land and model it in Snowflake, orchestrate the load with Azure Data Factory, transform it with dbt, and present it in a Power BI dashboard — the same shape of project a real data engineering job asks for.',
+                'capstone_description' => 'Combine every tool above into one project: pull data from an API with Python, land and model it in Snowflake, orchestrate the load with Azure Data Factory, transform it with dbt, and present it in a Power BI dashboard. It is the same shape of project a real data engineering job would ask you to do.',
                 'bundle_course_id' => $bundleCourse?->id,
                 'is_published' => true,
                 'is_featured' => true,

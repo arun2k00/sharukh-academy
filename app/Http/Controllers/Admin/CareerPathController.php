@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CareerPathRequest;
 use App\Models\CareerPath;
 use App\Models\Course;
+use App\Services\ResourceStorageService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -18,6 +19,10 @@ use Illuminate\View\View;
  */
 class CareerPathController extends Controller
 {
+    public function __construct(
+        private readonly ResourceStorageService $storage,
+    ) {}
+
     public function index(): View
     {
         return view('admin.career-paths.index', [
@@ -36,7 +41,9 @@ class CareerPathController extends Controller
     public function store(CareerPathRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-        $careerPath = CareerPath::create($this->pathAttributes($validated));
+        $careerPath = new CareerPath($this->pathAttributes($validated));
+        $this->applyBanner($careerPath, $request);
+        $careerPath->save();
         $careerPath->courses()->sync($this->coursesSyncData($validated));
 
         return redirect()->route('admin.career-paths.index')->with('status', 'Career path created.');
@@ -53,7 +60,9 @@ class CareerPathController extends Controller
     public function update(CareerPathRequest $request, CareerPath $careerPath): RedirectResponse
     {
         $validated = $request->validated();
-        $careerPath->update($this->pathAttributes($validated));
+        $careerPath->fill($this->pathAttributes($validated));
+        $this->applyBanner($careerPath, $request);
+        $careerPath->save();
         $careerPath->courses()->sync($this->coursesSyncData($validated));
 
         return redirect()->route('admin.career-paths.index')->with('status', 'Career path updated.');
@@ -61,6 +70,7 @@ class CareerPathController extends Controller
 
     public function destroy(CareerPath $careerPath): RedirectResponse
     {
+        $this->storage->deleteImage($careerPath->banner_path);
         $careerPath->delete();
 
         return redirect()->route('admin.career-paths.index')->with('status', 'Career path deleted.');
@@ -81,9 +91,17 @@ class CareerPathController extends Controller
     private function pathAttributes(array $validated): array
     {
         $attributes = $validated;
-        unset($attributes['courses']);
+        unset($attributes['courses'], $attributes['banner']);
 
         return $attributes;
+    }
+
+    private function applyBanner(CareerPath $careerPath, CareerPathRequest $request): void
+    {
+        if ($request->hasFile('banner')) {
+            $this->storage->deleteImage($careerPath->banner_path);
+            $careerPath->banner_path = $this->storage->storeImage($request->file('banner'), 'career-paths');
+        }
     }
 
     /**

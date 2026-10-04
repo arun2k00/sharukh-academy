@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\EnrollmentSource;
 use App\Enums\EnrollmentStatus;
+use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\EnrollmentRequest;
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\Order;
+use App\Models\Payment;
 use App\Models\User;
 use App\Services\EnrollmentService;
 use Illuminate\Http\RedirectResponse;
@@ -61,7 +65,29 @@ class EnrollmentController extends Controller
         $student = User::findOrFail($request->integer('user_id'));
         $course = Course::findOrFail($request->integer('course_id'));
 
-        $enrollment = $this->enrollments->enroll($student, $course, EnrollmentSource::Admin);
+        // A paid course may already have a pending order from a checkout the
+        // student started but never finished. Settle it here so it shows as
+        // paid in the Orders screen instead of sitting pending forever.
+        $order = Order::query()
+            ->where('user_id', $student->id)
+            ->where('course_id', $course->id)
+            ->where('status', OrderStatus::Pending)
+            ->first();
+
+        if ($order !== null) {
+            $order->update(['status' => OrderStatus::Paid, 'paid_at' => now()]);
+
+            Payment::create([
+                'order_id' => $order->id,
+                'gateway' => 'manual',
+                'amount' => $order->amount,
+                'currency' => $order->currency,
+                'status' => PaymentStatus::Successful,
+                'paid_at' => now(),
+            ]);
+        }
+
+        $enrollment = $this->enrollments->enroll($student, $course, EnrollmentSource::Admin, $order);
 
         $this->enrollments->changeStatus($enrollment, EnrollmentStatus::from($request->string('status')->toString()));
 
@@ -80,7 +106,7 @@ class EnrollmentController extends Controller
 
         $enrollment->forceFill(['expires_at' => $request->date('expires_at')])->save();
 
-        return back()->with('status', 'Enrolment updated.');
+        return back()->with('status', 'Enrollment updated.');
     }
 
     public function destroy(Enrollment $enrollment): RedirectResponse
@@ -89,6 +115,6 @@ class EnrollmentController extends Controller
 
         $enrollment->delete();
 
-        return back()->with('status', 'Enrolment removed. The student can no longer open the course.');
+        return back()->with('status', 'Enrollment removed. The student can no longer open the course.');
     }
 }

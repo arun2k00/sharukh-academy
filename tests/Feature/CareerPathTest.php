@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\CareerPath;
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\Instructor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -75,6 +76,20 @@ class CareerPathTest extends TestCase
         $this->get(route('career-paths.show', $withoutCapstone))
             ->assertOk()
             ->assertDontSee('Real-world project');
+    }
+
+    public function test_the_show_page_lists_the_paths_instructors_and_course_stats(): void
+    {
+        $instructor = Instructor::factory()->create(['name' => 'Sharuk Shaik']);
+        $course = Course::factory()->create(['instructor_id' => $instructor->id, 'duration_minutes' => 120]);
+        $path = CareerPath::factory()->create();
+        $path->courses()->attach($course->id, ['stage_label' => 'FOUNDATION', 'sort_order' => 1]);
+
+        $this->get(route('career-paths.show', $path))
+            ->assertOk()
+            ->assertSee('Sharuk Shaik')
+            ->assertSee('Hours of instruction')
+            ->assertSee('2'); // 120 minutes = 2 hours
     }
 
     public function test_an_enrolled_students_course_shows_continue_instead_of_view_course(): void

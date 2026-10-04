@@ -22,7 +22,7 @@ use Illuminate\Support\Collection;
  * Populates the engagement features added in the advanced-features phase
  * (§12–16, §22, §25) with realistic demo content, so a fresh install shows
  * working screens rather than empty states everywhere. Runs after
- * DemoAccountSeeder, which is what creates the enrolments and progress this
+ * DemoAccountSeeder, which is what creates the enrollments and progress this
  * seeder attaches to.
  */
 class EngagementSeeder extends Seeder
@@ -35,17 +35,17 @@ class EngagementSeeder extends Seeder
             return;
         }
 
-        $admin = User::firstWhere('email', 'admin@oaceracademy.test');
+        $admin = User::firstWhere('email', 'admin@aixone.site');
 
         $students = User::query()
             ->whereIn('email', [
-                'meera@example.test', 'jude@example.test', 'rohit@example.test',
+                'student@aixone.site', 'jude@example.test', 'rohit@example.test',
                 'fiona@example.test', 'kwame@example.test', 'sara@example.test', 'tom@example.test',
             ])
             ->get()
             ->keyBy('email');
 
-        $meera = $students['meera@example.test'] ?? null;
+        $meera = $students['student@aixone.site'] ?? null;
         $jude = $students['jude@example.test'] ?? null;
         $rohit = $students['rohit@example.test'] ?? null;
         $fiona = $students['fiona@example.test'] ?? null;
@@ -268,9 +268,9 @@ class EngagementSeeder extends Seeder
         if ($tom !== null) {
             SupportTicket::create([
                 'user_id' => $tom->id,
-                'subject' => 'Invoice for enrolment needed',
+                'subject' => 'Invoice for enrollment needed',
                 'category' => 'billing',
-                'message' => 'Could you send an invoice with VAT details for my recent enrolment? My employer needs it for reimbursement.',
+                'message' => 'Could you send an invoice with VAT details for my recent enrollment? My employer needs it for reimbursement.',
                 'status' => 'open',
             ]);
         }

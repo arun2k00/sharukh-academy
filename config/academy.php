@@ -13,15 +13,15 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Edunova'),
+    'name' => env('APP_NAME', 'Sharukh Academy'),
 
     'currency' => env('ACADEMY_CURRENCY', 'INR'),
 
     'currency_symbol' => env('ACADEMY_CURRENCY_SYMBOL', '₹'),
 
-    'support_email' => env('ACADEMY_SUPPORT_EMAIL', 'support@edunova.com'),
+    'support_email' => env('ACADEMY_SUPPORT_EMAIL', 'support@sharukhacademy.com'),
 
-    'support_phone' => env('ACADEMY_SUPPORT_PHONE', '+91 00000 00000'),
+    'support_phone' => env('ACADEMY_SUPPORT_PHONE'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,6 +52,14 @@ return [
     | Watched percentage at which a video lesson may be auto-completed.
     */
     'video_completion_percent' => 90,
+
+    /*
+    | One-click sign-in into a seeded demo account from the sign-up page, so a
+    | visitor can see each role's experience without knowing test credentials.
+    | Defaults to on everywhere except production — set DEMO_LOGIN_ENABLED
+    | explicitly if a non-production environment should hide it too.
+    */
+    'demo_login_enabled' => (bool) env('DEMO_LOGIN_ENABLED', env('APP_ENV', 'production') !== 'production'),
 
     /*
     |--------------------------------------------------------------------------

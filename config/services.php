@@ -41,6 +41,13 @@ return [
         'webhook_secret' => env('RAZORPAY_WEBHOOK_SECRET'),
     ],
 
+    'phonepe' => [
+        'merchant_id' => env('PHONEPE_MERCHANT_ID'),
+        'salt_key' => env('PHONEPE_SALT_KEY'),
+        'salt_index' => env('PHONEPE_SALT_INDEX', '1'),
+        'env' => env('PHONEPE_ENV', 'sandbox'),
+    ],
+
     'stripe' => [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
-    'user_id', 'course_id', 'order_id', 'last_lesson_id', 'status', 'source',
+    'user_id', 'course_id', 'order_id', 'invite_code_id', 'last_lesson_id', 'status', 'source',
     'progress_percent', 'enrolled_at', 'completed_at', 'expires_at', 'last_accessed_at',
 ])]
 class Enrollment extends Model
@@ -70,6 +70,14 @@ class Enrollment extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
+    }
+
+    /**
+     * @return BelongsTo<InviteCode, $this>
+     */
+    public function inviteCode(): BelongsTo
+    {
+        return $this->belongsTo(InviteCode::class);
     }
 
     /**

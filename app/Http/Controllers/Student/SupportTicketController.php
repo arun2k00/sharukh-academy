@@ -18,7 +18,7 @@ class SupportTicketController extends Controller
      */
     public const CATEGORIES = [
         'general' => 'General question',
-        'billing' => 'Billing and enrolment',
+        'billing' => 'Billing and enrollment',
         'technical' => 'Technical issue',
         'course_content' => 'Course content',
     ];

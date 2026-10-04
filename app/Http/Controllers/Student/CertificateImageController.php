@@ -26,7 +26,10 @@ class CertificateImageController extends Controller
         CertificateImageService $renderer,
         CertificateService $certificates,
     ): Response {
-        if ($request->user() !== null) {
+        // Only the private route is owner-gated. The public verification page
+        // is open by design, and checking ownership there would 403 any signed-in
+        // visitor verifying someone else's certificate (an employer, say).
+        if ($request->routeIs('certificates.image')) {
             Gate::authorize('view', $certificate);
         }
 

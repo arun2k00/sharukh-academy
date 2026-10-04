@@ -5,6 +5,8 @@ namespace Tests\Feature\Admin;
 use App\Models\CareerPath;
 use App\Models\Course;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class CareerPathManagementTest extends TestCase
@@ -49,6 +51,23 @@ class CareerPathManagementTest extends TestCase
         $this->assertSame('data-engineering-complete-job-ready-program', $path->slug);
         $this->assertSame([$sql->id, $python->id], $path->courses()->pluck('courses.id')->all());
         $this->assertSame('FOUNDATION', $path->courses()->first()->pivot->stage_label);
+    }
+
+    public function test_the_admin_can_upload_a_banner_image(): void
+    {
+        Storage::fake('public');
+
+        $this->actingAs($this->admin())
+            ->post(route('admin.career-paths.store'), $this->validPayload([
+                'banner' => UploadedFile::fake()->image('banner.jpg', 1600, 500),
+            ]))
+            ->assertRedirect(route('admin.career-paths.index'));
+
+        $path = CareerPath::firstOrFail();
+
+        $this->assertNotNull($path->banner_path);
+        Storage::disk('public')->assertExists($path->banner_path);
+        $this->assertNotNull($path->banner_url);
     }
 
     public function test_updating_a_career_path_replaces_its_course_list(): void

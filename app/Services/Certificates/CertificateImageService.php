@@ -98,6 +98,7 @@ class CertificateImageService
         $image = match ($extension) {
             'png' => @imagecreatefrompng($path),
             'jpg', 'jpeg' => @imagecreatefromjpeg($path),
+            'webp' => @imagecreatefromwebp($path),
             default => false,
         };
 
@@ -159,6 +160,7 @@ class CertificateImageService
         $signature = match ($extension) {
             'png' => @imagecreatefrompng($path),
             'jpg', 'jpeg' => @imagecreatefromjpeg($path),
+            'webp' => @imagecreatefromwebp($path),
             default => false,
         };
 

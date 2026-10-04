@@ -43,7 +43,11 @@ class AuthenticatedSessionController extends Controller
             return redirect($redirectTo);
         }
 
-        return redirect()->intended($user->isAdmin() ? route('admin.dashboard') : route('dashboard'));
+        return redirect()->intended(match (true) {
+            $user->isAdmin() => route('admin.dashboard'),
+            $user->isTrainer() => route('tutor.dashboard'),
+            default => route('dashboard'),
+        });
     }
 
     public function destroy(Request $request): RedirectResponse

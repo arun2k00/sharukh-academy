@@ -7,7 +7,7 @@
         <x-ui.stat label="Students" :value="number_format($stats['students'])" />
         <x-ui.stat label="Published courses" :value="$stats['publishedCourses']"
                    :hint="$stats['draftCourses'].' in draft'" />
-        <x-ui.stat label="Enrolments" :value="number_format($stats['enrollments'])" />
+        <x-ui.stat label="Enrollments" :value="number_format($stats['enrollments'])" />
         <x-ui.stat label="Certificates issued" :value="number_format($stats['certificates'])" />
     </dl>
 
@@ -19,13 +19,13 @@
     @endif
 
     <div class="mt-8 grid gap-6 lg:grid-cols-2">
-        <x-ui.panel title="Recent enrolments" :padded="false">
+        <x-ui.panel title="Recent enrollments" :padded="false">
             <x-slot:actions>
                 <a href="{{ route('admin.enrollments.index') }}" class="text-[0.8125rem] text-pine-700 hover:underline">All</a>
             </x-slot:actions>
 
             @if ($recentEnrollments->isEmpty())
-                <p class="px-5 py-8 text-center text-sm text-ink-500">No enrolments yet.</p>
+                <p class="px-5 py-8 text-center text-sm text-ink-500">No enrollments yet.</p>
             @else
                 <ul class="divide-y divide-ink-200">
                     @foreach ($recentEnrollments as $enrollment)

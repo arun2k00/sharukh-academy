@@ -48,6 +48,18 @@
                            class="block w-full text-sm text-ink-600 file:mr-3 file:border file:border-ink-300 file:bg-white file:px-3 file:py-1.5 file:text-sm file:text-ink-800 hover:file:bg-sand-100" />
                 </x-ui.field>
 
+                <x-ui.field label="Linked trainer account" for="user_id" :error="$errors->first('user_id')"
+                            hint="Lets this person sign in and manage their own courses from the Tutor dashboard.">
+                    <x-ui.select id="user_id" name="user_id" :invalid="$errors->has('user_id')">
+                        <option value="">— No login (profile only) —</option>
+                        @foreach ($trainers as $trainer)
+                            <option value="{{ $trainer->id }}" @selected((string) old('user_id', $instructor->user_id) === (string) $trainer->id)>
+                                {{ $trainer->name }} ({{ $trainer->email }})
+                            </option>
+                        @endforeach
+                    </x-ui.select>
+                </x-ui.field>
+
                 <x-ui.field label="Years in practice" for="experience_years" :error="$errors->first('experience_years')">
                     <x-ui.input id="experience_years" name="experience_years" type="number" min="0" max="80"
                                 value="{{ old('experience_years', $instructor->experience_years) }}"

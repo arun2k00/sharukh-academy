@@ -4,59 +4,66 @@
 @source '../../storage/framework/views/*.php';
 
 /*
-| Edunova design tokens
+| Sharukh Academy design tokens
 |
-| A deliberately narrow palette: warm paper, near-black ink for text, the
-| brand's emerald green for anything interactive, and a muted brass reserved
-| for ratings and small emphasis. Headings use a serif for an editorial feel;
-| everything functional stays in the sans.
+| Everything is drawn from the logo: the bright azure of the S-mark, the deep
+| navy its gradient falls into, and cool paper/ink neutrals so nothing warm
+| fights the blue. Headings use a serif for an editorial feel; everything
+| functional stays in the sans.
+|
+| The scales are still named `pine`/`sand`/`brass`/`blush` from the previous
+| brand. Renaming them would mean editing several hundred utility classes
+| across the templates for no visual gain, so the names stayed and the values
+| moved. `pine-*` is the brand blue.
 */
 @theme {
     --font-sans: 'Instrument Sans', 'Instrument Sans Fallback', ui-sans-serif, system-ui, -apple-system, sans-serif;
     --font-serif: 'Source Serif 4', 'Source Serif 4 Fallback', ui-serif, Georgia, 'Times New Roman', serif;
 
-    --color-ink-50: #f7f7f6;
-    --color-ink-100: #ececeb;
-    --color-ink-200: #d8d8d5;
-    --color-ink-300: #b4b4af;
-    --color-ink-400: #8a8a84;
-    --color-ink-500: #6b6b65;
-    --color-ink-600: #55554f;
-    --color-ink-700: #454541;
-    --color-ink-800: #2c2c29;
-    --color-ink-900: #1a1a18;
-    --color-ink-950: #0e0e0d;
+    --color-ink-50: #f7f9fa;
+    --color-ink-100: #eceff3;
+    --color-ink-200: #d8dee6;
+    --color-ink-300: #b3bcc9;
+    --color-ink-400: #8792a2;
+    --color-ink-500: #677181;
+    --color-ink-600: #515a68;
+    --color-ink-700: #414955;
+    --color-ink-800: #2a303a;
+    --color-ink-900: #171d26;
+    --color-ink-950: #0b1017;
 
-    --color-sand-50: #fcfbf8;
-    --color-sand-100: #f6f3ec;
-    --color-sand-200: #ece7db;
-    --color-sand-300: #ded6c4;
-    --color-sand-400: #c9bfa8;
+    --color-sand-50: #f8fafc;
+    --color-sand-100: #f1f5f9;
+    --color-sand-200: #e5edf5;
+    --color-sand-300: #d2dfec;
+    --color-sand-400: #b2c5da;
 
-    --color-pine-50: #f1fbf6;
-    --color-pine-100: #d9f7e9;
-    --color-pine-200: #a3f5cd;
-    --color-pine-300: #5df6ac;
-    --color-pine-400: #12fd8b;
-    --color-pine-500: #01bf63;
-    --color-pine-600: #00994f;
-    --color-pine-700: #03753e;
-    --color-pine-800: #045b31;
-    --color-pine-900: #054023;
+    /* The brand blue, taken off the logo: azure at 500, its navy at 900. */
+    --color-pine-50: #eef6fd;
+    --color-pine-100: #d7eafa;
+    --color-pine-200: #b3d6f4;
+    --color-pine-300: #82bdec;
+    --color-pine-400: #479ee3;
+    --color-pine-500: #1e83d7;
+    --color-pine-600: #1068bd;
+    --color-pine-700: #0d539b;
+    --color-pine-800: #0a3f78;
+    --color-pine-900: #073055;
 
-    --color-brass-50: #faf5ea;
-    --color-brass-100: #f2e6cf;
-    --color-brass-500: #a8763a;
-    --color-brass-600: #8c6130;
-    --color-brass-700: #6f4d26;
+    /* Steel: small emphasis and ratings, kept cool so nothing reads as gold. */
+    --color-brass-50: #eff4f9;
+    --color-brass-100: #dce7f1;
+    --color-brass-500: #44688f;
+    --color-brass-600: #375577;
+    --color-brass-700: #2c4460;
 
-    /* A small set of pastels for badges and section washes — used sparingly. */
+    /* A small set of tints for badges and section washes — used sparingly. */
     --color-sky-50: #f0f6fb;
     --color-sky-100: #dceaf5;
     --color-sky-600: #4b7ba3;
-    --color-blush-50: #fdf1f3;
-    --color-blush-100: #fbe1e6;
-    --color-blush-600: #b25a6d;
+    --color-blush-50: #eef6fd;
+    --color-blush-100: #cfe6fa;
+    --color-blush-600: #2b6ea8;
     --color-lilac-50: #f5f2fb;
     --color-lilac-100: #e9e2f6;
     --color-lilac-600: #7d63ad;
@@ -141,21 +148,31 @@
     */
     .bg-texture-dots {
         background-color: #ffffff;
-        background-image: radial-gradient(circle, rgba(3, 117, 62, 0.12) 1px, transparent 1px);
+        background-image: radial-gradient(circle, rgba(16, 104, 189, 0.13) 1px, transparent 1px);
         background-size: 22px 22px;
     }
 
     .bg-texture-grid {
         background-color: #ffffff;
         background-image:
-            linear-gradient(to right, rgba(26, 26, 24, 0.045) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(26, 26, 24, 0.045) 1px, transparent 1px);
+            linear-gradient(to right, rgba(23, 29, 38, 0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(23, 29, 38, 0.05) 1px, transparent 1px);
         background-size: 40px 40px;
     }
 
     .bg-texture-dark {
-        background-color: #102015;
+        background-color: #0b2136;
         background-image: radial-gradient(circle, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+        background-size: 22px 22px;
+    }
+
+    /*
+    | Dots only, no background colour — layered over a dark section that
+    | already carries its own colour (a flat fill or gradient blobs) rather
+    | than replacing it.
+    */
+    .bg-texture-dots-overlay {
+        background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
         background-size: 22px 22px;
     }
 
@@ -166,14 +183,14 @@
     */
     .card-interactive {
         @apply transition-all duration-300 ease-out;
-        box-shadow: 0 1px 2px rgba(16, 32, 21, 0.04);
+        box-shadow: 0 1px 2px rgba(11, 33, 54, 0.05);
     }
 
     .card-interactive:hover {
         transform: translateY(-4px) scale(1.008);
         box-shadow:
-            0 20px 40px -16px rgba(3, 117, 62, 0.22),
-            0 8px 16px -8px rgba(16, 32, 21, 0.12);
+            0 20px 40px -16px rgba(16, 104, 189, 0.24),
+            0 8px 16px -8px rgba(11, 33, 54, 0.14);
     }
 
     /*
@@ -198,8 +215,49 @@
         }
     }
 
+    /*
+    | Hero background: the faint grid fades toward the edges instead of
+    | cutting off hard, and the brand-coloured blobs drift very slowly — felt
+    | as ambient motion, never competing with the heading for attention.
+    */
+    .hero-texture-grid {
+        background-image:
+            linear-gradient(to right, rgba(23, 29, 38, 0.055) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(23, 29, 38, 0.055) 1px, transparent 1px);
+        background-size: 44px 44px;
+        mask-image: radial-gradient(ellipse 75% 65% at 28% 35%, black 30%, transparent 80%);
+    }
+
+    .hero-blob {
+        animation: hero-blob-drift 24s ease-in-out infinite;
+    }
+
+    .hero-blob-alt {
+        animation: hero-blob-drift-alt 28s ease-in-out infinite;
+    }
+
+    @keyframes hero-blob-drift {
+        0%, 100% {
+            transform: translate(0, 0) scale(1);
+        }
+        50% {
+            transform: translate(5%, -7%) scale(1.1);
+        }
+    }
+
+    @keyframes hero-blob-drift-alt {
+        0%, 100% {
+            transform: translate(0, 0) scale(1);
+        }
+        50% {
+            transform: translate(-6%, 5%) scale(1.12);
+        }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-        .marquee-track {
+        .marquee-track,
+        .hero-blob,
+        .hero-blob-alt {
             animation: none;
         }
     }

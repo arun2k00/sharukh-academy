@@ -6,6 +6,7 @@ use App\Enums\CourseStatus;
 use App\Enums\UserRole;
 use App\Models\Course;
 use App\Models\CourseModule;
+use App\Models\Instructor;
 use App\Models\Lesson;
 use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -50,6 +51,19 @@ abstract class TestCase extends BaseTestCase
     protected function student(): User
     {
         return User::factory()->create();
+    }
+
+    /**
+     * A Trainer account with its Instructor profile already linked, so it
+     * can immediately manage courses in the Tutor dashboard.
+     */
+    protected function trainer(): User
+    {
+        $trainer = User::factory()->trainer()->create();
+
+        Instructor::factory()->create(['user_id' => $trainer->id]);
+
+        return $trainer->fresh();
     }
 
     /**

@@ -43,11 +43,38 @@ class PaymentManager
     }
 
     /**
-     * Whether checkout can currently take real money.
+     * Whether checkout can currently take real money through at least one
+     * configured online gateway.
      */
     public function processesPaymentsOnline(): bool
     {
-        return (string) config('academy.payments.driver', 'manual') !== 'manual';
+        return $this->availableOnlineDrivers() !== [];
+    }
+
+    /**
+     * Every registered non-manual gateway whose credentials are actually
+     * present — what the enrollment panel loops over to render one "Pay via
+     * X" button per gateway an administrator has switched on.
+     *
+     * @return list<PaymentGateway>
+     */
+    public function availableOnlineDrivers(): array
+    {
+        $drivers = [];
+
+        foreach (array_keys($this->gateways) as $name) {
+            if ($name === 'manual') {
+                continue;
+            }
+
+            $gateway = $this->container->make($this->gateways[$name]);
+
+            if ($gateway->isConfigured()) {
+                $drivers[] = $gateway;
+            }
+        }
+
+        return $drivers;
     }
 
     /**

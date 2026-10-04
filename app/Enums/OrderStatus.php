@@ -30,4 +30,16 @@ enum OrderStatus: string
             self::Refunded => 'bg-sand-200 text-ink-700',
         };
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function options(): array
+    {
+        return array_reduce(
+            self::cases(),
+            fn (array $carry, self $case): array => $carry + [$case->value => $case->label()],
+            [],
+        );
+    }
 }

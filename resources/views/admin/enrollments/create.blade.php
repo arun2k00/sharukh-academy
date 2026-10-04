@@ -1,5 +1,5 @@
-<x-layouts.admin title="Enrol a student" heading="Enrol a student">
-    <x-admin.page-header title="Manual enrolment" :back="route('admin.enrollments.index')" back-label="All enrolments"
+<x-layouts.admin title="Enroll a student" heading="Enroll a student">
+    <x-admin.page-header title="Manual enrollment" :back="route('admin.enrollments.index')" back-label="All enrollments"
                          description="Grants immediate access without any payment being processed." />
 
     <div class="max-w-2xl">
@@ -44,7 +44,7 @@
                 </x-ui.field>
 
                 <div class="flex items-center gap-3">
-                    <x-ui.button type="submit">Enrol student</x-ui.button>
+                    <x-ui.button type="submit">Enroll student</x-ui.button>
                     <x-ui.button :href="route('admin.enrollments.index')" variant="ghost">Cancel</x-ui.button>
                 </div>
             </form>

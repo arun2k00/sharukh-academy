@@ -3,7 +3,7 @@
 
     @if ($enrollments->isEmpty())
         <x-ui.empty-state title="No courses yet"
-                          description="When you enrol in a programme it appears here with your progress.">
+                          description="When you enroll in a programme it appears here with your progress.">
             <x-ui.button :href="route('courses.index')">Browse the catalogue</x-ui.button>
         </x-ui.empty-state>
     @else

@@ -11,7 +11,7 @@ class PaymentGatewayUnavailable extends RuntimeException
         return new self(
             "No payment gateway is registered for the [{$driver}] driver. Register an "
             .'implementation of '.PaymentGateway::class.' in PaymentManager, or set '
-            .'PAYMENT_DRIVER=manual to fall back to administrator-confirmed enrolments.'
+            .'PAYMENT_DRIVER=manual to fall back to administrator-confirmed enrollments.'
         );
     }
 

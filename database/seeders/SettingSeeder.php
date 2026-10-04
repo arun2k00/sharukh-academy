@@ -11,21 +11,25 @@ class SettingSeeder extends Seeder
     public function run(SettingsRepository $settings): void
     {
         $settings->setMany([
-            'academy_name' => 'Edunova',
+            'academy_name' => 'Sharukh Academy',
             'site_tagline' => 'Job-ready data engineering training with live classes, real projects and certification.',
-            'hero_heading' => "Stop learning theory.\nStart building pipelines.",
+            // No hero_heading: leaving it unset lets the homepage's rotating
+            // default headlines show. An administrator setting one here (or
+            // from the admin settings form) pins it back to a single line.
             'hero_subheading' => 'Six focused programmes, each with live classes, production-grade projects and a certificate that means something.',
-            'contact_email' => 'hello@edunova.com',
+            'contact_email' => 'no-reply@aixone.site',
             'contact_phone' => '+91 80 4718 2200',
             'contact_address' => '4th Floor, Ashirwad Complex, Residency Road, Bengaluru 560025',
             'footer_note' => 'A focused data engineering academy for people who want to be job-ready, not just certificate-ready.',
-            'social_linkedin' => 'https://www.linkedin.com/company/edunova',
-            'social_youtube' => 'https://www.youtube.com/@edunova',
-            'social_instagram' => 'https://www.instagram.com/edunova',
-            'color_primary' => '#03753e',
-            'color_secondary' => '#1a1a18',
-            'logo_path' => $this->copyBrandAsset('enova.png', 'edunova-logo.png'),
-            'favicon_path' => $this->copyBrandAsset('icon.png', 'edunova-icon.png'),
+            'social_linkedin' => 'https://www.linkedin.com/company/sharukhacademy',
+            'social_youtube' => 'https://www.youtube.com/@sharukhacademy',
+            'social_instagram' => 'https://www.instagram.com/sharukhacademy',
+            'color_primary' => '#0d539b',
+            'color_secondary' => '#073055',
+            'logo_path' => $this->copyBrandAsset('sharukh-academy-logo.png', 'sharukh-academy-logo.png'),
+            // White cut of the same mark, for the dark header band in emails.
+            'logo_email_path' => $this->copyBrandAsset('sharukh-academy-logo-white.png', 'sharukh-academy-logo-white.png'),
+            'favicon_path' => $this->copyBrandAsset('sharukh-icon.png', 'sharukh-icon.png'),
         ]);
     }
 

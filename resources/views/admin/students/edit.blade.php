@@ -16,7 +16,7 @@
         <div class="mt-10 border-t border-ink-200 pt-6">
             <div class="flex flex-wrap items-center justify-between gap-4 border border-red-200 bg-red-50 p-4">
                 <p class="text-sm text-ink-700">
-                    Removing an account revokes access immediately. Enrolments, progress and certificates are retained.
+                    Removing an account revokes access immediately. Enrollments, progress and certificates are retained.
                 </p>
                 <form method="POST" action="{{ route('admin.students.destroy', $student) }}"
                       onsubmit="return confirm('Remove {{ $student->name }}?')">

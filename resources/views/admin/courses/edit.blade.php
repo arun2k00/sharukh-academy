@@ -4,6 +4,9 @@
             <x-ui.button :href="route('admin.courses.curriculum', $course)" variant="outline" size="sm">
                 Curriculum
             </x-ui.button>
+            <x-ui.button :href="route('admin.courses.invite-codes.index', $course)" variant="outline" size="sm">
+                Invite codes
+            </x-ui.button>
             @if ($course->isPublished())
                 <x-ui.button :href="route('courses.show', $course)" variant="outline" size="sm"
                              target="_blank" rel="noopener" icon-after="external-link">
@@ -28,7 +31,7 @@
         <h2 class="font-sans text-[0.6875rem] font-medium tracking-[0.12em] text-ink-500 uppercase">Danger zone</h2>
         <div class="mt-3 flex flex-wrap items-center justify-between gap-4 border border-red-200 bg-red-50 p-4">
             <p class="text-sm text-ink-700">
-                Deleting removes the course from the catalogue and the admin list. Enrolments, progress and
+                Deleting removes the course from the catalogue and the admin list. Enrollments, progress and
                 certificates are kept, and the course can be restored from the Deleted filter.
             </p>
             <form method="POST" action="{{ route('admin.courses.destroy', $course) }}"

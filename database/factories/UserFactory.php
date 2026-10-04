@@ -46,6 +46,18 @@ class UserFactory extends Factory
     }
 
     /**
+     * A trainer — link an Instructor profile separately via `has()`/`for()`
+     * or by setting `Instructor::user_id` afterwards, since the accounts are
+     * distinct models with no automatic pairing.
+     */
+    public function trainer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::Trainer,
+        ]);
+    }
+
+    /**
      * Indicate that the model's email address should be unverified.
      */
     public function unverified(): static

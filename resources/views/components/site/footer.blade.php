@@ -12,7 +12,7 @@
 @endphp
 
 <footer class="border-t border-ink-200 bg-white">
-    <div class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8">
+    <div class="mx-auto max-w-[1400px] px-5 py-14 lg:px-8">
         <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
             <div class="lg:col-span-4">
                 <x-site.logo />
@@ -67,9 +67,17 @@
             </div>
         </div>
 
-        <div class="mt-12 flex flex-col gap-2 border-t border-ink-200 pt-6 text-[0.8125rem] text-ink-500 sm:flex-row sm:items-center sm:justify-between">
-            <p>&copy; {{ now()->year }} {{ config('academy.name') }}. All rights reserved.</p>
-            <p>Verify a certificate at <span class="text-ink-700">{{ str(url('/verify-certificate'))->after('://') }}</span></p>
+        <div class="mt-12 border-t border-ink-200 pt-6">
+            <ul class="flex flex-wrap gap-x-6 gap-y-2 text-[0.8125rem]">
+                <li><a href="{{ route('legal.terms') }}" class="text-ink-600 hover:text-ink-950">Terms and Conditions</a></li>
+                <li><a href="{{ route('legal.privacy') }}" class="text-ink-600 hover:text-ink-950">Privacy Policy</a></li>
+                <li><a href="{{ route('legal.refunds') }}" class="text-ink-600 hover:text-ink-950">Refund Policy</a></li>
+            </ul>
+
+            <div class="mt-4 flex flex-col gap-2 text-[0.8125rem] text-ink-500 sm:flex-row sm:items-center sm:justify-between">
+                <p>&copy; {{ now()->year }} {{ $settings['academy_name'] ?? config('academy.name') }}. All rights reserved.</p>
+                <p>Verify a certificate at <span class="text-ink-700">{{ str(url('/verify-certificate'))->after('://') }}</span></p>
+            </div>
         </div>
     </div>
 </footer>

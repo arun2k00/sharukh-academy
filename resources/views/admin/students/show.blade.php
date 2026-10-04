@@ -3,12 +3,12 @@
                          :description="$student->email">
         <x-slot:actions>
             <x-ui.button :href="route('admin.students.edit', $student)" variant="outline" size="sm">Edit account</x-ui.button>
-            <x-ui.button :href="route('admin.enrollments.create')" size="sm" icon="plus">Enrol in a course</x-ui.button>
+            <x-ui.button :href="route('admin.enrollments.create')" size="sm" icon="plus">Enroll in a course</x-ui.button>
         </x-slot:actions>
     </x-admin.page-header>
 
     <dl class="grid divide-y divide-ink-200 border border-ink-200 bg-white sm:grid-cols-4 sm:divide-x sm:divide-y-0">
-        <x-ui.stat label="Enrolments" :value="$student->enrollments->count()" />
+        <x-ui.stat label="Enrollments" :value="$student->enrollments->count()" />
         <x-ui.stat label="Lessons completed" :value="$lessonsCompleted" />
         <x-ui.stat label="Certificates" :value="$student->certificates->count()" />
         <x-ui.stat label="Last active"
@@ -17,7 +17,7 @@
 
     <div class="mt-8 grid gap-6 lg:grid-cols-12">
         <div class="lg:col-span-8">
-            <x-ui.panel title="Enrolments and progress" :padded="false">
+            <x-ui.panel title="Enrollments and progress" :padded="false">
                 @if ($student->enrollments->isEmpty())
                     <p class="px-5 py-10 text-center text-sm text-ink-500">Not enrolled in anything yet.</p>
                 @else
@@ -56,8 +56,8 @@
                                     </div>
                                     <x-ui.button type="submit" variant="outline" size="sm">Update</x-ui.button>
                                     <x-admin.delete-form :action="route('admin.enrollments.destroy', $enrollment)"
-                                                         class="pb-2" label="Remove enrolment"
-                                                         confirm="Remove this enrolment? The student loses access." />
+                                                         class="pb-2" label="Remove enrollment"
+                                                         confirm="Remove this enrollment? The student loses access." />
                                 </form>
                             </li>
                         @endforeach

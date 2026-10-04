@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Support\WebpImage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -38,10 +39,11 @@ class ResourceStorageService
 
     /**
      * Store a public image (course thumbnail, avatar) and return its path.
+     * Re-encoded to WebP on the way in; see WebpImage.
      */
     public function storeImage(UploadedFile $file, string $directory): string
     {
-        return $file->store($directory, 'public');
+        return WebpImage::store($file, $directory);
     }
 
     public function deleteImage(?string $path): void

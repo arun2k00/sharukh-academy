@@ -20,10 +20,13 @@ class OrderService
     public function openFor(User $user, Course $course): Order
     {
         return DB::transaction(function () use ($user, $course): Order {
+            // Locked: without it a double-click opens two pending orders for
+            // the same course, and the second one never gets settled.
             $pending = Order::query()
                 ->where('user_id', $user->id)
                 ->where('course_id', $course->id)
                 ->where('status', OrderStatus::Pending)
+                ->lockForUpdate()
                 ->first();
 
             if ($pending !== null) {

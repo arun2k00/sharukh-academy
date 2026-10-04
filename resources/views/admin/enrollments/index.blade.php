@@ -1,6 +1,6 @@
-<x-layouts.admin title="Enrolments" heading="Enrolments">
+<x-layouts.admin title="Enrollments" heading="Enrollments">
     <x-slot:actions>
-        <x-ui.button :href="route('admin.enrollments.create')" size="sm" icon="plus">Enrol a student</x-ui.button>
+        <x-ui.button :href="route('admin.enrollments.create')" size="sm" icon="plus">Enroll a student</x-ui.button>
     </x-slot:actions>
 
     <form method="GET" class="mb-5 flex flex-wrap items-end gap-3">
@@ -36,9 +36,9 @@
     </form>
 
     @if ($enrollments->isEmpty())
-        <x-ui.empty-state icon="graduation-cap" title="No enrolments match"
-                          description="Enrol someone manually, or wait for a self-service enrolment.">
-            <x-ui.button :href="route('admin.enrollments.create')">Enrol a student</x-ui.button>
+        <x-ui.empty-state icon="graduation-cap" title="No enrollments match"
+                          description="Enroll someone manually, or wait for a self-service enrollment.">
+            <x-ui.button :href="route('admin.enrollments.create')">Enroll a student</x-ui.button>
         </x-ui.empty-state>
     @else
         <x-admin.table :headings="['Student', 'Course', 'Progress', 'Source', 'Status', ['label' => '', 'class' => 'text-right']]">
@@ -62,7 +62,7 @@
                             @csrf
                             @method('PATCH')
                             <x-ui.select name="status" class="!py-1.5 !text-[0.8125rem]"
-                                         onchange="this.form.submit()" aria-label="Enrolment status">
+                                         onchange="this.form.submit()" aria-label="Enrollment status">
                                 @foreach (\App\Enums\EnrollmentStatus::options() as $value => $label)
                                     <option value="{{ $value }}" @selected($enrollment->status->value === $value)>{{ $label }}</option>
                                 @endforeach
@@ -73,7 +73,7 @@
                     <td class="px-4 py-3">
                         <div class="flex justify-end">
                             <x-admin.delete-form :action="route('admin.enrollments.destroy', $enrollment)"
-                                                 confirm="Remove this enrolment? The student loses access to the course."
+                                                 confirm="Remove this enrollment? The student loses access to the course."
                                                  label="Remove" />
                         </div>
                     </td>

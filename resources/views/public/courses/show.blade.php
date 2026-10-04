@@ -1,29 +1,47 @@
 <x-layouts.public :title="$course->title" :description="$course->short_description">
     {{-- Course hero --}}
     <section class="border-b border-ink-200 bg-white">
-        <div class="mx-auto max-w-[1600px] px-5 pt-8 lg:px-8">
+        <div class="mx-auto max-w-[1400px] px-5 pt-8 lg:px-8">
             <x-ui.breadcrumbs :items="[
                 ['label' => 'Courses', 'url' => route('courses.index')],
                 ['label' => $course->title],
             ]" />
         </div>
 
-        @if ($course->banner_url || $course->thumbnail_url)
-            <div class="mx-auto mt-6 max-w-[1600px] px-6 lg:px-12">
-                <img src="{{ $course->banner_url ?? $course->thumbnail_url }}" alt=""
-                     class="aspect-[3/1] w-full border border-ink-200 object-cover">
+        @php $heroImage = $course->banner_url ?? $course->thumbnail_url; @endphp
+
+        {{-- Plain header: always on mobile, and the only header when there is no hero image --}}
+        <div class="mx-auto max-w-[1400px] px-5 pt-6 lg:px-8 {{ $heroImage ? 'lg:hidden' : '' }}">
+            @if ($course->category)
+                <p class="text-[0.6875rem] font-medium tracking-[0.14em] text-pine-700 uppercase">{{ $course->category->name }}</p>
+            @endif
+            <h1 class="mt-4 text-[1.75rem] leading-[1.15] sm:text-[2.5rem]">{{ $course->title }}</h1>
+            <p class="mt-4 max-w-2xl text-[1.0625rem]/7 text-ink-600 sm:mt-5 sm:text-[1.0625rem]/8">{{ $course->short_description }}</p>
+        </div>
+
+        {{-- Hero banner: course content overlaid in white on the image's open left half --}}
+        @if ($heroImage)
+            <div class="mx-auto mt-6 hidden max-w-[1400px] lg:mt-8 lg:block lg:px-12">
+                <div class="relative isolate overflow-hidden border border-ink-200">
+                    <img src="{{ $heroImage }}" alt="" class="aspect-[3/1] w-full object-cover">
+                    <div class="absolute inset-0 bg-linear-to-r from-black/25 via-black/0 to-transparent"></div>
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="max-w-md pl-10 xl:pl-16">
+                            @if ($course->category)
+                                <p class="text-[0.6875rem] font-medium tracking-[0.14em] text-white/85 uppercase">{{ $course->category->name }}</p>
+                            @endif
+                            <h1 class="mt-3 font-serif text-[2rem] leading-[1.1] text-white xl:text-[2.375rem]">{{ $course->title }}</h1>
+                        </div>
+                    </div>
+                </div>
             </div>
         @endif
 
-        <div class="mx-auto grid max-w-[1600px] gap-10 px-5 py-10 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-14">
+        <div class="mx-auto grid max-w-[1400px] gap-10 px-5 py-10 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-14">
             <div class="lg:col-span-7">
-                @if ($course->category)
-                    <p class="text-[0.6875rem] font-medium tracking-[0.14em] text-pine-700 uppercase">{{ $course->category->name }}</p>
+                @if ($heroImage)
+                    <p class="hidden max-w-2xl text-[1.0625rem]/8 text-ink-600 lg:block">{{ $course->short_description }}</p>
                 @endif
-
-                <h1 class="mt-4 text-[2rem] leading-[1.15] sm:text-[2.5rem]">{{ $course->title }}</h1>
-
-                <p class="mt-5 max-w-2xl text-[1.0625rem]/8 text-ink-600">{{ $course->short_description }}</p>
 
                 @if ($course->careerPaths->isNotEmpty())
                     <p class="mt-4 text-[0.8125rem] text-ink-500">
@@ -67,13 +85,9 @@
                 </dl>
             </div>
 
-            {{-- Enrolment panel --}}
+            {{-- Enrollment panel --}}
             <div class="lg:col-span-5">
-                <div class="border border-ink-200 lg:sticky lg:top-24">
-                    @if ($course->thumbnail_url)
-                        <img src="{{ $course->thumbnail_url }}" alt="" class="aspect-[16/9] w-full object-cover">
-                    @endif
-
+                <div id="enroll-panel" class="border border-ink-200 lg:sticky lg:top-24">
                     <div class="p-6">
                         <div class="flex items-baseline gap-3">
                             <p class="font-serif text-[1.75rem] text-ink-900">{{ $course->price_label }}</p>
@@ -93,21 +107,17 @@
                                     You are enrolled — {{ $enrollment?->progress_percent ?? 0 }}% complete
                                 </p>
                             @elseif (auth()->check())
-                                <form method="POST" action="{{ route('courses.enroll', $course) }}">
-                                    @csrf
-                                    <x-ui.button type="submit" size="lg" class="w-full">
-                                        {{ $course->isFree() ? 'Enrol for free' : ($paymentsOnline ? 'Enrol now' : 'Request enrolment') }}
-                                    </x-ui.button>
-                                </form>
-
-                                @if (! $course->isFree() && ! $paymentsOnline)
-                                    <p class="text-center text-[0.8125rem] text-ink-500">
-                                        Our team will contact you to arrange payment and open the course.
-                                    </p>
+                                @if ($course->isFree())
+                                    <form method="POST" action="{{ route('courses.enroll', $course) }}">
+                                        @csrf
+                                        <x-ui.button type="submit" size="lg" class="w-full">Enroll for free</x-ui.button>
+                                    </form>
+                                @else
+                                    <x-public.enrollment-options :course="$course" :available-gateways="$availableGateways" />
                                 @endif
                             @else
                                 <x-ui.button :href="route('login')" size="lg" class="w-full">
-                                    Sign in to enrol
+                                    Sign in to enroll
                                 </x-ui.button>
                                 <p class="text-center text-[0.8125rem] text-ink-500">
                                     New here?
@@ -119,7 +129,7 @@
                         <ul class="mt-6 space-y-2.5 border-t border-ink-200 pt-6 text-sm text-ink-700">
                             <li class="flex gap-2.5">
                                 <x-ui.icon name="play-circle" class="mt-0.5 size-4 shrink-0 text-ink-400" />
-                                {{ $lessonCount }} recorded lessons, yours for the life of the enrolment
+                                {{ $lessonCount }} recorded lessons, yours for the life of the enrollment
                             </li>
                             @if ($liveClassCount > 0)
                                 <li class="flex gap-2.5">
@@ -148,7 +158,7 @@
 
     {{-- What you will learn --}}
     @if (! empty($course->outcomes))
-        <section class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8 lg:py-16">
+        <section class="mx-auto max-w-[1400px] px-5 py-14 lg:px-8 lg:py-16">
             <h2 class="text-[1.5rem] leading-tight">What you will be able to do</h2>
             <ul class="mt-8 grid gap-x-10 gap-y-4 sm:grid-cols-2">
                 @foreach ($course->outcomes as $outcome)
@@ -163,7 +173,7 @@
 
     {{-- Overview, audience and requirements --}}
     <section class="border-t border-ink-200 bg-white">
-        <div class="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-16">
+        <div class="mx-auto grid max-w-[1400px] gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-16">
             <div class="lg:col-span-7">
                 <h2 class="text-[1.5rem] leading-tight">About this course</h2>
                 <div class="prose-academy mt-6">
@@ -202,7 +212,7 @@
     </section>
 
     {{-- Curriculum --}}
-    <section class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8 lg:py-16">
+    <section class="mx-auto max-w-[1400px] px-5 py-14 lg:px-8 lg:py-16">
         <div class="flex flex-wrap items-end justify-between gap-4">
             <div>
                 <h2 class="text-[1.5rem] leading-tight">Curriculum</h2>
@@ -230,7 +240,7 @@
     {{-- Instructor --}}
     @if ($course->instructor)
         <section class="border-y border-ink-200 bg-lilac-50/60">
-            <div class="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-16 lg:px-8 lg:py-20">
+            <div class="mx-auto grid max-w-[1400px] gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-16 lg:px-8 lg:py-20">
                 <div class="lg:col-span-4">
                     <div class="relative max-w-xs">
                         <div class="absolute -inset-3 -z-10 rounded-3xl bg-pine-100/70" aria-hidden="true"></div>
@@ -285,7 +295,7 @@
 
     {{-- Testimonials --}}
     @if ($course->testimonials->isNotEmpty())
-        <section class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8 lg:py-16">
+        <section class="mx-auto max-w-[1400px] px-5 py-14 lg:px-8 lg:py-16">
             <h2 class="text-[1.5rem] leading-tight">From students on this course</h2>
             <div class="mt-10 grid gap-10 lg:grid-cols-3">
                 @foreach ($course->testimonials as $testimonial)
@@ -297,7 +307,7 @@
 
     {{-- Student reviews --}}
     <section class="border-t border-ink-200 bg-white">
-        <div class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8 lg:py-16">
+        <div class="mx-auto max-w-[1400px] px-5 py-14 lg:px-8 lg:py-16">
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <h2 class="text-[1.5rem] leading-tight">Student reviews</h2>
                 @if ($averageRating)
@@ -352,7 +362,7 @@
     {{-- FAQ --}}
     @if ($faqs->isNotEmpty())
         <section class="border-t border-ink-200 bg-white">
-            <div class="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-16">
+            <div class="mx-auto grid max-w-[1400px] gap-10 px-5 py-14 lg:grid-cols-12 lg:gap-14 lg:px-8 lg:py-16">
                 <div class="lg:col-span-4">
                     <h2 class="text-[1.5rem] leading-tight">Common questions</h2>
                     <p class="mt-4 text-sm/6 text-ink-600">
@@ -367,9 +377,9 @@
         </section>
     @endif
 
-    {{-- Closing enrolment prompt --}}
+    {{-- Closing enrollment prompt --}}
     <section class="bg-ink-950">
-        <div class="mx-auto flex max-w-[1600px] flex-wrap items-end justify-between gap-8 px-5 py-14 lg:px-8 lg:py-16">
+        <div class="mx-auto flex max-w-[1400px] flex-wrap items-end justify-between gap-8 px-5 py-14 lg:px-8 lg:py-16">
             <div class="max-w-xl">
                 <h2 class="text-[1.75rem] leading-tight text-white">{{ $course->title }}</h2>
                 <p class="mt-3 text-[0.975rem]/7 text-white/60">
@@ -383,14 +393,16 @@
                 @if ($hasAccess)
                     <x-ui.button :href="route('learn.course', $course)" variant="light" size="lg">Continue learning</x-ui.button>
                 @elseif (auth()->check())
-                    <form method="POST" action="{{ route('courses.enroll', $course) }}">
-                        @csrf
-                        <x-ui.button type="submit" variant="light" size="lg">
-                            {{ $course->isFree() ? 'Enrol for free' : ($paymentsOnline ? 'Enrol now' : 'Request enrolment') }}
-                        </x-ui.button>
-                    </form>
+                    @if ($course->isFree())
+                        <form method="POST" action="{{ route('courses.enroll', $course) }}">
+                            @csrf
+                            <x-ui.button type="submit" variant="light" size="lg">Enroll for free</x-ui.button>
+                        </form>
+                    @else
+                        <x-ui.button href="#enroll-panel" variant="light" size="lg">Choose how to enroll</x-ui.button>
+                    @endif
                 @else
-                    <x-ui.button :href="route('login')" variant="light" size="lg">Sign in to enrol</x-ui.button>
+                    <x-ui.button :href="route('login')" variant="light" size="lg">Sign in to enroll</x-ui.button>
                 @endif
             </div>
         </div>

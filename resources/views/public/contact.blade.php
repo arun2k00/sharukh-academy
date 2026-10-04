@@ -1,15 +1,15 @@
-<x-layouts.public title="Contact" description="Questions about a programme, corporate enrolment or anything else.">
+<x-layouts.public title="Contact" description="Questions about a programme, corporate enrollment or anything else.">
     <section class="border-b border-ink-200">
-        <div class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8 lg:py-20">
+        <div class="mx-auto max-w-[1400px] px-5 py-14 lg:px-8 lg:py-20">
             <p class="text-[0.6875rem] font-medium tracking-[0.16em] text-pine-700 uppercase">Contact</p>
-            <h1 class="mt-5 max-w-2xl text-[2rem] leading-tight sm:text-[2.5rem]">Ask us anything before you enrol</h1>
+            <h1 class="mt-5 max-w-2xl text-[2rem] leading-tight sm:text-[2.5rem]">Ask us anything before you enroll</h1>
             <p class="mt-5 max-w-xl text-[1.0625rem]/8 text-ink-600">
                 We answer within one working day. If a programme is not right for you, we would rather tell you now.
             </p>
         </div>
     </section>
 
-    <section class="mx-auto max-w-[1600px] px-5 py-14 lg:px-8 lg:py-16">
+    <section class="mx-auto max-w-[1400px] px-5 py-14 lg:px-8 lg:py-16">
         <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <div class="lg:col-span-7">
                 <x-ui.flash />

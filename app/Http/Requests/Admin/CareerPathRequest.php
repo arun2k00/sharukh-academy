@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Support\UploadRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -39,6 +40,7 @@ class CareerPathRequest extends FormRequest
             'description' => ['required', 'string', 'max:2000'],
             'capstone_title' => ['nullable', 'string', 'max:150'],
             'capstone_description' => ['nullable', 'string', 'max:1000'],
+            'banner' => UploadRules::image(),
             'bundle_course_id' => ['nullable', Rule::exists('courses', 'id')->withoutTrashed()],
             'is_published' => ['boolean'],
             'is_featured' => ['boolean'],

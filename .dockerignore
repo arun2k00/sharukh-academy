@@ -1,0 +1,16 @@
+.git
+node_modules
+vendor
+tests
+storage/logs/*
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+public/build
+public/storage
+.env
+.env.*
+!.env.example
+.DS_Store
+.phpunit.result.cache
+*.tar.gz

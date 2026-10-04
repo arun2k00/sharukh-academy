@@ -54,10 +54,10 @@
 
                 <x-ui.panel title="Homepage">
                     <div class="space-y-5">
-                        <x-ui.field label="Hero heading" for="hero_heading" :error="$errors->first('hero_heading')">
-                            <x-ui.input id="hero_heading" name="hero_heading"
-                                        value="{{ old('hero_heading', $settings['hero_heading'] ?? '') }}"
-                                        :invalid="$errors->has('hero_heading')" />
+                        <x-ui.field label="Hero heading" for="hero_heading" :error="$errors->first('hero_heading')"
+                                    hint="Leave blank to show four rotating headlines automatically. Fill this in to pin one custom headline instead — press Enter once, after the first sentence, to control where it breaks onto a second line.">
+                            <x-ui.textarea id="hero_heading" name="hero_heading" rows="2"
+                                           :invalid="$errors->has('hero_heading')">{{ old('hero_heading', $settings['hero_heading'] ?? '') }}</x-ui.textarea>
                         </x-ui.field>
 
                         <x-ui.field label="Hero paragraph" for="hero_subheading" :error="$errors->first('hero_subheading')">

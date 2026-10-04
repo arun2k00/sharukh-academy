@@ -5,7 +5,7 @@ use App\Enums\CourseStatus;
 use App\Enums\LessonType;
 
 /**
- * Demonstration catalogue for Edunova.
+ * Demonstration catalogue for Sharukh Academy.
  *
  * Replace this file's content with the academy's real programmes; the seeder
  * reads it verbatim, so no code has to change when the curriculum does.
@@ -300,7 +300,7 @@ return [
         'instructor' => 'sharuk-shaik',
         'price' => 7999,
         'level' => CourseLevel::Intermediate,
-        'short' => 'Build, schedule and monitor real pipelines in Azure Data Factory — including the error handling most tutorials skip.',
+        'short' => 'Build, schedule and monitor real pipelines in Azure Data Factory, including the error handling most tutorials skip.',
         'description' => "Most ADF tutorials show you how to build a pipeline that works once, on a demo dataset, on a good day. This course is about the pipeline that still works after the source schema changes, a run fails halfway through, and nobody is watching the monitoring page when it happens.\n\nWe cover the building blocks — linked services, datasets, the Copy activity and data flows — then spend real time on parameters, triggers and orchestration, and finish with monitoring and error handling, the module that separates a working demo from something you can put in production.",
         'outcomes' => [
             'Build parameterised, reusable pipelines rather than one-off copies',
@@ -382,7 +382,7 @@ return [
         'price' => 7999,
         'level' => CourseLevel::Intermediate,
         'featured' => true,
-        'short' => 'Architecture, loading, sharing and performance — everything you need to run a real Snowflake warehouse, not just query one.',
+        'short' => 'Architecture, loading, sharing and performance: everything you need to run a real Snowflake warehouse, not just query one.',
         'description' => "Most Snowflake content teaches you to write a SELECT statement against a warehouse someone else built and tuned. This course teaches you to be the person who builds and tunes it.\n\nWe start with why Snowflake's architecture — storage separated from compute — changes how you design everything else, then move through loading data, streams and tasks for automation, secure data sharing, and finish with the performance and cost questions that come up in every real deployment: warehouse sizing, clustering, and why the bill looked like that this month.",
         'outcomes' => [
             'Explain Snowflake\'s architecture well enough to make real design decisions with it',
@@ -467,7 +467,7 @@ return [
         'instructor' => 'sharuk-shaik',
         'price' => 7999,
         'level' => CourseLevel::Intermediate,
-        'short' => 'Models, tests, documentation and incremental loads — the dbt workflow that turns a warehouse into something a team can trust.',
+        'short' => 'Models, tests, documentation and incremental loads: the dbt workflow that turns a warehouse into something a team can trust.',
         'description' => "dbt did not invent SQL transformation. It made it possible to test it, document it, and review it the way software has been reviewed for years — and that discipline is the actual point of this course.\n\nWe cover models, sources and tests, then macros and incremental models for performance, and finish with the production workflow: environments, scheduled runs, and what a good dbt pull request actually looks like. The final project models a subscription business's revenue end to end.",
         'outcomes' => [
             'Structure a dbt project that stays organised past the first ten models',
@@ -477,7 +477,7 @@ return [
         ],
         'requirements' => [
             'Working SQL knowledge (the SQL for Data Engineering course, or equivalent)',
-            'Access to a warehouse — a free-tier Snowflake or BigQuery account works',
+            'Access to a warehouse (a free-tier Snowflake or BigQuery account works)',
         ],
         'audience' => [
             'Data analysts moving into analytics engineering',
@@ -553,7 +553,7 @@ return [
         'price' => 7999,
         'level' => CourseLevel::Intermediate,
         'featured' => true,
-        'short' => 'Data modeling, Power Query, DAX and dashboard performance — built for people who already work with data, not first-time spreadsheet users.',
+        'short' => 'Data modeling, Power Query, DAX and dashboard performance, built for people who already work with data, not first-time spreadsheet users.',
         'description' => "This course assumes you already understand data. It is about turning that understanding into dashboards other people trust and can actually use.\n\nWe start with data modelling — the single biggest factor in whether a Power BI report is fast and correct — then Power Query for shaping data before it hits the model, then DAX, taught around the one concept, filter context, that unlocks everything else in the language. The final module is dashboard design, performance and row-level security, finishing with a complete executive sales dashboard.",
         'outcomes' => [
             'Build a star-schema model that is fast and does not produce wrong numbers',
@@ -645,7 +645,7 @@ return [
         'level' => CourseLevel::Beginner,
         'status' => CourseStatus::Archived,
         'short' => 'Frontend, backend and the database in between — a complete web application, built and deployed end to end.',
-        'description' => "A previously run cohort-based programme covering the full stack: a modern frontend framework, a backend API and its database, and deployment to a real server.\n\nKept here for reference — this programme is not currently open for enrolment.",
+        'description' => "A previously run cohort-based programme covering the full stack: a modern frontend framework, a backend API and its database, and deployment to a real server.\n\nKept here for reference — this programme is not currently open for enrollment.",
         'outcomes' => [
             'Build a complete web application, frontend to database',
             'Deploy an application to a Linux server correctly',
@@ -675,7 +675,7 @@ return [
         'level' => CourseLevel::Intermediate,
         'status' => CourseStatus::Archived,
         'short' => 'Designing and deploying production infrastructure across AWS and Azure, the way a cloud architect actually does it.',
-        'description' => "A previously run programme on cloud architecture and deployment: designing infrastructure, automating it, and running it in production across both AWS and Azure.\n\nKept here for reference — this programme is not currently open for enrolment.",
+        'description' => "A previously run programme on cloud architecture and deployment: designing infrastructure, automating it, and running it in production across both AWS and Azure.\n\nKept here for reference — this programme is not currently open for enrollment.",
         'outcomes' => [
             'Design production infrastructure on AWS and Azure',
             'Automate deployment instead of doing it by hand',

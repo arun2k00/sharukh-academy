@@ -6,6 +6,7 @@ use App\Enums\EnrollmentSource;
 use App\Enums\EnrollmentStatus;
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\InviteCode;
 use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\User;
@@ -32,8 +33,9 @@ class EnrollmentService
         Course $course,
         EnrollmentSource $source = EnrollmentSource::Admin,
         ?Order $order = null,
+        ?InviteCode $inviteCode = null,
     ): Enrollment {
-        return DB::transaction(function () use ($user, $course, $source, $order): Enrollment {
+        return DB::transaction(function () use ($user, $course, $source, $order, $inviteCode): Enrollment {
             $enrollment = Enrollment::firstOrNew([
                 'user_id' => $user->id,
                 'course_id' => $course->id,
@@ -61,6 +63,10 @@ class EnrollmentService
 
             if ($order !== null) {
                 $enrollment->order_id = $order->id;
+            }
+
+            if ($inviteCode !== null) {
+                $enrollment->invite_code_id = $inviteCode->id;
             }
 
             $isNewGrant = ! $enrollment->exists || $enrollment->isDirty('status');

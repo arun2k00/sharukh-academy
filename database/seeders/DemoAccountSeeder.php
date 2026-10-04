@@ -6,6 +6,7 @@ use App\Enums\EnrollmentSource;
 use App\Enums\UserRole;
 use App\Models\ContactMessage;
 use App\Models\Course;
+use App\Models\Instructor;
 use App\Models\Lesson;
 use App\Models\User;
 use App\Services\EnrollmentService;
@@ -14,7 +15,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * Demonstration accounts and the enrolment history behind them.
+ * Demonstration accounts and the enrollment history behind them.
  *
  * Progress is recorded through the real services rather than written straight
  * to the tables, so the seeded state matches what the application produces —
@@ -23,17 +24,28 @@ use Illuminate\Support\Facades\Hash;
 class DemoAccountSeeder extends Seeder
 {
     /**
-     * Password shared by every seeded account. Local demonstration only.
+     * Passwords for the seeded demo accounts, read from the environment so no
+     * real credential is ever committed. Set DEMO_SEED_PASSWORD locally to use
+     * your own; the fallback is deliberately obvious and useless in production,
+     * where this seeder should not be run at all.
      */
-    private const DEMO_PASSWORD = 'password';
+    private function adminPassword(): string
+    {
+        return (string) env('DEMO_SEED_ADMIN_PASSWORD', env('DEMO_SEED_PASSWORD', 'password'));
+    }
+
+    private function demoPassword(): string
+    {
+        return (string) env('DEMO_SEED_PASSWORD', 'password');
+    }
 
     public function run(EnrollmentService $enrollments, ProgressService $progress): void
     {
         $admin = User::updateOrCreate(
-            ['email' => 'admin@oaceracademy.test'],
+            ['email' => 'admin@aixone.site'],
             [
                 'name' => 'Arun Menon',
-                'password' => Hash::make(self::DEMO_PASSWORD),
+                'password' => Hash::make($this->adminPassword()),
                 'email_verified_at' => now(),
             ],
         );
@@ -41,8 +53,24 @@ class DemoAccountSeeder extends Seeder
         // `role` is not mass assignable, so it is set explicitly.
         $admin->forceFill(['role' => UserRole::Admin])->save();
 
+        $trainer = User::updateOrCreate(
+            ['email' => 'trainer@aixone.site'],
+            [
+                'name' => 'Sharuk Shaik',
+                'password' => Hash::make($this->demoPassword()),
+                'email_verified_at' => now(),
+            ],
+        );
+
+        $trainer->forceFill(['role' => UserRole::Trainer])->save();
+
+        // CatalogSeeder runs before this one and already created the matching
+        // "Sharuk Shaik" instructor profile — link it so the demo Trainer
+        // account actually sees courses in the Tutor dashboard.
+        Instructor::where('slug', 'sharuk-shaik')->update(['user_id' => $trainer->id]);
+
         $students = collect([
-            ['name' => 'Meera Sundaram', 'email' => 'meera@example.test'],
+            ['name' => 'Meera Sundaram', 'email' => 'student@aixone.site'],
             ['name' => 'Jude Mensah', 'email' => 'jude@example.test'],
             ['name' => 'Rohit Bansal', 'email' => 'rohit@example.test'],
             ['name' => 'Fiona Clarke', 'email' => 'fiona@example.test'],
@@ -54,7 +82,7 @@ class DemoAccountSeeder extends Seeder
                 ['email' => $row['email']],
                 [
                     'name' => $row['name'],
-                    'password' => Hash::make(self::DEMO_PASSWORD),
+                    'password' => Hash::make($this->demoPassword()),
                     'email_verified_at' => now(),
                 ],
             );
@@ -129,7 +157,7 @@ class DemoAccountSeeder extends Seeder
         ContactMessage::create([
             'name' => 'Rahul Shah',
             'email' => 'rahul@example.test',
-            'subject' => 'Corporate enrolment for six people',
+            'subject' => 'Corporate enrollment for six people',
             'message' => "Hello,\n\nWe would like to put six of our data team through the SQL Server and Snowflake programmes in the next quarter. Do you offer a group rate, and can the live sessions be scheduled for a single cohort?\n\nThank you,\nRahul",
         ]);
 
